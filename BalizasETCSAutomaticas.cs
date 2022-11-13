@@ -1,0 +1,332 @@
+using Orts.Simulation.Signalling;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ORTS.Scripting.Script
+{
+	public class ETCS_MAIN_MA_1_2 : EurobalizaConmutable
+	{
+        public ETCS_MAIN_MA_1_2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add("{ma}");
+            msg.Add("{ssp}");
+            msg.Add(get_linking());
+            Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
+            switch(asp)
+            {
+                case Aspecto.RebaseAutorizado:
+                case Aspecto.RebaseAutorizadoCortaDistancia:
+                    msg.Add(create_packet(132, "1", 1));
+                    break;
+                default:
+                    msg.Add(create_packet(132, "0", 1));
+                    break;
+            }
+            switch(asp)
+            {
+                case Aspecto.Parada:
+                case Aspecto.ParadaPermisiva:
+                case Aspecto.ParadaSelectiva:
+                    msg.Add(create_packet(137, "0", 1));
+                    break;
+                default:
+                    msg.Add(create_packet(137, "1", 1));
+                    break;
+            }
+            if (asp == Aspecto.RebaseAutorizado || asp == Aspecto.RebaseAutorizadoCortaDistancia)
+            {
+                string prof = "01" + format_etcs_distance(0) + "01" + "1111111" + format_binary(32767, 15) + format_etcs_distance(0) + "0" + "00000";
+                msg.Add(create_packet(80, prof, 1));
+            }
+            else if (asp == Aspecto.RebaseAutorizadoDestellos)
+            {
+                string prof = "01" + "{NextSignalDistanceM(0)-bgref}" + "00" + "1111111" + "{NextSignalDistanceM(1)-NextSignalDistanceM(0)}" + format_etcs_distance(300) + "1" + "00000";
+                msg.Add(create_packet(80, prof, 1));
+            }
+            msg.AddRange(base.ConstruirMensajes());
+            return msg;
+        }
+    }
+	public class ETCS_MAIN_FIXED_2_2 : EurobalizaConmutable
+	{
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add("{gradient}");
+            msg.Add("{trackcond}");
+            msg.Add("{pk}");
+            int levelId = NextSignalId("ETCS_LEVEL");
+            if (levelId >= 0 && NextSignalId("NORMAL", 1) == IdSignalLocalVariable(levelId, 601))
+            {
+                msg.Add(level_tr(0, level_table(levelId, 0)));
+            }
+            msg.AddRange(base.ConstruirMensajes());
+            return msg;
+        }
+    }
+	public class ETCS_LTV : EurobalizaConmutable
+	{
+        public ETCS_LTV()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add("{ltv}");
+            return msg;
+        }
+    }
+	public class ETCS_INFILL_MA_1_2 : EurobalizaConmutable
+	{
+        public ETCS_INFILL_MA_1_2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add("{linking}");
+            msg.AddRange(base.ConstruirMensajes());
+            int id = -1;
+            for (int i=0; ; i++)
+            {
+                int nid = NextSignalId("ETCS", i);
+                if (nid < 0) break;
+                if (IdSignalLocalVariable(nid, KeyN_PIG) != 0) continue;
+                if (IdSignalLocalVariable(nid, KeyNextSignalId) != SharedVariables[KeyNextSignalId]) break;
+                id = IdSignalLocalVariable(nid, KeyNID_BG);
+            }
+            if (id != -1)
+            {
+                msg.Add(create_packet(136, "0"+format_binary(id,14), 1));
+                msg.Add("{ssp_infill}");
+                msg.Add("{ma_infill}");
+                Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
+                if (asp == Aspecto.RebaseAutorizadoDestellos)
+                {
+                    string prof = "01" + "{NextSignalDistanceM(0)-ilref}" + "00" + "1111111" + "{NextSignalDistanceM(1)-NextSignalDistanceM(0)}" + format_etcs_distance(300) + "1" + "00000";
+                    msg.Add(create_packet(80, prof, 1));
+                }
+            }
+            return msg;
+        }
+    }
+	public class ETCS_INFILL_FIXED_2_2 : EurobalizaConmutable
+	{
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add("{gradient}");
+            msg.Add("{trackcond}");
+            int levelId = NextSignalId("ETCS_LEVEL");
+            if (levelId >= 0 && NextSignalId("NORMAL", 1) == IdSignalLocalVariable(levelId, 601))
+            {
+                msg.Add(level_tr(-1, level_table(levelId, 500)));
+            }
+            msg.AddRange(base.ConstruirMensajes());
+            return msg;
+        }
+    }
+	public class ETCS_RETROCESO : EurobalizaConmutable
+	{
+        public ETCS_RETROCESO()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            var msg = base.ConstruirMensajes();
+            Aspect asp = IdSignalAspect(NextSignalId("NORMAL"),"NORMAL");
+            msg.Add(create_packet(132, (asp == Aspect.Stop || asp == Aspect.Restricting) ? "0" : "1", 1));
+            msg.Add(create_packet(137, (asp == Aspect.Stop || asp == Aspect.Restricting || asp == Aspect.StopAndProceed) ? "0" : "1", 1));
+            return msg;
+        }
+    }
+	public class ETCS_DEFAULT_1_1 : EurobalizaFija
+	{
+        public ETCS_DEFAULT_1_1()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add("{linking}");
+            msg.AddRange(base.ConstruirMensajes());
+            return msg;
+        }
+		Dictionary<string, Aspecto> textoAAspecto;
+    }
+	public class ETCS_DEFAULT_2_2 : EurobalizaFija
+	{
+    }
+	public class ETCS_GENERIC : EurobalizaConmutable
+	{
+        public override void Initialize()
+        {
+            EsPrimera |= HasHead(1);
+            base.Initialize();
+        }
+    }
+    public class ETCS_SECCIONAMIENTO_1_1 : EurobalizaFija
+	{
+        public ETCS_SECCIONAMIENTO_1_1()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            double dist = 0;
+            double length = 600;
+            List<string> msg = new List<string>();
+            string txt = "Cierre del Regulador";
+            byte[] ascii = System.Text.Encoding.GetEncoding(28591).GetBytes(txt); 
+            string packet = "01" + format_binary(1,2) + "0" + format_etcs_distance(dist) + format_binary(15,4) + format_binary(5,3) + format_etcs_distance(length) + format_binary(1023,10) + format_binary(15,4) + format_binary(5,3) + format_binary(0,2) + format_binary(ascii.Length, 8);   
+            for (int i=0; i<ascii.Length; i++)
+            {
+                packet += format_binary((int)ascii[i],8);
+            }
+            msg.Add(create_packet(72,packet,1));
+            return msg;
+        }
+    }
+	public class ETCS_LEVELTR_ANNOUNCEMENT_0_FIJA_1_2 : EurobalizaFija
+	{
+        public ETCS_LEVELTR_ANNOUNCEMENT_0_FIJA_1_2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            float dist=0;
+            for (int i=0; i<5; i++)
+            {
+                if (HasHead(i+1)) dist += 20*(1<<i);
+            }
+            if (dist == 0) dist=500;
+            msg.Add(level_tr(dist, level_table(new List<int>{1}, dist/2)));
+            return msg;
+        }
+    }
+	public class ETCS_LEVELTR_ANNOUNCEMENT_1_FIJA_1_2 : EurobalizaFija
+	{
+        public ETCS_LEVELTR_ANNOUNCEMENT_1_FIJA_1_2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add(level_tr(-1, level_table(new List<int>{2,5,1}, 500)));
+            return msg;
+        }
+    }
+    public class ETCS_LEVELTR_ORDER_0_FIJA_1_2 : EurobalizaFija
+	{
+        public ETCS_LEVELTR_ORDER_0_FIJA_1_2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            msg.Add(level_tr(0, level_table(new List<int>{1}, 0)));
+            return msg;
+        }
+    }
+
+	public class ETCS_LEVELTR_ANNOUNCEMENT_LINKED_1_2 : EurobalizaConmutable
+	{
+        public ETCS_LEVELTR_ANNOUNCEMENT_LINKED_1_2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            int levelId = NextSignalId("ETCS_LEVEL");
+            int lsig = IdSignalLocalVariable(levelId, 601);
+            if (levelId >= 0 && (lsig == NextSignalId("NORMAL", 0)  || lsig == NextSignalId("NORMAL", 1)))
+            {
+                msg.Add(level_tr(-1, level_table(levelId, 500)));
+            }
+            return msg;
+        }
+    }
+
+	public class ETCS_LEVELTR_ORDER_LINKED_1_2 : EurobalizaConmutable
+	{
+        public ETCS_LEVELTR_ORDER_LINKED_1_2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = new List<string>();
+            int levelId = NextSignalId("ETCS_LEVEL");
+            int lsig = IdSignalLocalVariable(levelId, 601);
+            if (levelId >= 0 && (lsig == NextSignalId("NORMAL", 0)  || lsig == NextSignalId("NORMAL", 1)))
+            {
+                int lv = IdSignalLocalVariable(levelId, 602);
+                if (lv == 0 || lv > 4) // Only for NTC and level 0: otherwise would lead to train trip
+                {
+                    msg.Add(level_tr(0, level_table(levelId, 0)));
+                }
+            }
+            return msg;
+        }
+    }
+    
+    public ETCS_LEVELTR_FIXED : EurobalizaFija
+    {
+        public ETCS_LEVELTR_FIXED()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            List<string> msg = base.ConstruirMensajes();
+            float dist=0;
+            for (int i=0; i<8; i++)
+            {
+                if (HasHead(i+1)) dist += 20*(1<<i);
+            }
+            
+            int levelId = NextSignalId("ETCS_LEVEL");
+            int lsig = IdSignalLocalVariable(levelId, 601);
+            if (levelId >= 0 && (lsig == NextSignalId("NORMAL", 0)  || lsig == NextSignalId("NORMAL", 1)))
+            {
+                int lv = IdSignalLocalVariable(levelId, 602);
+                msg.Add(level_tr(dist, level_table(levelId, 0)));
+            }
+            return msg;
+        }
+    }
+    
+    public class ETCS_STOPSR : PaqueteETCS
+	{
+        public override void UpdatePacket()
+        {
+            Packet = create_packet(137, "0", 1);
+            base.UpdatePacket();
+        }
+    }
+    public class ETCS_MSG_TUNNEL : PaqueteETCS
+    {
+        public override void UpdatePacket()
+        {
+            Packet = "{tunnel_msg(0)}";
+            base.UpdatePacket();
+        }
+    }
+}
