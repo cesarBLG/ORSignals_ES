@@ -292,22 +292,18 @@ namespace ORTS.Scripting.Script
             else if (message == "ITINERARIO_ERTMS") itinerarioERTMS = true;
             else if (message == "ITINERARIO_ASFA") itinerarioERTMS = false;
         }
-        /*public override void HandleEvent(SignalEvent evt, string message = "") 
+        public override void HandleEvent(SignalEvent evt, string message = "") 
         {
             switch(evt)
             {
                 case SignalEvent.RequestMostRestrictiveAspect:
                     break;
                 case SignalEvent.RequestApproachAspect:
-                    itinerarioERTMS = true;
-                    //if (idSiguienteSenal>=0) SendSignalMessage(idSiguienteSenal, "ITINERARIO_ERTMS"));
                     break;
                 case SignalEvent.RequestLeastRestrictiveAspect:
-                    itinerarioERTMS = false;
-                    //if (idSiguienteSenal>=0) SendSignalMessage(idSiguienteSenal, "ITINERARIO_ASFA"));
                     break;
             }
-        }*/
+        }
 
 
 
@@ -600,6 +596,10 @@ namespace ORTS.Scripting.Script
                         aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
                     }
                 }
+                else if (HoldState == HoldState.ManualApproach)
+                {
+                    aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
+                }
                 else
                 {
                     aspectoEstaSenal = Aspecto.ViaLibre;
@@ -613,7 +613,7 @@ namespace ORTS.Scripting.Script
             else if (aspectoSiguienteSenal == Aspecto.Parada ||
                 aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado ||
                 aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || 
-                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0)
+                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0 || HoldState == HoldState.ManualApproach)
             {
                 aspectoEstaSenal = anuncioParadaInmediata ? Aspecto.AnuncioParadaInmediata : Aspecto.AnuncioParada;
             }
@@ -857,7 +857,7 @@ namespace ORTS.Scripting.Script
 
         bool IsPreparada()
         {
-            return Enabled;
+            return Enabled && HoldState != HoldState.StationStop && HoldState != HoldState.ManualLock;
         }
 
         int GetIdSiguienteSenal()

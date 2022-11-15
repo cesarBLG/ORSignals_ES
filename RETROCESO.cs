@@ -43,7 +43,7 @@ namespace ORTS.Scripting.Script
                 forzarParada = FlagPresente("F_PARADA");
             }
             bool absoluta = false;
-            if (CurrentBlockState == BlockState.Obstructed || !Enabled)
+            if (CurrentBlockState == BlockState.Obstructed || !Enabled || HoldState == HoldState.ManualLock)
             {
                 AspectoEstaSeñal = AspectoRetroceso.Parada;
                 absoluta = true;
@@ -64,7 +64,7 @@ namespace ORTS.Scripting.Script
             else
             {
                 BlockState state = RouteClearedToSignal(idSigSeñal, true);
-                if (state == BlockState.Clear || state == BlockState.Occupied)
+                if (state == BlockState.Clear || state == BlockState.Occupied || HoldState == HoldState.ManualPass)
                 {
                     if (movimientoAutorizado) AspectoEstaSeñal = AspectoRetroceso.MovimientoAutorizado;
                     else if (desviada || !RouteSet) AspectoEstaSeñal = AspectoRetroceso.IndicadoraDesviada;
