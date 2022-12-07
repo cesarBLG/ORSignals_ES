@@ -269,8 +269,7 @@ namespace ORTS.Scripting.Script
             SetSNCA();
             
             ProducirFusion();
-            var aspectoSinFusion = aspectoEstaSenal;
-            //GestionarFusionLamparas();
+            GestionarFusionLamparas();
             GestionarReconocimientoAnuncioPrecaucion();
             RetardarCambioDeAspecto();
             // ProducirAveria();
@@ -419,12 +418,12 @@ namespace ORTS.Scripting.Script
         
         void ProducirFusion()
         {
-            if (rand.Next(1000000)==1) averiaFocoAmarillo = !averiaFocoAmarillo;
+            /*if (rand.Next(1000000)==1) averiaFocoAmarillo = !averiaFocoAmarillo;
             if (rand.Next(1000000)==1) averiaFocoAzul = !averiaFocoAzul;
             if (rand.Next(1000000)==1) averiaFocoBlanco = !averiaFocoBlanco;
             if (rand.Next(1000000)==1) averiaFocoRojo = !averiaFocoRojo;
             if (rand.Next(1000000)==1) averiaFocoVerde = !averiaFocoVerde;
-            if (rand.Next(1000000)==1) averiaPantallaAlfanumerica = !averiaPantallaAlfanumerica;
+            if (rand.Next(1000000)==1) averiaPantallaAlfanumerica = !averiaPantallaAlfanumerica;*/
         }
         
         void GestionarFusionLamparas()
@@ -432,7 +431,7 @@ namespace ORTS.Scripting.Script
             while (!aspectosDisponibles.Contains(aspectoEstaSenal) && aspectoEstaSenal != Aspecto.Apagada)
             {
                 if (aspectoEstaSenal == Aspecto.ViaLibre) aspectoEstaSenal = Aspecto.ViaLibreCondicional;
-                else if (aspectoEstaSenal == Aspecto.ViaLibreCondicional) aspectoEstaSenal = Aspecto.PreanuncioParada;
+                else if (aspectoEstaSenal == Aspecto.ViaLibreCondicional && informacionDeRuta != InfoRuta.NO_INSTALADO) aspectoEstaSenal = Aspecto.PreanuncioParada;
                 else if (aspectoEstaSenal == Aspecto.PreanuncioParada || aspectoEstaSenal == Aspecto.AnuncioPrecaucion) aspectoEstaSenal = Aspecto.AnuncioParada;
                 else if (aspectoEstaSenal == Aspecto.AnuncioParada) aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
                 else if (aspectoEstaSenal == Aspecto.ParadaSelectivaDestellos) aspectoEstaSenal = Aspecto.ParadaSelectiva;
@@ -536,13 +535,10 @@ namespace ORTS.Scripting.Script
         void CalcularAspecto()
         {
             paradaTotal = false;
-            bool avanzadaSinParada = (esAvanzada || esPreavanzada) && (esBLA || esBSL);
-            if (!estaPreparada && !reposoAnuncioParada && !reposoViaLibre && !avanzadaSinParada)
-            {
-                aspectoEstaSenal = AspectoParada;
-                paradaTotal = true;
-            }
-            else if (estadoDelCanton == EstadoCanton.ObstruidoAguja && !avanzadaSinParada)
+            bool avanzadaSinParada = ((esAvanzada || esPreavanzada) && (esBLA || esBSL)) || !aspectosDisponibles.Contains(AspectoParada);
+            if (((!estaPreparada && !reposoAnuncioParada && !reposoViaLibre) || 
+                (HoldState == HoldState.StationStop || HoldState == HoldState.ManualLock) ||
+                (estadoDelCanton == EstadoCanton.ObstruidoAguja)) && !avanzadaSinParada)
             {
                 aspectoEstaSenal = AspectoParada;
                 paradaTotal = true;
@@ -551,7 +547,7 @@ namespace ORTS.Scripting.Script
             {
                 aspectoEstaSenal = AspectoParada;
             }
-            else if (focoBlanco && TrainHasCallOn(false, true))
+            else if (aspectosDisponibles.Contains(Aspecto.RebaseAutorizado) && TrainHasCallOn(false, true))
             {
                 if (rebaseAutorizadoDestellos)
                 {
@@ -585,7 +581,11 @@ namespace ORTS.Scripting.Script
             }
             else if (forzarViaLibre) // La señal de salida a un bloqueo no automatico debe indicar via libre
             {
-                if (agujaEstaSenalDesviada)
+                if (HoldState == HoldState.ManualApproach)
+                {
+                    aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
+                }
+                else if (agujaEstaSenalDesviada)
                 {
                     if (ApproachControlSpeed(500, 1) || anuncioPrecaucionAnteriorReconocido || !anuncioPrecaucionAnteriorNoReconocido/* || agujaAnteriorSenalDesviada*/)
                     {
@@ -595,10 +595,6 @@ namespace ORTS.Scripting.Script
                     {
                         aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
                     }
-                }
-                else if (HoldState == HoldState.ManualApproach)
-                {
-                    aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
                 }
                 else
                 {
@@ -857,7 +853,7 @@ namespace ORTS.Scripting.Script
 
         bool IsPreparada()
         {
-            return Enabled && HoldState != HoldState.StationStop && HoldState != HoldState.ManualLock;
+            return Enabled;
         }
 
         int GetIdSiguienteSenal()

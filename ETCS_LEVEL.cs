@@ -63,7 +63,7 @@ namespace ORTS.Scripting.Script
         }
         public override void Update()
         {
-            SharedVariables[601] = NextSignalId("NORMAL");
+            SharedVariables[601] = RouteSet ? NextSignalId("NORMAL") : -1;
         }
     }
 }

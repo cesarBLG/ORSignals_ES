@@ -11,7 +11,7 @@ namespace ORTS.Scripting.Script
 	{
         public ETCS_MAIN_MA_1_2()
         {
-            EsPrimera = true;
+            //EsPrimera = true;
         }
         protected override List<string> ConstruirMensajes() 
         {
@@ -63,11 +63,11 @@ namespace ORTS.Scripting.Script
             msg.Add("{gradient}");
             msg.Add("{trackcond}");
             msg.Add("{pk}");
-            int levelId = NextSignalId("ETCS_LEVEL");
+            /*int levelId = NextSignalId("ETCS_LEVEL");
             if (levelId >= 0 && NextSignalId("NORMAL", 1) == IdSignalLocalVariable(levelId, 601))
             {
                 msg.Add(level_tr(0, level_table(levelId, 0)));
-            }
+            }*/
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }
@@ -127,11 +127,11 @@ namespace ORTS.Scripting.Script
             List<string> msg = new List<string>();
             msg.Add("{gradient}");
             msg.Add("{trackcond}");
-            int levelId = NextSignalId("ETCS_LEVEL");
+            /*int levelId = NextSignalId("ETCS_LEVEL");
             if (levelId >= 0 && NextSignalId("NORMAL", 1) == IdSignalLocalVariable(levelId, 601))
             {
                 msg.Add(level_tr(-1, level_table(levelId, 500)));
-            }
+            }*/
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }
@@ -287,29 +287,24 @@ namespace ORTS.Scripting.Script
         }
     }
     
-    public ETCS_LEVELTR_FIXED : EurobalizaFija
+    public class ETCS_LEVELTR : PaqueteETCS
     {
-        public ETCS_LEVELTR_FIXED()
+        public override void UpdatePacket()
         {
-            EsPrimera = true;
-        }
-        protected override List<string> ConstruirMensajes() 
-        {
-            List<string> msg = base.ConstruirMensajes();
+            Packet = "";
             float dist=0;
-            for (int i=0; i<8; i++)
+            for (int i=0; i<7; i++)
             {
-                if (HasHead(i+1)) dist += 20*(1<<i);
+                if (HasHead(i+1)) dist += 50*(1<<i);
             }
             
             int levelId = NextSignalId("ETCS_LEVEL");
             int lsig = IdSignalLocalVariable(levelId, 601);
             if (levelId >= 0 && (lsig == NextSignalId("NORMAL", 0)  || lsig == NextSignalId("NORMAL", 1)))
             {
-                int lv = IdSignalLocalVariable(levelId, 602);
-                msg.Add(level_tr(dist, level_table(levelId, 0)));
+                Packet = level_tr(dist, level_table(levelId, Math.Min(350, dist/2+50)));
             }
-            return msg;
+            base.UpdatePacket();
         }
     }
     

@@ -7,15 +7,39 @@ using System.Threading.Tasks;
 
 namespace ORTS.Scripting.Script
 {
-    public class ETCS_Bifurcacion : PaqueteETCS
+    public class ETCS_BIFURCACION : PaqueteETCS
 	{
         string Mensaje = "";
-        public ETCS_Bifurcacion(string direccion, int distancia)
+        public ETCS_BIFURCACION()
         {
-            Mensaje = get_bifurcacion(direccion, distancia);
         }
         Aspect aspect;
         int id;
+        public override void Initialize()
+        {
+            string dir = "";
+            float dist = 2300;
+            switch(SignalTypeName)
+            {
+                case "etcs_bifurcacion_aranda":
+                    dir = "Aranda";
+                    dist = 2300;
+                    break;
+                case "etcs_bifurcacion_orobon":
+                    dir = "Orobón";
+                    dist = 2300;
+                    break;
+                case "etcs_bifurcacion_bpg":
+                    dir = "Parque Grande";
+                    dist = 1000;
+                    break;
+                case "etcs_bifurcacion_ps":
+                    dir = "P. Susana";
+                    dist = 1000;
+                    break;
+            }
+            Mensaje = get_bifurcacion(dir, dist);
+        }
         public override void Update()
         {
             int next_id = NextSignalId ("NORMAL");
@@ -32,7 +56,6 @@ namespace ORTS.Scripting.Script
             {
                 var route_block_state = RouteClearedToSignal(id);
                 var next_state = IdSignalAspect (id, "NORMAL");
-                
                 if (route_block_state == BlockState.Clear && aspect != Aspect.Stop && aspect != Aspect.StopAndProceed && aspect != Aspect.Restricting && RouteSet)
                 {
                     show = true;
@@ -52,13 +75,5 @@ namespace ORTS.Scripting.Script
             }
             return create_packet(72, msg, 1);
         }
-    }
-	public class ETCS_BIFURCACION_ARANDA : ETCS_Bifurcacion
-    {
-        public ETCS_BIFURCACION_ARANDA() : base("Aranda", 2300) {}
-    }
-	public class ETCS_BIFURCACION_OROBON : ETCS_Bifurcacion
-    {
-        public ETCS_BIFURCACION_OROBON() : base("Orobón", 2300) {}
     }
 }
