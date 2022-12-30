@@ -31,11 +31,11 @@ namespace ORTS.Scripting.Script
                     break;
                 case "etcs_bifurcacion_bpg":
                     dir = "Parque Grande";
-                    dist = 1000;
+                    dist = 1200;
                     break;
                 case "etcs_bifurcacion_ps":
                     dir = "P. Susana";
-                    dist = 1000;
+                    dist = 1200;
                     break;
             }
             Mensaje = get_bifurcacion(dir, dist);

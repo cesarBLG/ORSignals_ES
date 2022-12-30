@@ -573,7 +573,7 @@ namespace ORTS.Scripting.Script
             }
             else if (!avanzadaSinParada && pantallaERTMScerrada)
             {
-                aspectoEstaSenal = Aspecto.ParadaSelectiva;
+                aspectoEstaSenal = esLZB ? Aspecto.ParadaLZB : Aspecto.ParadaSelectiva;
             }
             else if (!avanzadaSinParada && (itinerarioERTMS || (deslizamientoSiguienteSenalOcupado && aspectoSiguienteSenal == Aspecto.Parada)))
             {
@@ -609,7 +609,7 @@ namespace ORTS.Scripting.Script
             else if (aspectoSiguienteSenal == Aspecto.Parada ||
                 aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado ||
                 aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || 
-                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0 || HoldState == HoldState.ManualApproach)
+                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0 || HoldState == HoldState.ManualApproach)
             {
                 aspectoEstaSenal = anuncioParadaInmediata ? Aspecto.AnuncioParadaInmediata : Aspecto.AnuncioParada;
             }
@@ -964,6 +964,7 @@ namespace ORTS.Scripting.Script
             if (focoRojo && focoBlanco) aspectosDisponibles.Add(Aspecto.RebaseAutorizado);
             if (focoRojo && focoBlanco) aspectosDisponibles.Add(Aspecto.RebaseAutorizadoDestellos);
             if (focoRojo) aspectosDisponibles.Add(AspectoParada);
+            if (focoBlanco) aspectosDisponibles.Add(Aspecto.ParadaLZB);
         }
         int SNCA_orig = -1;
         int SNCAcount = 0;
