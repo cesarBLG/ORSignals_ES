@@ -431,7 +431,11 @@ namespace ORTS.Scripting.Script
             while (!aspectosDisponibles.Contains(aspectoEstaSenal) && aspectoEstaSenal != Aspecto.Apagada)
             {
                 if (aspectoEstaSenal == Aspecto.ViaLibre) aspectoEstaSenal = Aspecto.ViaLibreCondicional;
-                else if (aspectoEstaSenal == Aspecto.ViaLibreCondicional && informacionDeRuta != InfoRuta.NO_INSTALADO) aspectoEstaSenal = Aspecto.PreanuncioParada;
+                else if (aspectoEstaSenal == Aspecto.ViaLibreCondicional)
+                {
+                    if (informacionDeRuta != InfoRuta.NO_INSTALADO) aspectoEstaSenal = Aspecto.PreanuncioParada;
+                    else aspectoEstaSenal = Aspecto.AnuncioParada;
+                }
                 else if (aspectoEstaSenal == Aspecto.PreanuncioParada || aspectoEstaSenal == Aspecto.AnuncioPrecaucion) aspectoEstaSenal = Aspecto.AnuncioParada;
                 else if (aspectoEstaSenal == Aspecto.AnuncioParada) aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
                 else if (aspectoEstaSenal == Aspecto.ParadaSelectivaDestellos) aspectoEstaSenal = Aspecto.ParadaSelectiva;
