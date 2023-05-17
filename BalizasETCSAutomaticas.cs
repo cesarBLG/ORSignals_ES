@@ -116,7 +116,7 @@ namespace ORTS.Scripting.Script
             {
                 msg.Add(create_packet(136, "0"+format_binary(id,14), 1));
                 msg.Add("{ssp_infill}");
-                //msg.Add("{ma_infill}");
+                msg.Add("{ma_infill}");
                 Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
                 if (asp == Aspecto.RebaseAutorizadoDestellos)
                 {

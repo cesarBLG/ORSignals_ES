@@ -96,6 +96,7 @@ namespace ORTS.Scripting.Script
         bool agujaSiguienteSenalDesviada = false;
         readonly int KEY_VARIABLE_COMPARTIDA_AGUJA = 100;
         readonly int KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO = 121;
+        readonly int KEY_VARIABLE_COMPARTIDA_SIG_SENAL = 150;
         
         Random rand = new Random();
 
@@ -264,6 +265,7 @@ namespace ORTS.Scripting.Script
                 if (id >= 0 && IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && estadoDelCanton == EstadoCanton.Ocupado) deslizamientoOcupado = true;
             }
             SharedVariables[KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO] = deslizamientoOcupado ? 1 : 0;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_SENAL] = NextSignalId("NORMAL");
             
             CalcularAspecto();
             SetSNCA();
@@ -274,6 +276,21 @@ namespace ORTS.Scripting.Script
             if (!PreUpdate()) RetardarCambioDeAspecto();
             // ProducirAveria();
             ActualizarEstado();
+        }
+        void ItinerarioERTMS()
+        {
+            if (focoAzul)
+            {
+                itinerarioERTMS = true;
+                for (int i=0; i<20; i++)
+                {
+                    int id = NextSignalId("NORMAL", i);
+                    if (id < 0) break;
+                    if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
+                    SendSignalMessage(id, "ITINERARIO_ERTMS");
+                    break;
+                }
+            }
         }
 
         public override void HandleSignalMessage(int id, string message)
@@ -288,16 +305,18 @@ namespace ORTS.Scripting.Script
             {
                 consultaFlag = message.Substring(5) == "true";
             }
-            else if (message == "ITINERARIO_ERTMS") itinerarioERTMS = true;
+            else if (message == "ITINERARIO_ERTMS") ItinerarioERTMS();
             else if (message == "ITINERARIO_ASFA") itinerarioERTMS = false;
         }
         public override void HandleEvent(SignalEvent evt, string message = "") 
         {
+            itinerarioERTMS = false;
             switch(evt)
             {
                 case SignalEvent.RequestMostRestrictiveAspect:
                     break;
                 case SignalEvent.RequestApproachAspect:
+                    ItinerarioERTMS();
                     break;
                 case SignalEvent.RequestLeastRestrictiveAspect:
                     break;
@@ -521,7 +540,6 @@ namespace ORTS.Scripting.Script
             TextSignalAspect = aspectoATexto[aspectoEstaSenal];
             DrawState = drawStates_fast[aspectoEstaSenal];
             if (aspectoEstaSenal == Aspecto.Parada && !paradaTotal) MstsSignalAspect = Aspect.StopAndProceed; // Truco para permitir que el itinerario se establezca mas alla de la señal
-            
             if (aspectoEstaSenal == Aspecto.ParadaSelectiva || aspectoEstaSenal == Aspecto.ParadaSelectivaDestellos || aspectoEstaSenal == Aspecto.ParadaLZB)
             {
                 if (!SpeedLimitSetByScript)
@@ -540,12 +558,16 @@ namespace ORTS.Scripting.Script
         {
             paradaTotal = false;
             bool avanzadaSinParada = ((esAvanzada || esPreavanzada) && (esBLA || esBSL)) || !aspectosDisponibles.Contains(AspectoParada);
-            if (((!estaPreparada && !reposoAnuncioParada && !reposoViaLibre) || 
-                (HoldState == HoldState.StationStop || HoldState == HoldState.ManualLock) ||
-                (estadoDelCanton == EstadoCanton.ObstruidoAguja)) && !avanzadaSinParada)
+            if ((HoldState == HoldState.StationStop || HoldState == HoldState.ManualLock || estadoDelCanton == EstadoCanton.ObstruidoAguja) 
+                && !avanzadaSinParada)
             {
                 aspectoEstaSenal = AspectoParada;
                 paradaTotal = true;
+            }
+            else if (!estaPreparada && !reposoAnuncioParada && !reposoViaLibre && !avanzadaSinParada)
+            {
+                aspectoEstaSenal = AspectoParada;
+                paradaTotal = !esIntermedia; // Permite que se establezca el bloqueo pasando a estar preparadas
             }
             else if (siguienteEsRetroceso && (IdSignalAspect(NextSignalId("NORMAL"), "NORMAL") == Aspect.Stop || IdTextSignalAspect(NextSignalId("NORMAL"), "NORMAL") == "Parada"))
             {
@@ -615,11 +637,11 @@ namespace ORTS.Scripting.Script
 
         void CalcularAspectoConAgujaADesviada()
         {
-            if ((forzarViaLibre || rutaADesviadaObligatoria) && ApproachControlSpeed(500, 1))
+            if (rutaADesviadaObligatoria && ApproachControlSpeed(500, 1))
             {
                 CalcularAspectoConAgujaADirecta();
             }
-            else if (rutaADesviadaObligatoria && (anuncioPrecaucionAnteriorReconocido /* || agujaAnteriorSenalDesviada*/ || forzarViaLibre) && !anuncioPrecaucionAnteriorNoReconocido)
+            else if (rutaADesviadaObligatoria && (anuncioPrecaucionAnteriorReconocido /* || agujaAnteriorSenalDesviada*/ || siguienteSenalEsAvanzadaBLA) && !anuncioPrecaucionAnteriorNoReconocido)
             {
                 CalcularAspectoConAgujaADirecta();
             }
@@ -757,7 +779,7 @@ namespace ORTS.Scripting.Script
 
         void GestionarSenalDeLiberacionPosterior()
         {
-            if (siguienteSenalEsDeLiberacion && idSiguienteSenal >= 0)
+            if (siguienteSenalEsDeLiberacion)
             {
                 if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado || aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos)
                 {
@@ -904,15 +926,28 @@ namespace ORTS.Scripting.Script
         }
         void ActualizarInformacionFlags()
         {
-            forzarViaLibre = false;
             
             DeterminarTipologia(); // Evitamos tener que modificar señales ya existentes
             
             siguienteEsRetroceso = NextSignalId("NORMAL") > 0 && IdSignalHasNormalSubtype(NextSignalId("NORMAL"),"RETROCESO");
 
             siguienteSenalEsAvanzadaBLA = DistMultiSigMR("DISTANCE", "NORMAL", false) != Aspect.Stop;
-            forzarViaLibre |= FlagPresente("F_VL");
-            siguienteSenalEsAvanzadaBLA |= forzarViaLibre;
+            siguienteSenalEsAvanzadaBLA |= FlagPresente("F_VL");
+            siguienteSenalEsAvanzadaBLA |= (esSalida || esIntermedia) && (esBLA || esBSL);
+            /*siguienteSenalEsAvanzadaBLA = false;
+            if (DistMultiSigMR("DISTANCE", "NORMAL", false) != Aspect.Stop) siguienteSenalEsAvanzadaBLA = true;
+            else
+            {
+                int av = NextSignalId("DISTANCE");
+                int nxt = av >= 0 ? IdSignalLocalVariable(av, KEY_VARIABLE_COMPARTIDA_SIG_SENAL) : -1;
+                for (int i=0; i<20 && !siguienteSenalEsAvanzadaBLA && nxt >= 0; i++)
+                {
+                    int id = NextSignalId("NORMAL", i);
+                    if (id < 0) break;
+                    if (id == nxt) siguienteSenalEsAvanzadaBLA = true;
+                    if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO")) break;
+                }
+            }*/
             
             inhibirPreanuncioParadaAViaLibreSiSigAnuncioPrecaucion = FlagPresente("I_PREA_SIG_APREC_A_VL");
             inhibirPreanuncioParadaAViaLibreSiSigAnuncioParada = FlagPresente("I_PREA_SIG_APARA_A_VL");
@@ -933,8 +968,6 @@ namespace ORTS.Scripting.Script
 
             siguienteSenalEsDeLiberacion = FlagPresente("OLIBERACION");
             
-            if (siguienteSenalEsDeLiberacion) forzarViaLibre = false;
-            
             ActualizarAspectos();
         }
         void ActualizarAspectos()
@@ -943,8 +976,8 @@ namespace ORTS.Scripting.Script
             if (focoVerde) aspectosDisponibles.Add(Aspecto.ViaLibre);
             if (focoVerde && (tipoDeSenalizacionDoscientos || inhibirViaLibreAViaLibreCondicional)) aspectosDisponibles.Add(Aspecto.ViaLibreCondicional);
             if (focoAmarillo && focoVerde) aspectosDisponibles.Add(Aspecto.AnuncioPrecaucion);
-            if (focoAmarillo && !forzarViaLibre) aspectosDisponibles.Add(Aspecto.AnuncioParada);
-            if (focoAmarillo && !forzarViaLibre) aspectosDisponibles.Add(Aspecto.PreanuncioParada);
+            if (focoAmarillo && !siguienteSenalEsAvanzadaBLA) aspectosDisponibles.Add(Aspecto.AnuncioParada);
+            if (focoAmarillo && !siguienteSenalEsAvanzadaBLA) aspectosDisponibles.Add(Aspecto.PreanuncioParada);
             if (focoAzul && focoRojo) aspectosDisponibles.Add(Aspecto.ParadaSelectiva);
             if (focoAzul && focoRojo) aspectosDisponibles.Add(Aspecto.ParadaSelectivaDestellos);
             if (focoRojo && focoBlanco) aspectosDisponibles.Add(Aspecto.RebaseAutorizado);
@@ -1101,10 +1134,8 @@ namespace ORTS.Scripting.Script
                 focoVerde = nombreDeSenal != "sp2ra" && !nombreDeSenal.StartsWith("sp3e");
                 focoAzul = esBSL && !esAvanzada;
                 focoAmarillo = !(esSalida && (esBSL || esBLA)) && nombreDeSenal != "sp1v";
-                
                 if ((esSalida || esIntermedia) && (esBSL || esBLA)) focoAmarillo = false;
             }
-            if ((esSalida || esIntermedia) && (esBSL || esBLA)) forzarViaLibre = true;
         }
     }
 }
