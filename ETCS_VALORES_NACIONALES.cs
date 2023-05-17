@@ -22,6 +22,10 @@ namespace ORTS.Scripting.Script
         int D_override = 80;
         int T_override = 40;
         int D_posttrip = 50;
+        public ETCS_VALORES_NACIONALES()
+        {
+            Reaction = 1;
+        }
 		public override void UpdatePacket()
 		{
             if (NID_C == 364) //Madrid Cercanias

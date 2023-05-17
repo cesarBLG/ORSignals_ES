@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace ORTS.Scripting.Script
 {
@@ -21,17 +23,34 @@ namespace ORTS.Scripting.Script
         protected bool EsPrimera;
         protected int IdSigBaliza=-1;
         protected int BaliseReaction = 2;
+        protected int GroupReaction = 2;
+        public static string ScriptDirectoryPath = null;
+        public static void InitializeScriptDirectoryPath([CallerFilePath] string sourceFilePath = "")
+        {
+            ScriptDirectoryPath = Path.GetDirectoryName(Path.GetFullPath(sourceFilePath));
+        }
         public override void Initialize()
         {
+            if (ScriptDirectoryPath == null)
+            {
+                InitializeScriptDirectoryPath();
+            }
             if (EsPrimera) NID_BG = SignalId;
+            TextSignalAspect = "1"+"0000000"+"0"+format_binary(EsPrimera ? 0 : 1,3);
         }
 		public override void Update()
 		{
             SharedVariables[KeyNID_BG] = NID_BG;
             SharedVariables[KeyN_PIG] = N_PIG;
             SharedVariables[KeyN_TOTAL] = N_TOTAL;
-            SharedVariables[KeyNextSignalId] = NextSignalId("NORMAL");
-            SharedVariables[KeyBaliseReaction] = BaliseReaction;
+            int id = -1;
+            for (int i=0; ; i++)
+            {
+                id = NextSignalId("NORMAL", i);
+                if (id < 0) break;
+                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) break;
+            }
+            SharedVariables[KeyNextSignalId] = id;
             if (EsPrimera)
             {
                 if (N_TOTAL<0) NumeraGrupo();
@@ -100,15 +119,22 @@ namespace ORTS.Scripting.Script
             {
                 N_TOTAL = int.Parse(message.Substring(6,1));
                 if (N_PIG<N_TOTAL) SendSignalMessage(IdSigBaliza, message);
-                /*if (EsPrimera)
+                for (int i=0; ; i++)
+                {
+                    int id2 = NextSignalId("ETCS_PACKET", i);
+                    if (id2 < 0 || IdSignalLocalVariable(id2, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
+                    BaliseReaction = Math.Min(IdSignalLocalVariable(id2, KeyBaliseReaction), BaliseReaction);
+                }
+                SharedVariables[KeyBaliseReaction] = BaliseReaction;
+                if (EsPrimera)
                 {
                     int reaction = SharedVariables[KeyBaliseReaction];
                     for (int i=0; i<N_TOTAL; i++)
                     {
                         reaction = Math.Min(reaction, IdSignalLocalVariable(NextSignalId("ETCS", i), KeyBaliseReaction));
                     }
-                    SharedVariables[KeyGroupReaction] = 
-                }*/
+                    SharedVariables[KeyGroupReaction] = reaction;
+                }
             }
             else if (message.StartsWith("ACTUALIZA:"))
             {

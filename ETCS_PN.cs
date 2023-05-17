@@ -11,6 +11,10 @@ namespace ORTS.Scripting.Script
     public class ETCS_PN : PaqueteETCS
     {
         Aspect aspect;
+        public ETCS_PN()
+        {
+            Reaction = 1;
+        }
         public override void Update()
         {
             var next_state = IdSignalAspect(NextSignalId("OLPN_T"), "OLPN_T");

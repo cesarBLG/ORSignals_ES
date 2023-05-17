@@ -42,7 +42,7 @@ namespace ORTS.Scripting.Script
                     SignalNumClearAhead = i+2;
                     return;
                 }
-                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS"))
+                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO"))
                 {
                     nsig++;
                     if (nsig == 3)

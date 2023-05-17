@@ -12,6 +12,10 @@ namespace ORTS.Scripting.Script
     {
         int SignalId=-1;
         Aspecto aspecto;
+        public ETCS_LTV_DESVIOS()
+        {
+            Reaction = 1;
+        }
         public override void Update()
         {
             if (SignalId < 0) SignalId = NextSignalId("NORMAL");

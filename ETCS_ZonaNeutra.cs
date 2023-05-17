@@ -9,6 +9,10 @@ namespace ORTS.Scripting.Script
 {
 	public class ETCS_MSG_APROXIMACIONZN : PaqueteETCS
     {
+        public ETCS_MSG_APROXIMACIONZN()
+        {
+            Reaction = 1;
+        }
         public override void UpdatePacket()
         {
             double dist=0;
@@ -29,6 +33,10 @@ namespace ORTS.Scripting.Script
     }
 	public class ETCS_MSG_LLEGADAZN : PaqueteETCS
     {
+        public ETCS_MSG_LLEGADAZN()
+        {
+            Reaction = 1;
+        }
         public override void UpdatePacket()
         {
             double dist=0;

@@ -15,6 +15,7 @@ namespace ORTS.Scripting.Script
         bool Connect;
         public ETCS_CONEXION_RBC()
         {
+            Reaction = 1;
             /*IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName()).Where(ip => !Net.IPAddress.IsLoopback(ip));
             if (localIPs.Length > 0)
             {

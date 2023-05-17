@@ -9,9 +9,13 @@ namespace ORTS.Scripting.Script
 {
 	public abstract class PaqueteETCS : ETCS
     {
+        protected int Reaction = 2;
         protected string Packet="";
         bool prevRouteSet;
-        public override void Initialize() {}
+        public override void Initialize()
+        {
+            SharedVariables[KeyBaliseReaction] = Reaction;
+        }
         public override void Update()
         {
             SharedVariables[KeyNextEurobaliseID] = NextSignalId("ETCS", 0);
