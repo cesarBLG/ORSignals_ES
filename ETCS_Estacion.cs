@@ -13,15 +13,17 @@ namespace ORTS.Scripting.Script
         public override void Initialize()
         {
             string nom = SignalTypeName.Substring(14);
-            if (nom == "caf") Estacion = "Ind. CAF";
-            else if (nom == "santa_ana") Estacion = "Santa Ana";
-            else if (nom == "ingeniero_pizias") Estacion = "Ing. Pizias";
-            else if (nom == "aeropuerto_sur") Estacion = "Aeropuerto";
+            if (nom == "valparaiso_panam") Estacion = "Valparaíso - PANAM";
+			else if (nom == "el_paso_panam") Estacion = "El Paso - PANAM";
+			else if (nom == "la_cumbre_panam") Estacion = "La Cumbre - PANAM";
+			else if (nom == "tiltil_panam") Estacion = "Tiltil - PANAM";
+			else if (nom == "santiago_norte_panam") Estacion = "Santiago Norte - PANAM";
+			else if (nom == "santiago_alameda_panam") Estacion = "Santiago Alameda - PANAM";
         }
         public override void UpdatePacket()
         {
             double end=0;
-            for (int i=0; i<6; i++)
+            for (int i=0; i<8; i++)
             {
                 if (HasHead(i+1)) end += (1<<i)*50;
             }

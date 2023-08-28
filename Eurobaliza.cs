@@ -15,7 +15,7 @@ namespace ORTS.Scripting.Script
         protected int N_PIG;
         protected int N_TOTAL=-1;
         protected int M_DUP=0;
-        protected int NID_C;
+        protected int NID_C=352;
         protected int NID_BG;
         protected bool ActualizarGrupo;
         protected int msgcount=0;
@@ -67,6 +67,7 @@ namespace ORTS.Scripting.Script
         {
             var sb = new StringBuilder(300);
             sb.Append("1"+"0100001"+"0").Append(format_binary(N_PIG,3)).Append(format_binary(N_TOTAL,3)).Append(format_binary(M_DUP, 2)).Append(format_binary(num, 8)).Append(format_binary(NID_C, 10)).Append(format_binary(NID_BG, 14)).Append(format_binary(Linked?1:0, 1));
+            sb.Append(format_binary(0,8)).Append(format_binary(1,6)); // VBC
             foreach (string s in mensajes) sb.Append(s);
             sb.Append("11111111");
             Telegrama = sb.ToString();
