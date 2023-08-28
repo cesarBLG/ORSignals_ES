@@ -125,7 +125,7 @@ namespace ORTS.Scripting.Script
                 {
                     if (avanzadaBLA || preavanzadaBLA) SenalAsociada = NextSignalId("DISTANCE");
                     else SenalAsociada = NextSignalId("NORMAL");
-                    
+                    SendSignalMessage(SenalAsociada, "ASFA");
                 }
                 if (SenalAsociada < 0)
                 {

@@ -11,6 +11,10 @@ namespace ORTS.Scripting.Script
     {
         public override void Initialize()
         {
+            SetLevels();
+        }
+        public void SetLevels()
+        {
             var levels = new List<string>();
             var levelNames = new List<string>{"N0", "N1", "N2", "ASFA", "LZB", "EBICAB"};
             var levelPriorities = new List<string>{"N2", "N1", "LZB", "EBICAB", "ASFA", "N0"};
@@ -60,6 +64,7 @@ namespace ORTS.Scripting.Script
                 }
                 SharedVariables[602+i] = num;
             }
+            SharedVariables[602+orderedLevels.Count] = 0;
         }
         public override void Update()
         {

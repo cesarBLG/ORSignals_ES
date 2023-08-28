@@ -16,6 +16,7 @@ namespace ORTS.Scripting.Script
         }
         protected override List<string> ConstruirMensajes() 
         {
+            SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
             List<string> msg = new List<string>();
             msg.Add("{ma}");
             msg.Add("{ssp}");
@@ -143,6 +144,42 @@ namespace ORTS.Scripting.Script
             {
                 msg.Add(level_tr(-1, level_table(levelId, 500)));
             }*/
+            msg.AddRange(base.ConstruirMensajes());
+            return msg;
+        }
+    }
+    public class ETCS_MAIN_N2 : EurobalizaConmutable
+    {
+        public ETCS_MAIN_N2()
+        {
+            EsPrimera = true;
+        }
+        protected override List<string> ConstruirMensajes() 
+        {
+            SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
+            List<string> msg = new List<string>();
+            Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
+            switch(asp)
+            {
+                case Aspecto.RebaseAutorizado:
+                case Aspecto.RebaseAutorizadoCortaDistancia:
+                    msg.Add(create_packet(132, "1", 1));
+                    break;
+                default:
+                    msg.Add(create_packet(132, "0", 1));
+                    break;
+            }
+            switch(asp)
+            {
+                case Aspecto.Parada:
+                case Aspecto.ParadaPermisiva:
+                case Aspecto.ParadaSelectiva:
+                    msg.Add(create_packet(137, "0", 1));
+                    break;
+                default:
+                    msg.Add(create_packet(137, "1", 1));
+                    break;
+            }
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }

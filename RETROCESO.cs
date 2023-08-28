@@ -19,6 +19,7 @@ namespace ORTS.Scripting.Script
     {
         bool siguienteEsRetroceso;
         AspectoRetroceso AspectoEstaSeñal;
+        AspectoRetroceso previoAspectoEstaSeñal;
         bool forzarParada;
         bool desviada;
         bool maniobra;
@@ -28,12 +29,16 @@ namespace ORTS.Scripting.Script
         int idSigSeñal = -1;
         int previoIdSigSeñal = -1;
         bool movimientoAutorizado = false;
+        Timer actualizarAspectoTimer;
         public override void Initialize()
         {
-            if (SignalTypeName == "sp2rb") movimientoAutorizado = true; 
+            if (SignalTypeName == "sp2rb") movimientoAutorizado = true;
+            actualizarAspectoTimer = new Timer(this);
+            actualizarAspectoTimer.Setup(1);
         }
         public override void Update()
         {
+            previoAspectoEstaSeñal = AspectoEstaSeñal;
             idSigSeñal = NextSignalId("NORMAL");
             estaPreparada = Enabled;
             siguienteEsRetroceso = idSigSeñal >= 0 && IdSignalHasNormalSubtype(idSigSeñal, "RETROCESO");
@@ -72,6 +77,18 @@ namespace ORTS.Scripting.Script
                 }
                 else AspectoEstaSeñal = AspectoRetroceso.Parada;
             }
+            if (!PreUpdate())
+            {
+                if (AspectoEstaSeñal != previoAspectoEstaSeñal)
+                {
+                    if (!actualizarAspectoTimer.Started) actualizarAspectoTimer.Start();
+                    if (!actualizarAspectoTimer.Triggered) AspectoEstaSeñal = previoAspectoEstaSeñal;
+                }
+                else if (actualizarAspectoTimer.Started)
+                {
+                    actualizarAspectoTimer.Stop();
+                }
+            }
             switch (AspectoEstaSeñal)
             {
                 case AspectoRetroceso.Parada:
@@ -105,6 +122,7 @@ namespace ORTS.Scripting.Script
             }
             previoPrevioEstaPreparada = previoEstaPreparada;
             previoEstaPreparada = estaPreparada;
+            SetSNCA();
         }
 		bool consultaFlag;
         bool FlagPresente(string tipo)
@@ -125,6 +143,31 @@ namespace ORTS.Scripting.Script
             {
                 string flag = message.Substring(5);
                 SendSignalMessage(id, "FLAG:"+(FlagPresente(flag) ? "true" : "false"));
+            }
+        }
+        int SNCAcount = 0;
+        public void SetSNCA()
+        {
+            if (SNCAcount++ < 10) return;
+            SNCAcount = 0;
+            int nsig = 0;
+            for (int i=0; i<20; i++)
+            {
+                int id = NextSignalId("NORMAL", i);
+                if (id < 0 || i == 19)
+                {
+                    SignalNumClearAhead = i+2;
+                    return;
+                }
+                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO"))
+                {
+                    nsig++;
+                    if (nsig == 3)
+                    {
+                        SignalNumClearAhead = i+1;
+                        break;
+                    }
+                }
             }
         }
     }

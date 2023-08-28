@@ -55,6 +55,15 @@ namespace ORTS.Scripting.Script
         ViaLibreCondicional,
         ViaLibre
     }
+    [Flags]
+    public enum SistemaSeñalizacion
+    {
+        Ninguno=0,
+        ETCS_N1=1,
+        ETCS_N2=2,
+        ASFA=4,
+        LZB=8,
+    }
     public class GENERICO : CsSignalScript
     {
 
@@ -97,6 +106,7 @@ namespace ORTS.Scripting.Script
         readonly int KEY_VARIABLE_COMPARTIDA_AGUJA = 100;
         readonly int KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO = 121;
         readonly int KEY_VARIABLE_COMPARTIDA_SIG_SENAL = 150;
+        readonly int KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION = 200;
         
         Random rand = new Random();
 
@@ -116,6 +126,7 @@ namespace ORTS.Scripting.Script
         protected bool esBSL = false;
         protected bool esLZB = false;
         protected bool esBLA = false;
+        public SistemaSeñalizacion Sistemas;
 
         // Estado del canton
         enum EstadoCanton
@@ -144,6 +155,7 @@ namespace ORTS.Scripting.Script
         protected bool forzarViaLibreCondicional = false;
         protected bool forzarViaLibre = false;
         protected bool forzarParada = false;
+        protected bool forzarRebase = false;
         protected bool itinerarioERTMS = false;
 
         protected bool reposoViaLibre = false;
@@ -266,6 +278,7 @@ namespace ORTS.Scripting.Script
             }
             SharedVariables[KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO] = deslizamientoOcupado ? 1 : 0;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_SENAL] = NextSignalId("NORMAL");
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION] = (int)Sistemas;
             
             CalcularAspecto();
             SetSNCA();
@@ -307,6 +320,9 @@ namespace ORTS.Scripting.Script
             }
             else if (message == "ITINERARIO_ERTMS") ItinerarioERTMS();
             else if (message == "ITINERARIO_ASFA") itinerarioERTMS = false;
+            else if (message == "ETCS_N1") Sistemas |= SistemaSeñalizacion.ETCS_N1;
+            else if (message == "ETCS_N2") Sistemas |= SistemaSeñalizacion.ETCS_N2;
+            else if (message == "ASFA") Sistemas |= SistemaSeñalizacion.ASFA;
         }
         public override void HandleEvent(SignalEvent evt, string message = "") 
         {
@@ -592,6 +608,10 @@ namespace ORTS.Scripting.Script
             {
                 aspectoEstaSenal = AspectoParada;
                 paradaTotal = true;
+            }
+            else if (forzarRebase)
+            {
+                aspectoEstaSenal = Aspecto.RebaseAutorizado;
             }
             else if (forzarParada)
             {
@@ -957,6 +977,7 @@ namespace ORTS.Scripting.Script
             forzarAnuncioParada = FlagPresente("F_APARA_SIG_APARA");
             forzarAnuncioPrecaucion = FlagPresente("F_APREC_SIG_APARA");
             forzarParada = FlagPresente("F_PARADA");
+            forzarRebase = FlagPresente("F_REBASE");
 
             tipoDeSenalizacionDoscientos |= FlagPresente("B_DOSCIENTOS");
             rebaseAutorizadoDestellos = FlagPresente("R_DESTELLOS");
@@ -967,6 +988,7 @@ namespace ORTS.Scripting.Script
             //anuncioParadaInmediata = FlagPresente("APARADA_INMEDIATA");
 
             siguienteSenalEsDeLiberacion = FlagPresente("OLIBERACION");
+            siguienteSenalEsAvanzadaBLA &= !siguienteSenalEsDeLiberacion;
             
             ActualizarAspectos();
         }
@@ -977,7 +999,7 @@ namespace ORTS.Scripting.Script
             if (focoVerde && (tipoDeSenalizacionDoscientos || inhibirViaLibreAViaLibreCondicional)) aspectosDisponibles.Add(Aspecto.ViaLibreCondicional);
             if (focoAmarillo && focoVerde) aspectosDisponibles.Add(Aspecto.AnuncioPrecaucion);
             if (focoAmarillo && !siguienteSenalEsAvanzadaBLA) aspectosDisponibles.Add(Aspecto.AnuncioParada);
-            if (focoAmarillo && !siguienteSenalEsAvanzadaBLA) aspectosDisponibles.Add(Aspecto.PreanuncioParada);
+            if (focoAmarillo) aspectosDisponibles.Add(Aspecto.PreanuncioParada);
             if (focoAzul && focoRojo) aspectosDisponibles.Add(Aspecto.ParadaSelectiva);
             if (focoAzul && focoRojo) aspectosDisponibles.Add(Aspecto.ParadaSelectivaDestellos);
             if (focoRojo && focoBlanco) aspectosDisponibles.Add(Aspecto.RebaseAutorizado);
@@ -1002,7 +1024,7 @@ namespace ORTS.Scripting.Script
                 int id = NextSignalId("NORMAL", i);
                 if (id < 0 || i == 19)
                 {
-                    SignalNumClearAhead = i+2;
+                    SignalNumClearAhead = Math.Max(i+2, SNCA_orig);
                     return;
                 }
                 if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO"))

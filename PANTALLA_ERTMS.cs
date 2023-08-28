@@ -1,4 +1,5 @@
 using Orts.Simulation.Signalling;
+using ORTS.Scripting.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,24 +8,59 @@ using System.Threading.Tasks;
 
 namespace ORTS.Scripting.Script
 {
+    public enum AspectoPantalla
+    {
+        Parada,
+        ViaLibre
+    }
 	public class PANTALLA_ERTMS : CsSignalScript
     {
+        AspectoPantalla AspectoEstaSeñal;
+        AspectoPantalla previoAspectoEstaSeñal;
+        Timer actualizarAspectoTimer;
+        readonly int KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION = 200;
         public override void Initialize()
 		{
+            actualizarAspectoTimer = new Timer(this);
+            actualizarAspectoTimer.Setup(1);
+            
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION] = (int)SistemaSeñalizacion.ETCS_N2;
 		}
 		public override void Update()
 		{
+            previoAspectoEstaSeñal = AspectoEstaSeñal;
             if (!Enabled || CurrentBlockState != BlockState.Clear)
             {
+                AspectoEstaSeñal = AspectoPantalla.Parada;
                 SignalNumClearAhead = -1;
+            }
+            else
+            {
+                AspectoEstaSeñal = AspectoPantalla.ViaLibre;
+                SetSNCA();
+            }
+            
+            if (!PreUpdate())
+            {
+                if (AspectoEstaSeñal != previoAspectoEstaSeñal)
+                {
+                    if (!actualizarAspectoTimer.Started) actualizarAspectoTimer.Start();
+                    if (!actualizarAspectoTimer.Triggered) AspectoEstaSeñal = previoAspectoEstaSeñal;
+                }
+                else if (actualizarAspectoTimer.Started)
+                {
+                    actualizarAspectoTimer.Stop();
+                }
+            }
+            if (AspectoEstaSeñal == AspectoPantalla.Parada)
+            {
                 MstsSignalAspect = Aspect.Stop;
                 TextSignalAspect = "Parada";
             }
             else
             {
                 MstsSignalAspect = (Aspect)8;
-                TextSignalAspect = "ParadaSelectiva";
-                SetSNCA();
+                TextSignalAspect = "ViaLibre";
             }
             DrawState = DefaultDrawState(MstsSignalAspect);
         }
