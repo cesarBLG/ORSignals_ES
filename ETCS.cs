@@ -133,6 +133,11 @@ namespace ORTS.Scripting.Script
         }
         protected string level_table(List<int> levels, float lack)
         {
+            if (!ETCS_CONEXION_RBC.RbcActive && levels.Contains(3))
+            {
+                levels.Remove(3);
+                levels.Add(3); // Lowest priority
+            }
             var sb = new StringBuilder();
             for (int i=0; i<levels.Count; i++)
             {
