@@ -91,8 +91,8 @@ namespace ORTS.Scripting.Script
                     byte[] bytes = System.IO.File.ReadAllBytes("RBC.dll");
                     var ass = Assembly.Load(bytes);
                     var ty = ass.GetType("RBC.RBC");
-                    var ctor = ty.GetConstructor(new[] {typeof(int), typeof(Signals)});
-                    RBC = ctor.Invoke(new object[] {0x7911, MPManager.Simulator.Signals});
+                    var ctor = ty.GetConstructor(new[] {typeof(int), typeof(int), typeof(int), typeof(Signals)});
+                    RBC = ctor.Invoke(new object[] {NID_C, NID_RBC, 0x7911, MPManager.Simulator.Signals});
                     RBCUpdate = ty.GetMethod("Update");
                     RbcActive = true;
                 }
