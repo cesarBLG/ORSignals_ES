@@ -9,7 +9,7 @@ namespace ORTS.Scripting.Script
 {
 	public class ETCS_VALORES_NACIONALES : PaqueteETCS
 	{
-        int NID_C=352;
+        int NID_C;
         int V_SH = 40;
         int V_SR = 100;
         int V_OS = 30;
@@ -25,6 +25,7 @@ namespace ORTS.Scripting.Script
         public ETCS_VALORES_NACIONALES()
         {
             Reaction = 1;
+            NID_C = ETCS.NID_C;
         }
 		public override void UpdatePacket()
 		{

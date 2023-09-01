@@ -35,7 +35,6 @@ namespace ORTS.Scripting.Script
             {
                 InitializeScriptDirectoryPath();
             }
-            if (EsPrimera) NID_BG = SignalId;
             TextSignalAspect = "1"+"0000000"+"0"+format_binary(EsPrimera ? 0 : 1,3);
         }
 		public override void Update()
@@ -89,6 +88,8 @@ namespace ORTS.Scripting.Script
         protected void NumeraGrupo()
         {
             if (!EsPrimera) return;
+            NID_C = ETCS.NID_C;
+            NID_BG = SignalId;
             IdSigBaliza = NextSignalId("ETCS");
             if (IdSigBaliza < 0)
             {

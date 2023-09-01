@@ -14,7 +14,6 @@ namespace ORTS.Scripting.Script
 {
     public class ETCS_CONEXION_RBC : PaqueteETCS
     {
-        static int NID_C = 352;
         static int NID_RBC;
         static ulong NID_RADIO = 0xFFFFFFFFFFFFFFFFUL;
         static Task<string> ipTask;
