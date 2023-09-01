@@ -37,6 +37,22 @@ namespace ORTS.Scripting.Script
                     dir = "P. Susana";
                     dist = 1200;
                     break;
+                case "etcs_bifurcacion_s":
+                    dir = "Estación Sur";
+                    dist = 1200;
+                    break;
+                case "etcs_bifurcacion_g":
+                    dir = "Gadea";
+                    dist = 1200;
+                    break;
+                case "etcs_bifurcacion_aero":
+                    dir = "Aeropuerto";
+                    dist = 1500;
+                    break;
+                case "etcs_bifurcacion_br":
+                    dir = "Ribes";
+                    dist = 1500;
+                    break;
             }
             float distHead = 0;
             for (int i=0; i<7; i++)
