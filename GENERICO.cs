@@ -1081,6 +1081,7 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp3apr"))						esPermisiva = esAvanzada = true;
             if (nombreDeSenal.Equals("sp3ap200"))					esPermisiva = esAvanzada = tipoDeSenalizacionDoscientos = true;
 
+            if (nombreDeSenal.Equals("sp5ebab"))			esEntrada = true;
             if (nombreDeSenal.Equals("sp4ebab"))			esEntrada = true;
             if (nombreDeSenal.Equals("sp4ebabap"))		esEntrada = true;
             if (nombreDeSenal.Equals("sp4ebabapap"))		esEntrada = true;
@@ -1154,7 +1155,7 @@ namespace ORTS.Scripting.Script
                 focoRojo = !esAvanzada || (!esBLA && !esBSL);
                 focoBlanco = nombreDeSenal.StartsWith("sp4") || nombreDeSenal.StartsWith("sp3msbem") || nombreDeSenal.StartsWith("sp3sbem") || nombreDeSenal.StartsWith("sp3e");
                 focoVerde = nombreDeSenal != "sp2ra" && !nombreDeSenal.StartsWith("sp3e");
-                focoAzul = esBSL && !esAvanzada;
+                focoAzul = (esBSL && !esAvanzada) || nombreDeSenal.StartsWith("sp5");
                 focoAmarillo = !(esSalida && (esBSL || esBLA)) && nombreDeSenal != "sp1v";
                 if ((esSalida || esIntermedia) && (esBSL || esBLA)) focoAmarillo = false;
             }
