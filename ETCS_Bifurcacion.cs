@@ -29,6 +29,10 @@ namespace ORTS.Scripting.Script
                     dir = "Orobón";
                     dist = 2300;
                     break;
+                case "etcs_bifurcacion_genzor":
+                    dir = "Genzor";
+                    dist = 2300;
+                    break;
                 case "etcs_bifurcacion_bpg":
                     dir = "Parque Grande";
                     dist = 1200;
@@ -36,6 +40,22 @@ namespace ORTS.Scripting.Script
                 case "etcs_bifurcacion_ps":
                     dir = "P. Susana";
                     dist = 1200;
+                    break;
+                case "etcs_bifurcacion_s":
+                    dir = "Estación Sur";
+                    dist = 1200;
+                    break;
+                case "etcs_bifurcacion_g":
+                    dir = "Gadea";
+                    dist = 1200;
+                    break;
+                case "etcs_bifurcacion_aero":
+                    dir = "Aeropuerto";
+                    dist = 1500;
+                    break;
+                case "etcs_bifurcacion_br":
+                    dir = "Ribes";
+                    dist = 1500;
                     break;
             }
             float distHead = 0;
