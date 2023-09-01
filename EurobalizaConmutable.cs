@@ -17,6 +17,7 @@ namespace ORTS.Scripting.Script
         string prevSigAspect;
 		public override void Update()
 		{
+            base.Update();
             if (NID_BG <= 0) return;
             int SigId = NextSignalId("NORMAL");
             string SigAspect = SigId >= 0 ? IdTextSignalAspect(SigId, "NORMAL") : "";
@@ -38,7 +39,6 @@ namespace ORTS.Scripting.Script
             prevSigAspect = SigAspect;
             prevEnabled = IdSignalEnabled(SigId);
             prevLevelId = levelId;
-            base.Update();
 		}
 		void ActualizarTelegrama(int msgcount)
         {

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace ORTS.Scripting.Script
 {
@@ -23,9 +25,21 @@ namespace ORTS.Scripting.Script
         static public readonly int NID_C=352;
         
         Dictionary<string, Aspecto> textoAAspecto;
+        public static string ScriptDirectoryPath = null;
+        public static void InitializeScriptDirectoryPath([CallerFilePath] string sourceFilePath = "")
+        {
+            ScriptDirectoryPath = Path.GetDirectoryName(Path.GetFullPath(sourceFilePath));
+        }
         public ETCS()
         {
             textoAAspecto = Enum.GetNames(typeof(Aspecto)).ToDictionary(x => x, x => (Aspecto)Enum.Parse(typeof(Aspecto), x), StringComparer.OrdinalIgnoreCase);
+        }
+        public override void Initialize()
+        {
+            if (ScriptDirectoryPath == null)
+            {
+                InitializeScriptDirectoryPath();
+            }
         }
         protected Aspecto GetAspectoSenal(int id, string tipo = "NORMAL")
 		{

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using System.Runtime.CompilerServices;
 
 namespace ORTS.Scripting.Script
 {
@@ -15,7 +13,7 @@ namespace ORTS.Scripting.Script
         protected int N_PIG;
         protected int N_TOTAL=-1;
         protected int M_DUP=0;
-        protected int NID_C=352;
+        protected int NID_C;
         protected int NID_BG;
         protected bool ActualizarGrupo;
         protected int msgcount=0;
@@ -24,17 +22,9 @@ namespace ORTS.Scripting.Script
         protected int IdSigBaliza=-1;
         protected int BaliseReaction = 2;
         protected int GroupReaction = 2;
-        public static string ScriptDirectoryPath = null;
-        public static void InitializeScriptDirectoryPath([CallerFilePath] string sourceFilePath = "")
-        {
-            ScriptDirectoryPath = Path.GetDirectoryName(Path.GetFullPath(sourceFilePath));
-        }
         public override void Initialize()
         {
-            if (ScriptDirectoryPath == null)
-            {
-                InitializeScriptDirectoryPath();
-            }
+            base.Initialize();
             TextSignalAspect = "1"+"0000000"+"0"+format_binary(EsPrimera ? 0 : 1,3);
         }
 		public override void Update()
