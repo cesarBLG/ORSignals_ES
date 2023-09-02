@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
@@ -88,11 +89,11 @@ namespace ORTS.Scripting.Script
             {
                 try
                 {
-                    byte[] bytes = System.IO.File.ReadAllBytes("RBC.dll");
+                    byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(RouteDirectoryPath, "RBC.dll"));
                     var ass = Assembly.Load(bytes);
                     var ty = ass.GetType("RBC.RBC");
-                    var ctor = ty.GetConstructor(new[] {typeof(int), typeof(int), typeof(int), typeof(Signals)});
-                    RBC = ctor.Invoke(new object[] {NID_C, NID_RBC, 0x7911, MPManager.Simulator.Signals});
+                    var ctor = ty.GetConstructor(new[] {typeof(int), typeof(int), typeof(int)});
+                    RBC = ctor.Invoke(new object[] {NID_C, NID_RBC, 0x7911});
                     RBCUpdate = ty.GetMethod("Update");
                     RbcActive = true;
                 }

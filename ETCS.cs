@@ -25,10 +25,10 @@ namespace ORTS.Scripting.Script
         static public readonly int NID_C=352;
         
         Dictionary<string, Aspecto> textoAAspecto;
-        public static string ScriptDirectoryPath = null;
+        public static string RouteDirectoryPath = null;
         public static void InitializeScriptDirectoryPath([CallerFilePath] string sourceFilePath = "")
         {
-            ScriptDirectoryPath = Path.GetDirectoryName(Path.GetFullPath(sourceFilePath));
+            RouteDirectoryPath = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(sourceFilePath)), "..", "..");
         }
         public ETCS()
         {
@@ -36,7 +36,7 @@ namespace ORTS.Scripting.Script
         }
         public override void Initialize()
         {
-            if (ScriptDirectoryPath == null)
+            if (RouteDirectoryPath == null)
             {
                 InitializeScriptDirectoryPath();
             }

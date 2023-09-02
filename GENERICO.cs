@@ -1155,7 +1155,7 @@ namespace ORTS.Scripting.Script
                 focoRojo = !esAvanzada || (!esBLA && !esBSL);
                 focoBlanco = nombreDeSenal.StartsWith("sp4") || nombreDeSenal.StartsWith("sp3msbem") || nombreDeSenal.StartsWith("sp3sbem") || nombreDeSenal.StartsWith("sp3e");
                 focoVerde = nombreDeSenal != "sp2ra" && !nombreDeSenal.StartsWith("sp3e");
-                focoAzul = (esBSL && !esAvanzada) || nombreDeSenal.StartsWith("sp5");
+                focoAzul = (esBSL && !esAvanzada) || nombreDeSenal.StartsWith("sp5") || nombreDeSenal.StartsWith("sp4i");
                 focoAmarillo = !(esSalida && (esBSL || esBLA)) && nombreDeSenal != "sp1v";
                 if ((esSalida || esIntermedia) && (esBSL || esBLA)) focoAmarillo = false;
             }
