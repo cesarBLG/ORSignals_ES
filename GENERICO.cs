@@ -318,7 +318,7 @@ namespace ORTS.Scripting.Script
             {
                 consultaFlag = message.Substring(5) == "true";
             }
-            else if (message == "ITINERARIO_ERTMS") ItinerarioERTMS();
+            else if (message == "ITINERARIO_ERTMS" || message == "ERTMS_ROUTE") ItinerarioERTMS();
             else if (message == "ITINERARIO_ASFA") itinerarioERTMS = false;
             else if (message == "ETCS_N1") Sistemas |= SistemaSeñalizacion.ETCS_N1;
             else if (message == "ETCS_N2") Sistemas |= SistemaSeñalizacion.ETCS_N2;
