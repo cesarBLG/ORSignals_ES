@@ -617,7 +617,7 @@ namespace ORTS.Scripting.Script
             {
                 aspectoEstaSenal = AspectoParada;
             }
-            else if (!avanzadaSinParada && pantallaERTMScerrada)
+            else if (!avanzadaSinParada && (estaPreparada || !reposoAnuncioParada) && pantallaERTMScerrada)
             {
                 aspectoEstaSenal = esLZB ? Aspecto.ParadaLZB : Aspecto.ParadaSelectiva;
             }
