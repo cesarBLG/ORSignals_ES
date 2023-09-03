@@ -173,6 +173,7 @@ namespace ORTS.Scripting.Script
         protected bool tipoDeSenalizacionDoscientos = false;
         protected bool siguienteSenalEsDeLiberacion = false;
         protected bool siguienteEsRetroceso = false;
+        protected bool siguienteEsPantallaERTMS = false;
         protected bool siguienteSenalEsAvanzadaBLA = false; // Para casos concretos donde el aspecto de la avanzada influye en la señal de salida
 
         protected bool rutaADesviadaObligatoria = false;
@@ -279,6 +280,9 @@ namespace ORTS.Scripting.Script
             SharedVariables[KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO] = deslizamientoOcupado ? 1 : 0;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_SENAL] = NextSignalId("NORMAL");
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION] = (int)Sistemas;
+            
+            SharedVariables[801] = (int)BlockState.Clear;
+            SharedVariables[802] = (int)Aspect.Stop;
             
             CalcularAspecto();
             SetSNCA();
@@ -815,7 +819,7 @@ namespace ORTS.Scripting.Script
 
         EstadoCanton GetEstadoDelCanton()
         {
-            var estadoDelCantonMSTS = CurrentBlockState;
+            var estadoDelCantonMSTS = (BlockState)Math.Max((int)CurrentBlockState, IdSignalLocalVariable(NextSignalId("NORMAL"), 801));
             pantallaERTMScerrada = false;
             for (int i=0; !pantallaERTMScerrada; i++)
             {
@@ -827,11 +831,6 @@ namespace ORTS.Scripting.Script
                     if (IdSignalAspect(id, "NORMAL") == Aspect.Stop) pantallaERTMScerrada = true;
                 }
                 else break;
-            }
-            if (siguienteEsRetroceso)
-            {
-                var cantonRetroceso = (BlockState)IdSignalLocalVariable(NextSignalId("NORMAL"), 801);
-                if (cantonRetroceso > estadoDelCantonMSTS) estadoDelCantonMSTS = cantonRetroceso;
             }
             if (estadoDelCantonMSTS == BlockState.Occupied)
             {
@@ -849,7 +848,7 @@ namespace ORTS.Scripting.Script
         InfoRuta getInformacionDeRuta()
         {
             var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
-            if (siguienteEsRetroceso && informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
+            if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
             switch (informacionDeRutaMSTS)
             {
                 case Aspect.Stop:
@@ -950,6 +949,7 @@ namespace ORTS.Scripting.Script
             DeterminarTipologia(); // Evitamos tener que modificar señales ya existentes
             
             siguienteEsRetroceso = NextSignalId("NORMAL") > 0 && IdSignalHasNormalSubtype(NextSignalId("NORMAL"),"RETROCESO");
+            siguienteEsPantallaERTMS = NextSignalId("NORMAL") > 0 && IdSignalHasNormalSubtype(NextSignalId("NORMAL"),"PANTALLA_ERTMS");
 
             siguienteSenalEsAvanzadaBLA = DistMultiSigMR("DISTANCE", "NORMAL", false) != Aspect.Stop;
             siguienteSenalEsAvanzadaBLA |= FlagPresente("F_VL");

@@ -63,6 +63,10 @@ namespace ORTS.Scripting.Script
                 TextSignalAspect = "ViaLibre";
             }
             DrawState = DefaultDrawState(MstsSignalAspect);
+            SharedVariables[801] = (int)BlockState.Clear;
+            var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
+            if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
+            SharedVariables[802] = (int)informacionDeRutaMSTS;
         }
         int SNCAcount = 0;
         public void SetSNCA()

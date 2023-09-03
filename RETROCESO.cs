@@ -111,15 +111,10 @@ namespace ORTS.Scripting.Script
                     break;
             }
             TextSignalAspect = AspectoEstaSeñal.ToString();
-            SharedVariables[801] = (int)CurrentBlockState;
-            SharedVariables[802] = (int)DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
-            if (siguienteEsRetroceso)
-            {
-                BlockState bs = (BlockState)IdSignalLocalVariable(idSigSeñal, 801);
-                Aspect opap = (Aspect)IdSignalLocalVariable(idSigSeñal, 802);
-                if (bs > CurrentBlockState) SharedVariables[801] = (int)bs;
-                if (opap != Aspect.Stop) SharedVariables[802] = (int)opap;
-            }
+            SharedVariables[801] = (int)BlockState.Clear;
+            var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
+            if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
+            SharedVariables[802] = (int)informacionDeRutaMSTS;
             previoPrevioEstaPreparada = previoEstaPreparada;
             previoEstaPreparada = estaPreparada;
             SetSNCA();
