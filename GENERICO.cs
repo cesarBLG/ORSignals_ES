@@ -296,17 +296,24 @@ namespace ORTS.Scripting.Script
         }
         void ItinerarioERTMS()
         {
-            if (focoAzul)
+            if (avanzadaSinParada) return;
+            if ((Sistemas & SistemaSeñalizacion.ETCS_N1) != 0 || (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0)
             {
-                itinerarioERTMS = true;
-                for (int i=0; i<20; i++)
-                {
-                    int id = NextSignalId("NORMAL", i);
-                    if (id < 0) break;
-                    if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
-                    SendSignalMessage(id, "ITINERARIO_ERTMS");
-                    break;
-                }
+                if (!focoAzul) return;
+            }
+            else if ((Sistemas & SistemaSeñalizacion.LZB) != 0)
+            {
+                if (!focoBlanco) return;
+            }
+            else return;
+            itinerarioERTMS = true;
+            for (int i=0; i<20; i++)
+            {
+                int id = NextSignalId("NORMAL", i);
+                if (id < 0) break;
+                if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
+                SendSignalMessage(id, "ITINERARIO_ERTMS");
+                break;
             }
         }
 
@@ -327,6 +334,7 @@ namespace ORTS.Scripting.Script
             else if (message == "ETCS_N1") Sistemas |= SistemaSeñalizacion.ETCS_N1;
             else if (message == "ETCS_N2") Sistemas |= SistemaSeñalizacion.ETCS_N2;
             else if (message == "ASFA") Sistemas |= SistemaSeñalizacion.ASFA;
+            else if (message == "LZB") Sistemas |= SistemaSeñalizacion.LZB;
         }
         public override void HandleEvent(SignalEvent evt, string message = "") 
         {
@@ -623,9 +631,21 @@ namespace ORTS.Scripting.Script
             }
             else if (!avanzadaSinParada && (estaPreparada || !reposoAnuncioParada) && pantallaERTMScerrada)
             {
-                aspectoEstaSenal = esLZB ? Aspecto.ParadaLZB : Aspecto.ParadaSelectiva;
+                aspectoEstaSenal = Aspecto.ParadaSelectiva;
             }
-            else if (!avanzadaSinParada && (itinerarioERTMS || (deslizamientoSiguienteSenalOcupado && aspectoSiguienteSenal == Aspecto.Parada)))
+            else if (itinerarioERTMS && (Sistemas & SistemaSeñalizacion.ETCS_N1) != 0)
+            {
+                aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
+            }
+            else if (itinerarioERTMS && (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0)
+            {
+                aspectoEstaSenal = Aspecto.ParadaSelectiva;
+            }
+            else if (itinerarioERTMS && (Sistemas & SistemaSeñalizacion.LZB) != 0)
+            {
+                aspectoEstaSenal = Aspecto.ParadaLZB;
+            }
+            else if (!avanzadaSinParada && deslizamientoSiguienteSenalOcupado && aspectoSiguienteSenal == Aspecto.Parada)
             {
                 aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
             }
