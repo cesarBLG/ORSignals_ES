@@ -296,7 +296,6 @@ namespace ORTS.Scripting.Script
         }
         void ItinerarioERTMS()
         {
-            if (avanzadaSinParada) return;
             if ((Sistemas & SistemaSeñalizacion.ETCS_N1) != 0 || (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0)
             {
                 if (!focoAzul) return;
