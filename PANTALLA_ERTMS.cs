@@ -59,7 +59,8 @@ namespace ORTS.Scripting.Script
             }
             else
             {
-                MstsSignalAspect = (Aspect)8;
+                //MstsSignalAspect = (Aspect)8;
+                MstsSignalAspect = Aspect.Clear_2;
                 TextSignalAspect = "ViaLibre";
             }
             DrawState = DefaultDrawState(MstsSignalAspect);
