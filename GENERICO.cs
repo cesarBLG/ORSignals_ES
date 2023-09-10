@@ -648,15 +648,15 @@ namespace ORTS.Scripting.Script
             {
                 aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
             }
-            else if (aspectoSiguienteSenal == Aspecto.Apagada)
+            else if (aspectoSiguienteSenal == Aspecto.Apagada && !siguienteSenalEsAvanzadaBLA)
             {
                 if (esPreavanzada) aspectoEstaSenal = Aspecto.ViaLibreCondicional;
                 else aspectoEstaSenal = anuncioParadaInmediata ? Aspecto.AnuncioParadaInmediata : Aspecto.AnuncioParada;
             }
-            else if (aspectoSiguienteSenal == Aspecto.Parada ||
+            else if (((aspectoSiguienteSenal == Aspecto.Parada ||
                 aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado ||
                 aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || 
-                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0 || HoldState == HoldState.ManualApproach)
+                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0) && !siguienteSenalEsAvanzadaBLA) || HoldState == HoldState.ManualApproach)
             {
                 aspectoEstaSenal = anuncioParadaInmediata ? Aspecto.AnuncioParadaInmediata : Aspecto.AnuncioParada;
             }
