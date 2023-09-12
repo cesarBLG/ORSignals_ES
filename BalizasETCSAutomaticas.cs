@@ -9,14 +9,20 @@ namespace ORTS.Scripting.Script
 {
 	public class ETCS_MAIN_MA_1_2 : EurobalizaConmutable
 	{
+        bool soloN1;
         public ETCS_MAIN_MA_1_2()
         {
             BaliseReaction = 1;
             //EsPrimera = true;
         }
+        public override void Initialize()
+        {
+            soloN1 = HasHead(1);
+            base.Initialize();
+        }
         protected override List<string> ConstruirMensajes() 
         {
-            SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
+            if (!soloN1) SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
             List<string> msg = new List<string>();
             msg.Add("{ma}");
             msg.Add("{ssp}");
@@ -50,7 +56,32 @@ namespace ORTS.Scripting.Script
             }
             else if (asp == Aspecto.RebaseAutorizadoDestellos)
             {
-                string prof = "01" + "{NextSignalDistanceM(0)-bgref}" + "00" + "1111111" + "{NextSignalDistanceM(1)-NextSignalDistanceM(0)}" + format_etcs_distance(300) + "1" + "00000";
+                int start = 0;
+                int end = 1;
+                bool sigfound = false;
+                for (int i=0; ; i++)
+                {
+                    int id = NextSignalId("NORMAL", i);
+                    if (id < 0) break;
+                    if (IdSignalHasNormalSubtype(id, "RETROCESO"))
+                    {
+                        start = i;
+                        continue;
+                    }
+                    if (sigfound) break;
+                    start = i;
+                    if (IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
+                    sigfound = true;
+                }
+                for (int i=start+1; ; i++)
+                {
+                    end = i;
+                    int id = NextSignalId("NORMAL", i);
+                    if (id < 0) break;
+                    if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
+                    break;
+                }
+                string prof = "01" + "{NextSignalDistanceM("+start+")-bgref}" + "00" + "1111111" + "{NextSignalDistanceM("+end+")-NextSignalDistanceM("+start+")}" + format_etcs_distance(300) + "1" + "00000";
                 msg.Add(create_packet(80, prof, 1));
             }
             msg.AddRange(base.ConstruirMensajes());
@@ -121,7 +152,32 @@ namespace ORTS.Scripting.Script
                 Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
                 if (asp == Aspecto.RebaseAutorizadoDestellos)
                 {
-                    string prof = "01" + "{NextSignalDistanceM(0)-ilref}" + "00" + "1111111" + "{NextSignalDistanceM(1)-NextSignalDistanceM(0)}" + format_etcs_distance(300) + "1" + "00000";
+                    int start = 0;
+                    int end = 1;
+                    bool sigfound = false;
+                    for (int i=0; ; i++)
+                    {
+                        int id2 = NextSignalId("NORMAL", i);
+                        if (id2 < 0) break;
+                        if (IdSignalHasNormalSubtype(id2, "RETROCESO"))
+                        {
+                            start = i;
+                            continue;
+                        }
+                        if (sigfound) break;
+                        start = i;
+                        if (IdSignalHasNormalSubtype(id2, "PANTALLA_ERTMS")) continue;
+                        sigfound = true;
+                    }
+                    for (int i=start+1; ; i++)
+                    {
+                        end = i;
+                        int id2 = NextSignalId("NORMAL", i);
+                        if (id2 < 0) break;
+                        if (IdSignalHasNormalSubtype(id2, "RETROCESO") || IdSignalHasNormalSubtype(id2, "PANTALLA_ERTMS")) continue;
+                        break;
+                    }
+                    string prof = "01" + "{NextSignalDistanceM("+start+")-ilref}" + "00" + "1111111" + "{NextSignalDistanceM("+end+")-NextSignalDistanceM("+start+")}" + format_etcs_distance(300) + "1" + "00000";
                     msg.Add(create_packet(80, prof, 1));
                 }
             }
