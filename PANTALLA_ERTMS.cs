@@ -68,6 +68,8 @@ namespace ORTS.Scripting.Script
             var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
             if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
             SharedVariables[802] = (int)informacionDeRutaMSTS;
+            bool callOn = (IdSignalLocalVariable(NextSignalId("NORMAL"), 803) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true));
+            SharedVariables[803] = callOn ? 1 : 0;
         }
         int SNCAcount = 0;
         public void SetSNCA()

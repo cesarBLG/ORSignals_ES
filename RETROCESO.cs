@@ -48,6 +48,8 @@ namespace ORTS.Scripting.Script
                 forzarParada = FlagPresente("F_PARADA");
             }
             bool absoluta = false;
+            
+            bool callOn = (IdSignalLocalVariable(NextSignalId("NORMAL"), 803) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true));
             if (CurrentBlockState == BlockState.Obstructed || !Enabled || HoldState == HoldState.ManualLock)
             {
                 AspectoEstaSeñal = AspectoRetroceso.Parada;
@@ -58,7 +60,7 @@ namespace ORTS.Scripting.Script
             {
                 AspectoEstaSeñal = AspectoRetroceso.Parada;
             }
-            else if (maniobra || TrainHasCallOn(false, true) || (siguienteEsRetroceso && IdTextSignalAspect(idSigSeñal, "NORMAL") == "RebaseAutorizado"))
+            else if (maniobra || HoldState == HoldState.ManualApproach || (siguienteEsRetroceso && IdTextSignalAspect(idSigSeñal, "NORMAL") == "RebaseAutorizado"))
             {
                 AspectoEstaSeñal = AspectoRetroceso.RebaseAutorizado;
             }
@@ -66,16 +68,15 @@ namespace ORTS.Scripting.Script
             {
                 AspectoEstaSeñal = AspectoRetroceso.Parada;
             }
+            else if (CurrentBlockState == BlockState.Occupied && !callOn)
+            {
+                AspectoEstaSeñal = AspectoRetroceso.Parada;
+            }
             else
             {
-                BlockState state = RouteClearedToSignal(idSigSeñal, true);
-                if (state == BlockState.Clear || state == BlockState.Occupied || HoldState == HoldState.ManualPass)
-                {
-                    if (movimientoAutorizado) AspectoEstaSeñal = AspectoRetroceso.MovimientoAutorizado;
-                    else if (desviada || !RouteSet) AspectoEstaSeñal = AspectoRetroceso.IndicadoraDesviada;
-                    else AspectoEstaSeñal = AspectoRetroceso.IndicadoraDirecta;
-                }
-                else AspectoEstaSeñal = AspectoRetroceso.Parada;
+                if (movimientoAutorizado) AspectoEstaSeñal = AspectoRetroceso.MovimientoAutorizado;
+                else if (desviada || !RouteSet) AspectoEstaSeñal = AspectoRetroceso.IndicadoraDesviada;
+                else AspectoEstaSeñal = AspectoRetroceso.IndicadoraDirecta;
             }
             if (!PreUpdate())
             {
@@ -111,10 +112,11 @@ namespace ORTS.Scripting.Script
                     break;
             }
             TextSignalAspect = AspectoEstaSeñal.ToString();
-            SharedVariables[801] = (int)BlockState.Clear;
+            SharedVariables[801] = Math.Max((int)CurrentBlockState, IdSignalLocalVariable(NextSignalId("NORMAL"), 801));
             var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
             if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
             SharedVariables[802] = (int)informacionDeRutaMSTS;
+            SharedVariables[803] = callOn ? 1 : 0;
             previoPrevioEstaPreparada = previoEstaPreparada;
             previoEstaPreparada = estaPreparada;
             SetSNCA();

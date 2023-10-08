@@ -96,6 +96,7 @@ namespace ORTS.Scripting.Script
         Aspecto previoAspectoEstaSenal;
         Aspecto aspectoSiguienteSenal;
         Aspecto reservaAspectoEstaSenal;
+        AspectoRetroceso aspectoSiguienteSenalRetroceso;
 
         bool paradaTotal;
         
@@ -156,6 +157,7 @@ namespace ORTS.Scripting.Script
         protected bool forzarViaLibre = false;
         protected bool forzarParada = false;
         protected bool forzarRebase = false;
+        protected bool itinerarioRebase = false;
         protected bool itinerarioERTMS = false;
 
         protected bool reposoViaLibre = false;
@@ -255,6 +257,7 @@ namespace ORTS.Scripting.Script
 
             idSiguienteSenal = GetIdSiguienteSenal();
             aspectoSiguienteSenal = GetAspectoSiguienteSenal();
+            aspectoSiguienteSenalRetroceso = GetAspectoSiguienteSenalRetroceso();
 
             agujaEstaSenalDesviada = GetAgujaDeEstaSenalDesviada();
             agujaSiguienteSenalDesviada = GetAgujaDeSiguienteSenalDesviada();
@@ -281,8 +284,11 @@ namespace ORTS.Scripting.Script
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_SENAL] = NextSignalId("NORMAL");
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION] = (int)Sistemas;
             
+            itinerarioRebase = aspectosDisponibles.Contains(Aspecto.RebaseAutorizado) && ((IdSignalLocalVariable(NextSignalId("NORMAL"), 803) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true)));
+
             SharedVariables[801] = (int)BlockState.Clear;
             SharedVariables[802] = (int)Aspect.Stop;
+            SharedVariables[803] = 0;
             
             CalcularAspecto();
             SetSNCA();
@@ -596,9 +602,13 @@ namespace ORTS.Scripting.Script
                 aspectoEstaSenal = AspectoParada;
                 paradaTotal = !esIntermedia; // Permite que se establezca el bloqueo pasando a estar preparadas
             }
-            else if (siguienteEsRetroceso && (IdSignalAspect(NextSignalId("NORMAL"), "NORMAL") == Aspect.Stop || IdTextSignalAspect(NextSignalId("NORMAL"), "NORMAL") == "Parada"))
+            else if (aspectoSiguienteSenalRetroceso == AspectoRetroceso.Parada)
             {
                 aspectoEstaSenal = AspectoParada;
+            }
+            else if (aspectoSiguienteSenalRetroceso == AspectoRetroceso.RebaseAutorizado)
+            {
+                aspectoEstaSenal = Aspecto.RebaseAutorizado;
             }
             else if (aspectosDisponibles.Contains(Aspecto.RebaseAutorizado) && TrainHasCallOn(false, true))
             {
@@ -611,9 +621,9 @@ namespace ORTS.Scripting.Script
                     aspectoEstaSenal = Aspecto.RebaseAutorizado;
                 }
             }
-            else if (siguienteEsRetroceso && IdTextSignalAspect(NextSignalId("NORMAL"), "NORMAL") == "RebaseAutorizado")
+            else if (itinerarioRebase)
             {
-                aspectoEstaSenal = Aspecto.RebaseAutorizado;
+                aspectoEstaSenal = Aspecto.RebaseAutorizadoDestellos;
             }
             else if (estadoDelCanton == EstadoCanton.Ocupado && !avanzadaSinParada)
             {
@@ -954,6 +964,24 @@ namespace ORTS.Scripting.Script
                 }
             }
             return Aspecto.Parada;
+        }
+        AspectoRetroceso GetAspectoSiguienteSenalRetroceso()
+        {
+            AspectoRetroceso asp = AspectoRetroceso.MovimientoAutorizado;
+            for (int i=0; i<20; i++)
+            {
+                int id = NextSignalId("NORMAL", i);
+                if (id < 0) break;
+                if (IdSignalHasNormalSubtype(id, "RETROCESO"))
+                {
+                    string s = IdTextSignalAspect(id, "NORMAL");
+                    if (s == "Parada") asp = AspectoRetroceso.Parada;
+                    else if (s == "RebaseAutorizado") asp = AspectoRetroceso.RebaseAutorizado;
+                    break;
+                }
+                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) break;
+            }
+            return asp;
         }
         bool consultaFlag;
         bool FlagPresente(string tipo)
