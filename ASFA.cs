@@ -75,6 +75,7 @@ namespace ORTS.Scripting.Script
                 balizaLVI = true;
                 FrecuenciaFondo = Frecuencia.L2;
             }
+            if (SignalTypeName.Contains("fase_2")) Fase2 = true;
             
             if (balizaSenalFocos)
             {
