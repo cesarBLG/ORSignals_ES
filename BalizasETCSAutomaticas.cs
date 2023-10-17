@@ -454,4 +454,12 @@ namespace ORTS.Scripting.Script
             base.UpdatePacket();
         }
     }
+    public class ETCS_MSG_BRIDGE : PaqueteETCS
+    {
+        public override void UpdatePacket()
+        {
+            Packet = "{puente_msg(0)}";
+            base.UpdatePacket();
+        }
+    }
 }
