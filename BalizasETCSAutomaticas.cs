@@ -420,7 +420,7 @@ namespace ORTS.Scripting.Script
             int lsig = IdSignalLocalVariable(levelId, 601);
             if (levelId >= 0 && (lsig == NextSignalId("NORMAL", 0)  || lsig == NextSignalId("NORMAL", 1)))
             {
-                Packet = level_tr(dist, level_table(levelId, Math.Min(350, dist/2+50)));
+                Packet = level_tr(dist, level_table(levelId, Math.Max(350, Math.Min(dist/2+50, 1000))));
             }
             base.UpdatePacket();
         }
