@@ -23,6 +23,7 @@ namespace ORTS.Scripting.Script
         protected override List<string> ConstruirMensajes() 
         {
             if (!soloN1) SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
+            SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N1");
             List<string> msg = new List<string>();
             msg.Add("{ma}");
             msg.Add("{ssp}");
