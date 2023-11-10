@@ -112,6 +112,7 @@ namespace ORTS.Scripting.Script
                     break;
             }
             TextSignalAspect = AspectoEstaSeñal.ToString();
+            SharedVariables[201] = (int)TipoSeñal.Retroceso;
             SharedVariables[801] = Math.Max((int)CurrentBlockState, IdSignalLocalVariable(NextSignalId("NORMAL"), 801));
             var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
             if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
@@ -119,7 +120,9 @@ namespace ORTS.Scripting.Script
             SharedVariables[803] = callOn ? 1 : 0;
             previoPrevioEstaPreparada = previoEstaPreparada;
             previoEstaPreparada = estaPreparada;
-            SetSNCA();
+            SharedVariables[900] = 1;
+            SignalNumClearAhead = IdSignalLocalVariable(idSigSeñal, 901) + 1;
+            SharedVariables[901] = SignalNumClearAhead;
         }
 		bool consultaFlag;
         bool FlagPresente(string tipo)
@@ -140,31 +143,6 @@ namespace ORTS.Scripting.Script
             {
                 string flag = message.Substring(5);
                 SendSignalMessage(id, "FLAG:"+(FlagPresente(flag) ? "true" : "false"));
-            }
-        }
-        int SNCAcount = 0;
-        public void SetSNCA()
-        {
-            if (SNCAcount++ < 10) return;
-            SNCAcount = 0;
-            int nsig = 0;
-            for (int i=0; i<20; i++)
-            {
-                int id = NextSignalId("NORMAL", i);
-                if (id < 0 || i == 19)
-                {
-                    SignalNumClearAhead = i+2;
-                    return;
-                }
-                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO"))
-                {
-                    nsig++;
-                    if (nsig == 3)
-                    {
-                        SignalNumClearAhead = i+1;
-                        break;
-                    }
-                }
             }
         }
     }

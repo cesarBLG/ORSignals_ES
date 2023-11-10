@@ -53,7 +53,7 @@ namespace ORTS.Scripting.Script
     public class OPEDALPN : CsSignalScript
     {
         Timer TemporizadorPedal;
-        Random rand = new Random();
+        static Random rand = new Random();
         int id = -1;
         public override void Initialize()
         {
@@ -87,7 +87,7 @@ namespace ORTS.Scripting.Script
     }
     public class OLPN : CsSignalScript
     {
-        Random rand = new Random();
+        static Random rand = new Random();
         bool PedalActivo;
         enum EstadoPN
         {
@@ -142,6 +142,7 @@ namespace ORTS.Scripting.Script
                 Estado = EstadoPN.Desarmado;
                 PedalActivo = false;
             }
+            SharedVariables[150] = NextSignalId("NORMAL");
             DrawState = DefaultDrawState(MstsSignalAspect);
         }
         public override void HandleSignalMessage(int id, string message)

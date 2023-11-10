@@ -22,13 +22,13 @@ namespace ORTS.Scripting.Script
         }
         protected override List<string> ConstruirMensajes() 
         {
-            if (!soloN1) SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
-            SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N1");
+            if (!soloN1) SendSignalMessage(SharedVariables[KeyNextSignalId], "ETCS_N2");
+            SendSignalMessage(SharedVariables[KeyNextSignalId], "ETCS_N1");
             List<string> msg = new List<string>();
-            msg.Add("{ma}");
+            msg.Add(get_ma(SharedVariables[KeyNextSignalId], false));
             msg.Add("{ssp}");
             msg.Add(get_linking());
-            Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
+            Aspecto asp = GetAspectoSenal(SharedVariables[KeyNextSignalId]);
             switch(asp)
             {
                 case Aspecto.RebaseAutorizado:
@@ -149,14 +149,25 @@ namespace ORTS.Scripting.Script
             {
                 msg.Add(create_packet(136, "0"+format_binary(id,14), 1));
                 msg.Add("{ssp_infill}");
-                msg.Add("{ma_infill}");
-                Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
+                msg.Add(get_ma(SharedVariables[KeyNextSignalId], true));
+                Aspecto asp = GetAspectoSenal(SharedVariables[KeyNextSignalId]);
                 if (asp == Aspecto.RebaseAutorizadoDestellos)
                 {
+                    int associated = 0;
+                    for (int i=0; ; i++)
+                    {
+                        int id2 = NextSignalId("NORMAL", i);
+                        if (id2 < 0) break;
+                        if (id2 == SharedVariables[KeyNextSignalId])
+                        {
+                            associated = i;
+                            break;
+                        }
+                    }
                     int start = 0;
                     int end = 1;
                     bool sigfound = false;
-                    for (int i=0; ; i++)
+                    for (int i=associated; ; i++)
                     {
                         int id2 = NextSignalId("NORMAL", i);
                         if (id2 < 0) break;
