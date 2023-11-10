@@ -76,6 +76,7 @@ namespace ORTS.Scripting.Script
         Liberacion=32,
         Virtual=64,
         Retroceso=128,
+        Topera=256,
     }
     public enum TipoBloqueo
     {

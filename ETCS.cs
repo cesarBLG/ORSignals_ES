@@ -243,8 +243,16 @@ namespace ORTS.Scripting.Script
             }
             if (maxToClear == 0)
             {
+                TipoSeñal t = (TipoSeñal)IdSignalLocalVariable(SenalAsociada, 201);
+                float dangerPoint = 50;
+                int vrelease = 15;
+                if (t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Intermedia))
+                {
+                    vrelease = 30;
+                    dangerPoint = 100;
+                }
                 ma += "0000000"+"0000000"+"0000000000"+"00000";
-                ma += "000000000000000"+"0"+"0"+"1"+format_etcs_distance(50)+format_etcs_speed(15)+"0";
+                ma += "000000000000000"+"0"+"0"+"1"+format_etcs_distance(dangerPoint)+format_etcs_speedKpH(vrelease)+"0";
             }
             else
             {
@@ -259,7 +267,7 @@ namespace ORTS.Scripting.Script
                 int sig = -1;
                 string startRef = Infill ? "ilref" : "bgref";
                 string sectionLength="";
-                bool topera = false;
+                float dangerPoint=50;
                 bool first = false;
                 for(int i=0;; i++) 
                 {
@@ -276,6 +284,7 @@ namespace ORTS.Scripting.Script
                                 sect += construirSeccion(SenalAsociada, Infill, sectionLength, section, senalUltimaSeccion, -1, nsignals);
                                 senalUltimaSeccion = -1;
                                 section++;
+                                maxsections++;
                             }
                             npn++;
                         }
@@ -291,18 +300,25 @@ namespace ORTS.Scripting.Script
                     if (maxToClear == 1 && nsignals > 0) break;
                     Aspecto a = GetAspectoSenal(sig);
                     TipoSeñal t = (TipoSeñal)IdSignalLocalVariable(sig, 201);
-                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva ||
-                        a == Aspecto.RebaseAutorizado || a == Aspecto.RebaseAutorizadoCortaDistancia ||
-                        a == Aspecto.RebaseAutorizadoDestellos)
+                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva)
                     {
                         if (sig < 0)
                         {
                             vrelease = 10;
-                            topera = true;
+                            dangerPoint = 10;
                             sectionLength = "{(EoADistanceM(0)-10)-("+startRef+")}";
                         }
                         else sectionLength = "{NextSignalDistanceM("+i+")-("+startRef+")}";
-                        if (t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Intermedia)) vrelease = 30;
+                        if (t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Intermedia))
+                        {
+                            vrelease = 30;
+                            dangerPoint = 100;
+                        }
+                        else if (t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Topera))
+                        {
+                            vrelease = 10;
+                            dangerPoint = 10;
+                        }
                         break;
                     }
                     bool esInicioRuta = t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Entrada) || t.HasFlag(TipoSeñal.Salida) || t.HasFlag(TipoSeñal.Interior));
@@ -322,7 +338,7 @@ namespace ORTS.Scripting.Script
                 }
                 ma += format_binary(section, 5) + sect;
                 ma += construirSeccion(SenalAsociada, Infill, sectionLength, section, senalUltimaSeccion, sig, nsignals);
-                ma += "0"+"1"+format_etcs_distance(topera ? 10 : 50)+format_etcs_speedKpH(vrelease)+"0";
+                ma += "0"+"1"+format_etcs_distance(dangerPoint)+format_etcs_speedKpH(vrelease)+"0";
             }
             return create_packet(12, ma, 1);
         }
