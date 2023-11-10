@@ -32,12 +32,10 @@ namespace ORTS.Scripting.Script
             if (!Enabled || CurrentBlockState != BlockState.Clear)
             {
                 AspectoEstaSeñal = AspectoPantalla.Parada;
-                SignalNumClearAhead = -1;
             }
             else
             {
                 AspectoEstaSeñal = AspectoPantalla.ViaLibre;
-                SetSNCA();
             }
             
             if (!PreUpdate())
@@ -64,37 +62,17 @@ namespace ORTS.Scripting.Script
                 TextSignalAspect = "ViaLibre";
             }
             DrawState = DefaultDrawState(MstsSignalAspect);
+            SharedVariables[201] = (int)TipoSeñal.Virtual;
             SharedVariables[801] = (int)BlockState.Clear;
             var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
             if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
             SharedVariables[802] = (int)informacionDeRutaMSTS;
             bool callOn = (IdSignalLocalVariable(NextSignalId("NORMAL"), 803) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true));
             SharedVariables[803] = callOn ? 1 : 0;
-        }
-        int SNCAcount = 0;
-        public void SetSNCA()
-        {
-            if (SNCAcount++ < 10) return;
-            SNCAcount = 0;
-            int nsig = 0;
-            for (int i=0; i<20; i++)
-            {
-                int id = NextSignalId("NORMAL", i);
-                if (id < 0 || i == 19)
-                {
-                    SignalNumClearAhead = i+2;
-                    return;
-                }
-                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO"))
-                {
-                    nsig++;
-                    if (nsig == 3)
-                    {
-                        SignalNumClearAhead = i+1;
-                        break;
-                    }
-                }
-            }
+
+            SharedVariables[900] = 1;
+            SignalNumClearAhead = IdSignalLocalVariable(NextSignalId("NORMAL"), 901) + 1;
+            SharedVariables[901] = SignalNumClearAhead;
         }
     }
 }

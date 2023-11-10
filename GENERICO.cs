@@ -64,6 +64,24 @@ namespace ORTS.Scripting.Script
         ASFA=4,
         LZB=8,
     }
+    [Flags]
+    public enum TipoSeñal
+    {
+        Ninguno=0,
+        Entrada=1,
+        Salida=2,
+        Interior=4,
+        Intermedia=8,
+        Avanzada=16,
+        Liberacion=32,
+        Virtual=64,
+        Retroceso=128,
+    }
+    public enum TipoBloqueo
+    {
+        BLA,
+        BA,
+    }
     public class GENERICO : CsSignalScript
     {
 
@@ -108,6 +126,8 @@ namespace ORTS.Scripting.Script
         readonly int KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO = 121;
         readonly int KEY_VARIABLE_COMPARTIDA_SIG_SENAL = 150;
         readonly int KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION = 200;
+        readonly int KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL = 201;
+        readonly int KEY_VARIABLE_COMPARTIDA_TIPO_BLOQUEO = 202;
         
         Random rand = new Random();
 
@@ -340,6 +360,7 @@ namespace ORTS.Scripting.Script
             else if (message == "ETCS_N2") Sistemas |= SistemaSeñalizacion.ETCS_N2;
             else if (message == "ASFA") Sistemas |= SistemaSeñalizacion.ASFA;
             else if (message == "LZB") Sistemas |= SistemaSeñalizacion.LZB;
+            else if (message == "LIBERACION") esLiberacion = true;
         }
         public override void HandleEvent(SignalEvent evt, string message = "") 
         {
@@ -1033,8 +1054,10 @@ namespace ORTS.Scripting.Script
             inhibirViaLibreAViaLibreCondicional = FlagPresente("I_VL_A_VLC");
             
             //anuncioParadaInmediata = FlagPresente("APARADA_INMEDIATA");
-
-            siguienteSenalEsDeLiberacion = FlagPresente("OLIBERACION");
+            int id = GetIdSiguienteSenal();
+            if (FlagPresente("OLIBERACION")) SendSignalMessage(id, "LIBERACION");
+            var t = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
+            siguienteSenalEsDeLiberacion = t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Liberacion);
             siguienteSenalEsAvanzadaBLA &= !siguienteSenalEsDeLiberacion;
             
             ActualizarAspectos();
@@ -1065,25 +1088,30 @@ namespace ORTS.Scripting.Script
                 SNCA_orig = SignalNumClearAhead;
                 if (SNCA_orig < 0) SNCA_orig = 2;
             }
-            int nsig = 0;
-            for (int i=0; i<20; i++)
+
+            if (siguienteSenalEsDeLiberacion) SharedVariables[900] = 1; // Requerir liberacion abierta
+            else if (siguienteSenalEsAvanzadaBLA) SharedVariables[900] = -1; // Avanzada resta 1 a la secuencia
+            else SharedVariables[900] = 0;
+            
+            int snca = SNCA_orig + SharedVariables[900];
+            for (int i=0; i<snca-1; i++)
             {
                 int id = NextSignalId("NORMAL", i);
-                if (id < 0 || i == 19)
+                if (id < 0) break;
+                snca += IdSignalLocalVariable(id, 900);
+            }
+            for (int i=snca-1; i<snca; i++)
+            {
+                int id = NextSignalId("NORMAL", i);
+                if (id < 0) break;
+                var tipo = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
+                if (tipo != TipoSeñal.Ninguno && (tipo.HasFlag(TipoSeñal.Intermedia) || tipo.HasFlag(TipoSeñal.Liberacion) || tipo.HasFlag(TipoSeñal.Retroceso) || tipo.HasFlag(TipoSeñal.Virtual)))
                 {
-                    SignalNumClearAhead = Math.Max(i+2, SNCA_orig);
-                    return;
-                }
-                if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO"))
-                {
-                    nsig++;
-                    if (nsig >= SNCA_orig)
-                    {
-                        SignalNumClearAhead = i+1;
-                        break;
-                    }
+                    snca++;
                 }
             }
+            SignalNumClearAhead = snca;
+            SharedVariables[901] = SignalNumClearAhead;
         }
 
 
@@ -1206,6 +1234,15 @@ namespace ORTS.Scripting.Script
                 focoAmarillo = !(esSalida && (esBSL || esBLA)) && nombreDeSenal != "sp1v";
                 if ((esSalida || esIntermedia) && (esBSL || esBLA)) focoAmarillo = false;
             }
+            
+            TipoSeñal tipo = (TipoSeñal)0;
+            if (esSalida) tipo |= TipoSeñal.Salida;
+            if (esEntrada) tipo |= TipoSeñal.Entrada;
+            if (esIntermedia) tipo |= TipoSeñal.Intermedia;
+            if (esLiberacion) tipo |= TipoSeñal.Liberacion;
+            if (esAvanzada || esPreavanzada) tipo |= TipoSeñal.Avanzada;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL] = (int)tipo;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_TIPO_BLOQUEO] = (int)((esBLA || esBSL) ? TipoBloqueo.BLA : TipoBloqueo.BA);
         }
     }
 }
