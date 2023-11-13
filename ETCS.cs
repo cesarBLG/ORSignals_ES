@@ -259,6 +259,7 @@ namespace ORTS.Scripting.Script
                 int vrelease = 15;
                 ma += format_etcs_speedKpH(300)+format_etcs_speed(0)+format_binary(0, 10);
                 int nsignals = 0;
+                int totalsignals = 0;
                 int section = 0;
                 int maxsections = 2;
                 int senalUltimaSeccion=-1;
@@ -296,6 +297,7 @@ namespace ORTS.Scripting.Script
                         continue;
                     }
                     first = true;
+                    totalsignals++;
                     if (IdSignalHasNormalSubtype(sig, "PANTALLA_ERTMS") || IdSignalHasNormalSubtype(sig, "RETROCESO")) continue;
                     if (maxToClear == 1 && nsignals > 0) break;
                     Aspecto a = GetAspectoSenal(sig);
@@ -324,7 +326,7 @@ namespace ORTS.Scripting.Script
                     bool esInicioRuta = t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Entrada) || t.HasFlag(TipoSeñal.Salida) || t.HasFlag(TipoSeñal.Interior));
                     if (esInicioRuta)
                     {
-                        if (nsignals >= maxToClear) break;
+                        if (totalsignals > maxToClear) break;
                         if (section < maxsections)
                         {
                             sectionLength = "{NextSignalDistanceM("+i+")-("+startRef+")}";

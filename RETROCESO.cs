@@ -58,6 +58,8 @@ namespace ORTS.Scripting.Script
             }
             else if (siguienteEsRetroceso && (IdSignalAspect(idSigSeñal, "NORMAL") == Aspect.Stop || IdTextSignalAspect(idSigSeñal, "NORMAL") == "Parada"))
             {
+                /*if (TrainRequiresSignal(idSigSeñal, 0)) AspectoEstaSeñal = AspectoRetroceso.Parada;
+                else AspectoEstaSeñal = AspectoRetroceso.RebaseAutorizado;*/
                 AspectoEstaSeñal = AspectoRetroceso.Parada;
             }
             else if (maniobra || HoldState == HoldState.ManualApproach || (siguienteEsRetroceso && IdTextSignalAspect(idSigSeñal, "NORMAL") == "RebaseAutorizado"))
