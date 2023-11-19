@@ -38,6 +38,12 @@ namespace ORTS.Scripting.Script
                     dist = 1200;
                     break;
             }
+            float distHead = 0;
+            for (int i=0; i<7; i++)
+            {
+                if (HasHead(i+1)) distHead += (1<<i)*50;
+            }
+            if (distHead > 0) dist = distHead;
             Mensaje = get_bifurcacion(dir, dist);
         }
         public override void Update()

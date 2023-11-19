@@ -454,7 +454,12 @@ namespace ORTS.Scripting.Script
     {
         public override void UpdatePacket()
         {
-            Packet = "{tunnel_msg(0)}";
+            int ahead = 0;
+            for (int i=0; i<5; i++)
+            {
+                if (HasHead(i+1)) ahead += (1<<i);
+            }
+            Packet = "{tunnel_msg("+ahead+")}";
             base.UpdatePacket();
         }
     }
@@ -462,7 +467,12 @@ namespace ORTS.Scripting.Script
     {
         public override void UpdatePacket()
         {
-            Packet = "{viaducto_msg(0)}";
+            int ahead = 0;
+            for (int i=0; i<5; i++)
+            {
+                if (HasHead(i+1)) ahead += (1<<i);
+            }
+            Packet = "{viaducto_msg("+ahead+")}";
             base.UpdatePacket();
         }
     }
@@ -470,7 +480,12 @@ namespace ORTS.Scripting.Script
     {
         public override void UpdatePacket()
         {
-            Packet = "{puente_msg(0)}";
+            int ahead = 0;
+            for (int i=0; i<5; i++)
+            {
+                if (HasHead(i+1)) ahead += (1<<i);
+            }
+            Packet = "{puente_msg("+ahead+")}";
             base.UpdatePacket();
         }
     }
