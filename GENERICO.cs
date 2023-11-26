@@ -293,6 +293,7 @@ namespace ORTS.Scripting.Script
             {
                 ActualizarInformacionFlags();
             }
+            if (!estaPreparada) itinerarioERTMS = false;
 
             deslizamientoSiguienteSenalOcupado = IdSignalLocalVariable(idSiguienteSenal, KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO) == 1;
             bool deslizamientoOcupado = false;
@@ -333,14 +334,6 @@ namespace ORTS.Scripting.Script
             }
             else return;
             itinerarioERTMS = true;
-            for (int i=0; i<20; i++)
-            {
-                int id = NextSignalId("NORMAL", i);
-                if (id < 0) break;
-                if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
-                SendSignalMessage(id, "ITINERARIO_ERTMS");
-                break;
-            }
         }
 
         public override void HandleSignalMessage(int id, string message)
@@ -365,16 +358,30 @@ namespace ORTS.Scripting.Script
         }
         public override void HandleEvent(SignalEvent evt, string message = "") 
         {
-            itinerarioERTMS = false;
+            bool prevERTMS = itinerarioERTMS;
             switch(evt)
             {
                 case SignalEvent.RequestMostRestrictiveAspect:
+                    itinerarioERTMS = false;
                     break;
                 case SignalEvent.RequestApproachAspect:
                     ItinerarioERTMS();
                     break;
                 case SignalEvent.RequestLeastRestrictiveAspect:
+                    itinerarioERTMS = false;
                     break;
+            }
+            if (prevERTMS != itinerarioERTMS)
+            {
+                for (int i=0; ; i++)
+                {
+                    int id = NextSignalId("NORMAL", i);
+                    if (id < 0) break;
+                    if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
+                    var asp = GetAspectoSenal(id, "NORMAL");
+                    if (asp == Aspecto.Parada || asp == Aspecto.ParadaPermisiva || asp == Aspecto.RebaseAutorizado || asp == Aspecto.RebaseAutorizadoDestellos || asp == Aspecto.RebaseAutorizadoCortaDistancia) break;
+                    SendSignalMessage(id, itinerarioERTMS ? "ITINERARIO_ERTMS" : "ITINERARIO_ASFA");
+                }
             }
         }
 
@@ -567,7 +574,7 @@ namespace ORTS.Scripting.Script
 
         bool GetAgujaDeEstaSenalDesviada()
         {
-            if (FlagPresente("M_V_DESV") || !RouteSet)
+            if (rutaADesviadaObligatoria || !RouteSet || FlagPresente("M_V_DESV"))
             {
                 SharedVariables[KEY_VARIABLE_COMPARTIDA_AGUJA] = 1;
                 return true;
@@ -950,12 +957,9 @@ namespace ORTS.Scripting.Script
             }
             return -1;
         }
-
-        Aspecto GetAspectoSiguienteSenal()
+        Aspecto GetAspectoSenal(int id, string tipo)
         {
-            int id = idSiguienteSenal;
             if (id < 0) return Aspecto.Parada;
-            string tipo = siguienteSenalEsAvanzadaBLA ? "DISTANCE" : "NORMAL";
             var aspectoSiguienteSenalTexto = IdTextSignalAspect(id, tipo);
             if (textoAAspecto.ContainsKey(aspectoSiguienteSenalTexto))
             {
@@ -991,6 +995,10 @@ namespace ORTS.Scripting.Script
                 }
             }
             return Aspecto.Parada;
+        }
+        Aspecto GetAspectoSiguienteSenal()
+        {
+            return GetAspectoSenal(idSiguienteSenal, siguienteSenalEsAvanzadaBLA ? "DISTANCE" : "NORMAL");
         }
         AspectoRetroceso GetAspectoSiguienteSenalRetroceso()
         {
@@ -1052,6 +1060,8 @@ namespace ORTS.Scripting.Script
             forzarAnuncioPrecaucion = FlagPresente("F_APREC_SIG_APARA");
             forzarParada = FlagPresente("F_PARADA");
             forzarRebase = FlagPresente("F_REBASE");
+            
+            //rutaADesviadaObligatoria = FlagPresente("M_V_DESV_OBL");
 
             tipoDeSenalizacionDoscientos |= FlagPresente("B_DOSCIENTOS");
             rebaseAutorizadoDestellos = FlagPresente("R_DESTELLOS");
