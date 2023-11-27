@@ -77,6 +77,7 @@ namespace ORTS.Scripting.Script
         Virtual=64,
         Retroceso=128,
         Topera=256,
+        Maniobra=512,
     }
     public enum TipoBloqueo
     {
@@ -141,6 +142,7 @@ namespace ORTS.Scripting.Script
         protected bool esSalida = false;
         protected bool esProteccion = false;
         protected bool esLiberacion = false;
+        protected bool esManiobra = false;
 
         // Funciones 
         protected bool anuncioParadaInmediata = false;
@@ -666,6 +668,10 @@ namespace ORTS.Scripting.Script
             else if (forzarParada)
             {
                 aspectoEstaSenal = AspectoParada;
+            }
+            else if (esManiobra)
+            {
+                aspectoEstaSenal = Aspecto.RebaseAutorizado;
             }
             else if (!avanzadaSinParada && (estaPreparada || !reposoAnuncioParada) && pantallaERTMScerrada)
             {
@@ -1208,6 +1214,8 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp3msbem"))		esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbem_izq"))	esSalida		= esBLA = true;
             
+            if (nombreDeSenal.Equals("sp2m") || nombreDeSenal.Equals("sp2mb")) esManiobra = true;
+            
             /*if (nombreDeSenal.Equals("sp2vr"))
             if (nombreDeSenal.Equals("sp3tundersinp"))
             if (nombreDeSenal.Equals("sp3tunizqsinp"))
@@ -1242,6 +1250,11 @@ namespace ORTS.Scripting.Script
                     }
                 }
             }
+            else if (esManiobra)
+            {
+                focoRojo = focoBlanco = true;
+                focoVerde = focoAmarillo = focoAzul = false;
+            }
             else
             {
                 focoRojo = !esAvanzada || (!esBLA && !esBSL);
@@ -1258,6 +1271,7 @@ namespace ORTS.Scripting.Script
             if (esIntermedia) tipo |= TipoSeñal.Intermedia;
             if (esLiberacion) tipo |= TipoSeñal.Liberacion;
             if (esAvanzada || esPreavanzada) tipo |= TipoSeñal.Avanzada;
+            if (esManiobra) tipo |= TipoSeñal.Maniobra;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL] = (int)tipo;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_TIPO_BLOQUEO] = (int)((esBLA || esBSL) ? TipoBloqueo.BLA : TipoBloqueo.BA);
         }
