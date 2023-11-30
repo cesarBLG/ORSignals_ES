@@ -356,7 +356,11 @@ namespace ORTS.Scripting.Script
             else if (message == "ETCS_N2") Sistemas |= SistemaSeñalizacion.ETCS_N2;
             else if (message == "ASFA") Sistemas |= SistemaSeñalizacion.ASFA;
             else if (message == "LZB") Sistemas |= SistemaSeñalizacion.LZB;
-            else if (message == "LIBERACION") esLiberacion = true;
+            else if (message == "LIBERACION")
+            {
+                esLiberacion = true;
+                UpdateTipoSenal();
+            }
         }
         public override void HandleEvent(SignalEvent evt, string message = "") 
         {
@@ -874,11 +878,11 @@ namespace ORTS.Scripting.Script
         {
             if (siguienteSenalEsDeLiberacion)
             {
-                if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado || aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos)
+                if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.ParadaPermisiva)
                 {
                     aspectoEstaSenal = AspectoParada;
                 }
-                if ((aspectoSiguienteSenal == Aspecto.ParadaSelectiva || aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos) &&
+                if ((aspectoSiguienteSenal == Aspecto.RebaseAutorizado || aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos) &&
                     aspectoEstaSenal != AspectoParada)
                 {
                     aspectoEstaSenal = aspectoSiguienteSenal;
@@ -1264,6 +1268,10 @@ namespace ORTS.Scripting.Script
                 focoAmarillo = !(esSalida && (esBSL || esBLA)) && nombreDeSenal != "sp1v";
                 if ((esSalida || esIntermedia) && (esBSL || esBLA)) focoAmarillo = false;
             }
+            UpdateTipoSenal();
+        }
+        protected void UpdateTipoSenal()
+        {
             
             TipoSeñal tipo = (TipoSeñal)0;
             if (esSalida) tipo |= TipoSeñal.Salida;
