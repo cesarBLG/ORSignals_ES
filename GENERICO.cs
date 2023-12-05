@@ -665,15 +665,11 @@ namespace ORTS.Scripting.Script
                 aspectoEstaSenal = AspectoParada;
                 paradaTotal = true;
             }
-            else if (forzarRebase/* || (!TrainRequiresSignal(NextSignalId("NORMAL"), 0) && !avanzadaSinParada)*/)
-            {
-                aspectoEstaSenal = Aspecto.RebaseAutorizado;
-            }
             else if (forzarParada)
             {
                 aspectoEstaSenal = AspectoParada;
             }
-            else if (esManiobra)
+            else if (forzarRebase || esManiobra/* || (!TrainRequiresSignal(NextSignalId("NORMAL"), 0) && !avanzadaSinParada)*/)
             {
                 aspectoEstaSenal = Aspecto.RebaseAutorizado;
             }

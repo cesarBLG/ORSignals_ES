@@ -12,18 +12,13 @@ namespace ORTS.Scripting.Script
         protected int needsUpdate = 1;
         bool faulty = false;
         bool prevEnabled;
+        int prevNumCleared;
         int prevSigId;
-        int prevLevelId;
-        string prevSigAspect;
 		public override void Update()
 		{
             base.Update();
             if (NID_BG <= 0) return;
-            int SigId = NextSignalId("NORMAL");
-            string SigAspect = SigId >= 0 ? IdTextSignalAspect(SigId, "NORMAL") : "";
-            int levelId = NextSignalId("ETCS_LEVEL");
             if (needsUpdate > 0) needsUpdate++;
-            if (IdSignalEnabled(SigId) != prevEnabled || SigId != prevSigId || SigAspect != prevSigAspect || levelId != prevLevelId) needsUpdate++;
             for (int i=0; ; i++)
             {
                 int id = NextSignalId("ETCS_PACKET", i);
@@ -35,10 +30,6 @@ namespace ORTS.Scripting.Script
                 }
             }
             if (needsUpdate > 3) SendSignalMessage(NID_BG, "ACTUALIZA:");
-            prevSigId = SigId;
-            prevSigAspect = SigAspect;
-            prevEnabled = IdSignalEnabled(SigId);
-            prevLevelId = levelId;
 		}
 		void ActualizarTelegrama(int msgcount)
         {

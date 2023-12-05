@@ -323,7 +323,7 @@ namespace ORTS.Scripting.Script
                         }
                         break;
                     }
-                    bool esInicioRuta = t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Entrada) || t.HasFlag(TipoSeñal.Salida) || t.HasFlag(TipoSeñal.Interior));
+                    bool esInicioRuta = t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Entrada) || t.HasFlag(TipoSeñal.Salida) || t.HasFlag(TipoSeñal.Interior)) && !t.HasFlag(TipoSeñal.Liberacion);
                     if (esInicioRuta)
                     {
                         if (totalsignals > maxToClear) break;

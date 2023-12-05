@@ -10,6 +10,7 @@ namespace ORTS.Scripting.Script
 	public class ETCS_MAIN_MA_1_2 : EurobalizaConmutable
 	{
         bool soloN1;
+        int prevEndSig = -1;
         public ETCS_MAIN_MA_1_2()
         {
             BaliseReaction = 1;
@@ -19,6 +20,26 @@ namespace ORTS.Scripting.Script
         {
             soloN1 = HasHead(1);
             base.Initialize();
+        }
+        public override void Update()
+        {
+            int sigId = NextSignalId("NORMAL");
+            int endSig = -1;
+            if (sigId >= 0)
+            {
+                int max = IdSignalLocalVariable(sigId, 901);
+                for (int i=0; i<max; i++)
+                {
+                    int sig = NextSignalId("NORMAL", i);
+                    if (IdSignalHasNormalSubtype(sig, "PANTALLA_ERTMS") || IdSignalHasNormalSubtype(sig, "RETROCESO")) continue;
+                    Aspecto a = GetAspectoSenal(sig);
+                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva) break;
+                    endSig = sig;
+                }
+            }
+            if (endSig != prevEndSig) needsUpdate++;
+            prevEndSig = endSig;
+            base.Update();
         }
         protected override List<string> ConstruirMensajes() 
         {
@@ -126,10 +147,31 @@ namespace ORTS.Scripting.Script
     }
 	public class ETCS_INFILL_MA_1_2 : EurobalizaConmutable
 	{
+        int prevEndSig = -1;
         public ETCS_INFILL_MA_1_2()
         {
             EsPrimera = true;
             BaliseReaction = 1;
+        }
+        public override void Update()
+        {
+            int sigId = NextSignalId("NORMAL");
+            int endSig = -1;
+            if (sigId >= 0)
+            {
+                int max = IdSignalLocalVariable(sigId, 901);
+                for (int i=0; i<max; i++)
+                {
+                    int sig = NextSignalId("NORMAL", i);
+                    if (IdSignalHasNormalSubtype(sig, "PANTALLA_ERTMS") || IdSignalHasNormalSubtype(sig, "RETROCESO")) continue;
+                    Aspecto a = GetAspectoSenal(sig);
+                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva) break;
+                    endSig = sig;
+                }
+            }
+            if (endSig != prevEndSig) needsUpdate++;
+            prevEndSig = endSig;
+            base.Update();
         }
         protected override List<string> ConstruirMensajes() 
         {
@@ -218,9 +260,17 @@ namespace ORTS.Scripting.Script
     }
     public class ETCS_MAIN_N2 : EurobalizaConmutable
     {
+        Aspecto prevAspecto;
         public ETCS_MAIN_N2()
         {
             EsPrimera = true;
+        }
+        public override void Update()
+        {
+            Aspecto a = GetAspectoSenal(NextSignalId("NORMAL"));
+            if (prevAspecto != a) needsUpdate++;
+            prevAspecto = a;
+            base.Update();
         }
         protected override List<string> ConstruirMensajes() 
         {
@@ -415,9 +465,17 @@ namespace ORTS.Scripting.Script
     
     public class ETCS_LEVELTR : PaqueteETCS
     {
+        int prevLevelId;
         public ETCS_LEVELTR()
         {
             Reaction = 1;
+        }
+        public override void Update()
+        {
+            int levelId = NextSignalId("ETCS_LEVEL");
+            if (prevLevelId != levelId) SharedVariables[KeyPacketNeedsUpdate] = 1;
+            prevLevelId = levelId;
+            base.Update();
         }
         public override void UpdatePacket()
         {
