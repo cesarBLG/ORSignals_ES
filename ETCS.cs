@@ -128,7 +128,7 @@ namespace ORTS.Scripting.Script
                 if (id < 0) break;
                 if (IdSignalLocalVariable(id, KeyN_PIG) != 0) continue;
                 string r = "bg_reference("+id+")";
-                string l = "{"+r+"-("+prevref+")}"+"0"+format_binary(IdSignalLocalVariable(id, Eurobaliza.KeyNID_BG), 14)+"1"+format_binary(IdSignalLocalVariable(id, KeyGroupReaction), 2)+format_binary(3, 6);
+                string l = "{"+r+"-("+prevref+")}"+"0"+format_binary(IdSignalLocalVariable(id, KeyNID_BG), 14)+"1"+format_binary(IdSignalLocalVariable(id, KeyGroupReaction), 2)+format_binary(3, 6);
                 links.Add(l);
                 prevref = r;
             }

@@ -13,7 +13,7 @@ namespace ORTS.Scripting.Script
 		public override void Update()
 		{
             if (Telegrama != "") return;
-            if (NID_BG >= 0)
+            if (NID_BG > 0)
             {
                 count++;
                 if (count > 10) GenerarTelegrama();

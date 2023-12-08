@@ -10,7 +10,7 @@ namespace ORTS.Scripting.Script
 	public abstract class Eurobaliza : ETCS
 	{
         protected string Telegrama = "";
-        protected int N_PIG;
+        protected int N_PIG=-1;
         protected int N_TOTAL=-1;
         protected int M_DUP=0;
         protected int NID_C;
@@ -29,9 +29,6 @@ namespace ORTS.Scripting.Script
         }
 		public override void Update()
 		{
-            SharedVariables[KeyNID_BG] = NID_BG;
-            SharedVariables[KeyN_PIG] = N_PIG;
-            SharedVariables[KeyN_TOTAL] = N_TOTAL;
             int id = -1;
             for (int i=0; ; i++)
             {
@@ -75,17 +72,25 @@ namespace ORTS.Scripting.Script
             }
             return msg;
         }
+        void SaveVariables()
+        {
+            SharedVariables[KeyNID_BG] = NID_BG;
+            SharedVariables[KeyN_PIG] = N_PIG;
+            SharedVariables[KeyN_TOTAL] = N_TOTAL;
+        }
         protected void NumeraGrupo()
         {
             if (!EsPrimera) return;
             NID_C = ETCS.NID_C;
             NID_BG = SignalId;
+            N_PIG = 0;
             IdSigBaliza = NextSignalId("ETCS");
             if (IdSigBaliza < 0)
             {
                 if (Enabled) N_TOTAL = 0;
             }
             else SendSignalMessage(IdSigBaliza, "NUMERA:"+NID_C+","+NID_BG+","+1);
+            SaveVariables();
         }
         public override void HandleSignalMessage(int id, string message)
 		{
@@ -106,11 +111,13 @@ namespace ORTS.Scripting.Script
                 IdSigBaliza = NextSignalId("ETCS");
                 if (IdSigBaliza < 0) SendSignalMessage(bg, "TOTAL:"+pos);
                 else SendSignalMessage(IdSigBaliza, "NUMERA:"+NID_C+","+NID_BG+","+(N_PIG+1));
+                SaveVariables();
             }
             else if (message.StartsWith("TOTAL:"))
             {
                 N_TOTAL = int.Parse(message.Substring(6,1));
                 if (N_PIG<N_TOTAL) SendSignalMessage(IdSigBaliza, message);
+                SaveVariables();
                 for (int i=0; ; i++)
                 {
                     int id2 = NextSignalId("ETCS_PACKET", i);
