@@ -10,6 +10,7 @@ namespace ORTS.Scripting.Script
 {
     public class LZBSTART : CsSignalScript
     {
+        static public readonly int KeyNextSignalId=150;
         int id = -1;
         public override void Initialize()
         {
@@ -20,7 +21,7 @@ namespace ORTS.Scripting.Script
             if (id < 0)
             {
                 id = NextSignalId("NORMAL");
-                SendSignalMessage(id, "LZB");
+                SharedVariables[KeyNextSignalId] = id;
             }
         }
     }

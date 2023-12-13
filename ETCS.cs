@@ -302,7 +302,7 @@ namespace ORTS.Scripting.Script
                     if (maxToClear == 1 && nsignals > 0) break;
                     Aspecto a = GetAspectoSenal(sig);
                     TipoSeñal t = (TipoSeñal)IdSignalLocalVariable(sig, 201);
-                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva)
+                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.ParadaLZB)
                     {
                         if (sig < 0)
                         {
@@ -361,7 +361,7 @@ namespace ORTS.Scripting.Script
                 }
                 else
                 {
-                    if (Convencional) T = (senalInicioSeccion == SenalAsociada && esSalida) ? 30 : 150; // DAI
+                    if (Convencional) T = /*(senalInicioSeccion == SenalAsociada && esSalida) ? 30 : */150; // DAI
                     else if (nsignals == 1) T = 240; // DAI zona 2
                     else T = 360; // DAI zona 1
                 }

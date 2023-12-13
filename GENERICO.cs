@@ -140,6 +140,7 @@ namespace ORTS.Scripting.Script
         protected bool esAvanzada = false;
         protected bool esEntrada = false;
         protected bool esSalida = false;
+        protected bool esInterior = false;
         protected bool esProteccion = false;
         protected bool esLiberacion = false;
         protected bool esManiobra = false;
@@ -326,16 +327,9 @@ namespace ORTS.Scripting.Script
         }
         void ItinerarioERTMS()
         {
-            if ((Sistemas & SistemaSeñalizacion.ETCS_N1) != 0 || (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0)
-            {
-                if (!focoAzul) return;
-            }
-            else if ((Sistemas & SistemaSeñalizacion.LZB) != 0)
-            {
-                if (!focoBlanco) return;
-            }
-            else return;
-            itinerarioERTMS = true;
+            bool n1 = (Sistemas & SistemaSeñalizacion.ETCS_N1) != 0;
+            bool n2 = (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0;
+            if ((focoAzul && (n1 || n2)) || (esLZB && n2)) itinerarioERTMS = true;
         }
 
         public override void HandleSignalMessage(int id, string message)
@@ -675,23 +669,17 @@ namespace ORTS.Scripting.Script
             }
             else if (!avanzadaSinParada && (estaPreparada || !reposoAnuncioParada) && pantallaERTMScerrada)
             {
-                aspectoEstaSenal = Aspecto.ParadaSelectiva;
+                aspectoEstaSenal = esLZB ? Aspecto.ParadaLZB : Aspecto.ParadaSelectiva;
             }
-            else if (itinerarioERTMS && (Sistemas & SistemaSeñalizacion.ETCS_N1) != 0)
+            else if (itinerarioERTMS)
             {
-                aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
-            }
-            else if (itinerarioERTMS && (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0)
-            {
-                aspectoEstaSenal = Aspecto.ParadaSelectiva;
-            }
-            else if (itinerarioERTMS && (Sistemas & SistemaSeñalizacion.LZB) != 0)
-            {
-                aspectoEstaSenal = Aspecto.ParadaLZB;
+                if (esLZB) aspectoEstaSenal = Aspecto.ParadaLZB;
+                else if ((Sistemas & SistemaSeñalizacion.ETCS_N1) != 0) aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
+                else aspectoEstaSenal = Aspecto.ParadaSelectiva;
             }
             else if (!avanzadaSinParada && deslizamientoSiguienteSenalOcupado && aspectoSiguienteSenal == Aspecto.Parada)
             {
-                aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
+                aspectoEstaSenal = esLZB ? Aspecto.ParadaLZB : Aspecto.ParadaSelectivaDestellos;
             }
             else if (aspectoSiguienteSenal == Aspecto.Apagada && !siguienteSenalEsAvanzadaBLA)
             {
@@ -878,7 +866,7 @@ namespace ORTS.Scripting.Script
                 {
                     aspectoEstaSenal = AspectoParada;
                 }
-                if ((aspectoSiguienteSenal == Aspecto.RebaseAutorizado || aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos) &&
+                if ((aspectoSiguienteSenal == Aspecto.RebaseAutorizado || aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB) &&
                     aspectoEstaSenal != AspectoParada)
                 {
                     aspectoEstaSenal = aspectoSiguienteSenal;
@@ -1082,6 +1070,9 @@ namespace ORTS.Scripting.Script
             siguienteSenalEsDeLiberacion = t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Liberacion);
             siguienteSenalEsAvanzadaBLA &= !siguienteSenalEsDeLiberacion;
             
+            id = NextSignalId("LZB");
+            if (id >= 0 && NextSignalId("NORMAL") == IdSignalLocalVariable(id, 150)) Sistemas |= SistemaSeñalizacion.LZB;
+            
             ActualizarAspectos();
         }
         void ActualizarAspectos()
@@ -1111,7 +1102,7 @@ namespace ORTS.Scripting.Script
                 if (SNCA_orig < 0) SNCA_orig = 2;
             }
 
-            if (siguienteSenalEsDeLiberacion) SharedVariables[900] = 1; // Requerir liberacion abierta
+            if (siguienteSenalEsDeLiberacion || esInterior) SharedVariables[900] = 1; // Requerir liberacion abierta
             else if (siguienteSenalEsAvanzadaBLA) SharedVariables[900] = -1; // Avanzada resta 1 a la secuencia
             else SharedVariables[900] = 0;
             
@@ -1276,6 +1267,7 @@ namespace ORTS.Scripting.Script
             if (esLiberacion) tipo |= TipoSeñal.Liberacion;
             if (esAvanzada || esPreavanzada) tipo |= TipoSeñal.Avanzada;
             if (esManiobra) tipo |= TipoSeñal.Maniobra;
+            if (esInterior) tipo |= TipoSeñal.Interior;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL] = (int)tipo;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_TIPO_BLOQUEO] = (int)((esBLA || esBSL) ? TipoBloqueo.BLA : TipoBloqueo.BA);
         }

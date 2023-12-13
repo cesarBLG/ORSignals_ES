@@ -65,6 +65,7 @@ namespace ORTS.Scripting.Script
                 case Aspecto.Parada:
                 case Aspecto.ParadaPermisiva:
                 case Aspecto.ParadaSelectiva:
+                case Aspecto.ParadaLZB:
                     msg.Add(create_packet(137, "0", 1));
                     break;
                 default:
@@ -292,6 +293,7 @@ namespace ORTS.Scripting.Script
                 case Aspecto.Parada:
                 case Aspecto.ParadaPermisiva:
                 case Aspecto.ParadaSelectiva:
+                case Aspecto.ParadaLZB:
                     msg.Add(create_packet(137, "0", 1));
                     break;
                 default:
