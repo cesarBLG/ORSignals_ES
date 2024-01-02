@@ -21,21 +21,13 @@ namespace ORTS.Scripting.Script
             float dist = 2300;
             switch(SignalTypeName)
             {
-                case "etcs_bifurcacion_aranda":
-                    dir = "Aranda";
-                    dist = 2300;
+                case "etcs_bifurcacion_martos":
+                    dir = "Martos";
+                    dist = 2000;
                     break;
-                case "etcs_bifurcacion_orobon":
-                    dir = "Orobón";
-                    dist = 2300;
-                    break;
-                case "etcs_bifurcacion_bpg":
-                    dir = "Parque Grande";
-                    dist = 1200;
-                    break;
-                case "etcs_bifurcacion_ps":
-                    dir = "P. Susana";
-                    dist = 1200;
+                case "etcs_bifurcacion_cumbre":
+                    dir = "La cumbre";
+                    dist = 2000;
                     break;
             }
             float distHead = 0;
