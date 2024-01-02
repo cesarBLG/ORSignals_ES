@@ -296,7 +296,7 @@ namespace ORTS.Scripting.Script
             {
                 ActualizarInformacionFlags();
             }
-            if (!estaPreparada) itinerarioERTMS = false;
+            if (!estaPreparada) itinerarioERTMS = esLZB && (!esAvanzada || !esBSL);
 
             deslizamientoSiguienteSenalOcupado = IdSignalLocalVariable(idSiguienteSenal, KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO) == 1;
             bool deslizamientoOcupado = false;
@@ -680,6 +680,41 @@ namespace ORTS.Scripting.Script
             else if (!avanzadaSinParada && deslizamientoSiguienteSenalOcupado && aspectoSiguienteSenal == Aspecto.Parada)
             {
                 aspectoEstaSenal = esLZB ? Aspecto.ParadaLZB : Aspecto.ParadaSelectivaDestellos;
+            }
+            else if (esLZB)
+            {
+                if (siguienteSenalEsAvanzadaBLA)
+                {
+                    aspectoEstaSenal = Aspecto.ViaLibre;
+                }
+                else if (esAvanzada)
+                {
+                    if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.Apagada ||
+                aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado ||
+                aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || 
+                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0)
+                    {
+                        aspectoEstaSenal = Aspecto.AnuncioParada;
+                    }
+                    else
+                    {
+                        aspectoEstaSenal = Aspecto.ViaLibre;
+                    }
+                }
+                else
+                {
+                    if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.Apagada ||
+                aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || 
+                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || idSiguienteSenal < 0 || agujaEstaSenalDesviada)
+                    {
+                        if (esSalida) aspectoEstaSenal = Aspecto.RebaseAutorizadoDestellos;
+                        else aspectoEstaSenal = Aspecto.RebaseAutorizado;
+                    }
+                    else
+                    {
+                        aspectoEstaSenal = Aspecto.ViaLibre;
+                    }
+                }
             }
             else if (aspectoSiguienteSenal == Aspecto.Apagada && !siguienteSenalEsAvanzadaBLA)
             {
