@@ -131,7 +131,7 @@ namespace ORTS.Scripting.Script
         readonly int KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL = 201;
         readonly int KEY_VARIABLE_COMPARTIDA_TIPO_BLOQUEO = 202;
         
-        Random rand = new Random();
+        static Random rand = new Random();
 
         // Tipologia senal 
         protected bool esPermisiva = false;
@@ -629,7 +629,7 @@ namespace ORTS.Scripting.Script
             else if (!estaPreparada && !reposoAnuncioParada && !reposoViaLibre && !avanzadaSinParada)
             {
                 aspectoEstaSenal = AspectoParada;
-                paradaTotal = !esIntermedia; // Permite que se establezca el bloqueo pasando a estar preparadas
+                paradaTotal = true;
             }
             else if (aspectoSiguienteSenalRetroceso == AspectoRetroceso.Parada)
             {
@@ -1194,6 +1194,7 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp3p"))		esPermisiva = esIntermedia = true;
             if (nombreDeSenal.Equals("sp3pr"))		esPermisiva = esIntermedia = true;
             if (nombreDeSenal.Equals("sp3p200"))		esPermisiva = esIntermedia = tipoDeSenalizacionDoscientos = true;
+            if (nombreDeSenal.Equals("sp4ibab")) esIntermedia = true;
 
             if (nombreDeSenal.Equals("ep_3_ap_pap_p_ba"))			esPermisiva = esAvanzada = true;
             if (nombreDeSenal.Equals("ep_3_ap_bif_p_ba"))			esPermisiva = esAvanzada = true;
