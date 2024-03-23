@@ -252,7 +252,20 @@ namespace ORTS.Scripting.Script
                     dangerPoint = 100;
                 }
                 ma += "0000000"+"0000000"+"0000000000"+"00000";
-                ma += "000000000000000"+"0"+"0"+"1"+format_etcs_distance(dangerPoint)+format_etcs_speedKpH(vrelease)+"0";
+                int ahead = -1;
+                for (int i=0;; i++)
+                {
+                    int sig = NextSignalId("NORMAL", i);
+                    if (sig == SenalAsociada)
+                    {
+                        ahead = i;
+                        break;
+                    }
+                    if (sig < 0) break;
+                }
+                if (ahead < 0) ma += "000000000000000";
+                else ma += "{NextSignalDistanceM("+ahead+")-"+(Infill ? "ilref" : "bgref")+"}";
+                ma += "0"+"0"+"1"+format_etcs_distance(dangerPoint)+format_etcs_speedKpH(vrelease)+"0";
             }
             else
             {
@@ -301,8 +314,11 @@ namespace ORTS.Scripting.Script
                     if (IdSignalHasNormalSubtype(sig, "PANTALLA_ERTMS") || IdSignalHasNormalSubtype(sig, "RETROCESO")) continue;
                     if (maxToClear == 1 && nsignals > 0) break;
                     Aspecto a = GetAspectoSenal(sig);
+                    SistemaSeñalizacion sist = (SistemaSeñalizacion)IdSignalLocalVariable(sig, 200);
                     TipoSeñal t = (TipoSeñal)IdSignalLocalVariable(sig, 201);
-                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.ParadaLZB)
+                    bool stop = sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.ParadaLZB;
+                    if (a == Aspecto.ParadaSelectivaDestellos && (sist & SistemaSeñalizacion.ETCS_N1) == 0 && (sist & SistemaSeñalizacion.ETCS_N2) == 0 && (sist & SistemaSeñalizacion.LZB) == 0) stop = true;
+                    if (stop)
                     {
                         if (sig < 0)
                         {
