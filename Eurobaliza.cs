@@ -24,6 +24,7 @@ namespace ORTS.Scripting.Script
         protected int GroupReaction = 2;
         public override void Initialize()
         {
+            SharedVariables[KeyN_PIG] = -1;
             base.Initialize();
             TextSignalAspect = "1"+"0000000"+"0"+format_binary(EsPrimera ? 0 : 1,3);
         }

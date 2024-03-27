@@ -16,7 +16,7 @@ namespace ORTS.Scripting.Script
             if (NID_BG > 0)
             {
                 count++;
-                if (count > 10) GenerarTelegrama();
+                if (count > 5) GenerarTelegrama();
             }
             base.Update();
 		}
