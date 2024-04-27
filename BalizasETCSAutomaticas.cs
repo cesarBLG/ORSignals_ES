@@ -33,7 +33,7 @@ namespace ORTS.Scripting.Script
                     int sig = NextSignalId("NORMAL", i);
                     if (IdSignalHasNormalSubtype(sig, "PANTALLA_ERTMS") || IdSignalHasNormalSubtype(sig, "RETROCESO")) continue;
                     Aspecto a = GetAspectoSenal(sig);
-                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva) break;
+                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.RebaseAutorizado || a == Aspecto.RebaseAutorizadoCortaDistancia) break;
                     endSig = sig;
                 }
             }
@@ -166,7 +166,7 @@ namespace ORTS.Scripting.Script
                     int sig = NextSignalId("NORMAL", i);
                     if (IdSignalHasNormalSubtype(sig, "PANTALLA_ERTMS") || IdSignalHasNormalSubtype(sig, "RETROCESO")) continue;
                     Aspecto a = GetAspectoSenal(sig);
-                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva) break;
+                    if (sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.RebaseAutorizado || a == Aspecto.RebaseAutorizadoCortaDistancia) break;
                     endSig = sig;
                 }
             }
@@ -306,10 +306,18 @@ namespace ORTS.Scripting.Script
     }
 	public class ETCS_RETROCESO : EurobalizaConmutable
 	{
+        Aspect prevAspecto;
         public ETCS_RETROCESO()
         {
             EsPrimera = true;
             BaliseReaction = 1;
+        }
+        public override void Update()
+        {
+            Aspect a = IdSignalAspect(NextSignalId("NORMAL"), "NORMAL");
+            if (prevAspecto != a) needsUpdate++;
+            prevAspecto = a;
+            base.Update();
         }
         protected override List<string> ConstruirMensajes() 
         {

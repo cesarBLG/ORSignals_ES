@@ -316,7 +316,7 @@ namespace ORTS.Scripting.Script
                     Aspecto a = GetAspectoSenal(sig);
                     SistemaSeñalizacion sist = (SistemaSeñalizacion)IdSignalLocalVariable(sig, 200);
                     TipoSeñal t = (TipoSeñal)IdSignalLocalVariable(sig, 201);
-                    bool stop = sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.ParadaLZB;
+                    bool stop = sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.ParadaLZB || a == Aspecto.RebaseAutorizado || a == Aspecto.RebaseAutorizadoCortaDistancia;
                     if (a == Aspecto.ParadaSelectivaDestellos && (sist & SistemaSeñalizacion.ETCS_N1) == 0 && (sist & SistemaSeñalizacion.ETCS_N2) == 0 && (sist & SistemaSeñalizacion.LZB) == 0) stop = true;
                     if (stop)
                     {
@@ -327,7 +327,7 @@ namespace ORTS.Scripting.Script
                             sectionLength = "{(EoADistanceM(0)-10)-("+startRef+")}";
                         }
                         else sectionLength = "{NextSignalDistanceM("+i+")-("+startRef+")}";
-                        if (t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Intermedia))
+                        if (t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Intermedia) || t.HasFlag(TipoSeñal.Avanzada)))
                         {
                             vrelease = 30;
                             dangerPoint = 100;
