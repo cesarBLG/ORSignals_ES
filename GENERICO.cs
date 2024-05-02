@@ -1222,6 +1222,8 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp4sbab"))			esSalida = true;
             if (nombreDeSenal.Equals("sp4msbab"))		esSalida = true;
             if (nombreDeSenal.Equals("sp4msbab_izq"))	esSalida = true;
+            if (nombreDeSenal.Equals("sp4msbab_sc"))		esSalida = true;
+            if (nombreDeSenal.Equals("sp4msbab_sc_izq"))	esSalida = true;
             if (nombreDeSenal.Equals("sp4sbabl"))		esSalida = true;
             if (nombreDeSenal.Equals("sp4sbad200"))			esSalida = tipoDeSenalizacionDoscientos = true;
             if (nombreDeSenal.Equals("sp4sbad200mb"))		esSalida = tipoDeSenalizacionDoscientos = true;
@@ -1238,6 +1240,8 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp3sbemsp"))	    esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbeml"))		esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbeml_izq"))	esSalida		= esBLA = true;
+            if (nombreDeSenal.Equals("sp3msbeml_sc"))		esSalida		= esBLA = true;
+            if (nombreDeSenal.Equals("sp3msbeml_sc_izq"))	esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbem"))		esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbem_izq"))	esSalida		= esBLA = true;
             
@@ -1285,7 +1289,7 @@ namespace ORTS.Scripting.Script
             else
             {
                 focoRojo = !esAvanzada || (!esBLA && !esBSL);
-                focoBlanco = nombreDeSenal.StartsWith("sp5") || nombreDeSenal.StartsWith("sp4") || nombreDeSenal.StartsWith("sp3msbem") || nombreDeSenal.StartsWith("sp3sbem") || nombreDeSenal.StartsWith("sp3e");
+                focoBlanco = nombreDeSenal.StartsWith("sp5") || (nombreDeSenal.StartsWith("sp4") && !nombreDeSenal.StartsWith("sp4i")) || nombreDeSenal.StartsWith("sp3msbem") || nombreDeSenal.StartsWith("sp3sbem") || nombreDeSenal.StartsWith("sp3e");
                 focoVerde = nombreDeSenal != "sp2ra" && !nombreDeSenal.StartsWith("sp3e");
                 focoAzul = (esBSL && !esAvanzada) || nombreDeSenal.StartsWith("sp5") || nombreDeSenal.StartsWith("sp4i");
                 focoAmarillo = !(esSalida && (esBSL || esBLA)) && nombreDeSenal != "sp1v";
