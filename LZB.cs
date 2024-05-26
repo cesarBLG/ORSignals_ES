@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ORTS.Scripting.Script
 {
-    public class LZBSTART : CsSignalScript
+    public class LZB : CsSignalScript
     {
         static public readonly int KeyNextSignalId=150;
         int id = -1;

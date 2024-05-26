@@ -297,7 +297,7 @@ namespace ORTS.Scripting.Script
             {
                 ActualizarInformacionFlags();
             }
-            if (!estaPreparada) itinerarioERTMS = esLZB && (!esAvanzada || !esBSL);
+            if (!estaPreparada) itinerarioERTMS = esLZB && (!esAvanzada || !esBSL) && ((Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0);
 
             deslizamientoSiguienteSenalOcupado = IdSignalLocalVariable(idSiguienteSenal, KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO) == 1;
             bool deslizamientoOcupado = false;
