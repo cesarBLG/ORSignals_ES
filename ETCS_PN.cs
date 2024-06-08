@@ -30,7 +30,7 @@ namespace ORTS.Scripting.Script
             if (next_state == Aspect.Approach_2 || next_state == Aspect.Clear_2) pack += "0";
             else
             {
-                pack += "1"+format_etcs_speedKpH(10)+"0";//"1"+format_etcs_distance(50);
+                pack += "1"+format_etcs_speedKpH(10)+"1"+format_etcs_distance(50);
             }
             Packet = create_packet(88, pack, 1);
             base.UpdatePacket();

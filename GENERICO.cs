@@ -125,6 +125,7 @@ namespace ORTS.Scripting.Script
         bool agujaEstaSenalDesviada = false;
         bool agujaSiguienteSenalDesviada = false;
         readonly int KEY_VARIABLE_COMPARTIDA_AGUJA = 100;
+        readonly int KEY_VARIABLE_COMPARTIDA_ASPECTO_EXTENDIDO = 101;
         readonly int KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO = 121;
         readonly int KEY_VARIABLE_COMPARTIDA_SIG_SENAL = 150;
         readonly int KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION = 200;
@@ -518,7 +519,7 @@ namespace ORTS.Scripting.Script
                     else aspectoEstaSenal = Aspecto.AnuncioParada;
                 }
                 else if (aspectoEstaSenal == Aspecto.PreanuncioParada || aspectoEstaSenal == Aspecto.AnuncioPrecaucion) aspectoEstaSenal = Aspecto.AnuncioParada;
-                else if (aspectoEstaSenal == Aspecto.AnuncioParada) aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
+                else if (aspectoEstaSenal == Aspecto.AnuncioParada || aspectoEstaSenal == Aspecto.AnuncioParadaInmediata) aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
                 else if (aspectoEstaSenal == Aspecto.ParadaSelectivaDestellos) aspectoEstaSenal = Aspecto.ParadaSelectiva;
                 else if (aspectoEstaSenal == Aspecto.ParadaSelectiva) aspectoEstaSenal = AspectoParada;
                 else aspectoEstaSenal = Aspecto.Apagada;
@@ -528,7 +529,7 @@ namespace ORTS.Scripting.Script
             if ((aspectoEstaSenal == Aspecto.AnuncioPrecaucion) && averiaFocoVerde) aspectoEstaSenal = Aspecto.AnuncioParada;
             if ((aspectoEstaSenal == Aspecto.AnuncioPrecaucion) && averiaFocoAmarillo) aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
             if (aspectoEstaSenal == Aspecto.PreanuncioParada && averiaPantallaAlfanumerica) aspectoEstaSenal = Aspecto.AnuncioParada;
-            if ((aspectoEstaSenal == Aspecto.PreanuncioParada || aspectoEstaSenal == Aspecto.AnuncioParada) && averiaFocoAmarillo) aspectoEstaSenal = Aspecto.ParadaSelectiva;
+            if ((aspectoEstaSenal == Aspecto.PreanuncioParada || aspectoEstaSenal == Aspecto.AnuncioParada || aspectoEstaSenal == Aspecto.AnuncioParadaInmediata) && averiaFocoAmarillo) aspectoEstaSenal = Aspecto.ParadaSelectiva;
             if ((aspectoEstaSenal == Aspecto.ParadaSelectiva || aspectoEstaSenal == Aspecto.ParadaSelectivaDestellos) && averiaFocoAzul) aspectoEstaSenal = AspectoParada;
             if ((aspectoEstaSenal == Aspecto.ParadaSelectiva || aspectoEstaSenal == Aspecto.ParadaSelectivaDestellos || aspectoEstaSenal == AspectoParada) && averiaFocoRojo) aspectoEstaSenal = Aspecto.Apagada;
             if ((aspectoEstaSenal == Aspecto.RebaseAutorizado || aspectoEstaSenal == Aspecto.RebaseAutorizadoCortaDistancia || aspectoEstaSenal == Aspecto.RebaseAutorizadoDestellos) && averiaFocoBlanco) aspectoEstaSenal = AspectoParada;
@@ -600,6 +601,7 @@ namespace ORTS.Scripting.Script
         {
             MstsSignalAspect = compatibilidadAspectosMSTS[aspectoEstaSenal];
             TextSignalAspect = aspectoATexto[aspectoEstaSenal];
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_ASPECTO_EXTENDIDO] = (int)aspectoEstaSenal;
             DrawState = drawStates_fast[aspectoEstaSenal];
             if (aspectoEstaSenal == Aspecto.Parada && !paradaTotal) MstsSignalAspect = Aspect.StopAndProceed; // Truco para permitir que el itinerario se establezca mas alla de la señal
             if (aspectoEstaSenal == Aspecto.ParadaSelectiva || aspectoEstaSenal == Aspecto.ParadaSelectivaDestellos || aspectoEstaSenal == Aspecto.ParadaLZB)
@@ -1098,7 +1100,8 @@ namespace ORTS.Scripting.Script
             inhibirViaLibreAAnuncioPrecaucion = FlagPresente("I_VL_A_APREC");
             inhibirViaLibreAViaLibreCondicional = FlagPresente("I_VL_A_VLC");
             
-            //anuncioParadaInmediata = FlagPresente("APARADA_INMEDIATA");
+            anuncioParadaInmediata = FlagPresente("APARADA_INMEDIATA");
+
             int id = GetIdSiguienteSenal();
             if (FlagPresente("OLIBERACION")) SendSignalMessage(id, "LIBERACION");
             var t = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
@@ -1117,6 +1120,7 @@ namespace ORTS.Scripting.Script
             if (focoVerde && (tipoDeSenalizacionDoscientos || inhibirViaLibreAViaLibreCondicional)) aspectosDisponibles.Add(Aspecto.ViaLibreCondicional);
             if (focoAmarillo && focoVerde) aspectosDisponibles.Add(Aspecto.AnuncioPrecaucion);
             if (focoAmarillo && !siguienteSenalEsAvanzadaBLA) aspectosDisponibles.Add(Aspecto.AnuncioParada);
+            if (focoAmarillo && !siguienteSenalEsAvanzadaBLA) aspectosDisponibles.Add(Aspecto.AnuncioParadaInmediata);
             if (focoAmarillo) aspectosDisponibles.Add(Aspecto.PreanuncioParada);
             if (focoAzul && focoRojo) aspectosDisponibles.Add(Aspecto.ParadaSelectiva);
             if (focoAzul && focoRojo) aspectosDisponibles.Add(Aspecto.ParadaSelectivaDestellos);
