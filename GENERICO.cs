@@ -168,7 +168,7 @@ namespace ORTS.Scripting.Script
         // Senal activa
         bool estaPreparada = false;
         bool previoEstaPreparada = false;
-        bool previoPrevioEstaPreparada = false;
+        int preparedCycles = 0;
 
         // Flags
         protected bool rebaseAutorizadoDestellos = false;
@@ -277,7 +277,8 @@ namespace ORTS.Scripting.Script
             previoAspectoEstaSenal = aspectoEstaSenal;
             if (idSiguienteSenal >= 0) previoIdSiguienteSenal = idSiguienteSenal;
             reservaAspectoEstaSenal = aspectoEstaSenal;
-            previoPrevioEstaPreparada = previoEstaPreparada;
+            if (!estaPreparada) preparedCycles = 0;
+            else if (preparedCycles < 10) preparedCycles++;
             previoEstaPreparada = estaPreparada;
 
             idSiguienteSenal = GetIdSiguienteSenal();
@@ -293,7 +294,7 @@ namespace ORTS.Scripting.Script
             informacionDeRuta = getInformacionDeRuta();
 
             // Flags
-            if (previoIdSiguienteSenal != idSiguienteSenal || (estaPreparada && (!previoEstaPreparada || !previoPrevioEstaPreparada)))
+            if (previoIdSiguienteSenal != idSiguienteSenal || (estaPreparada && preparedCycles < 6))
             {
                 ActualizarInformacionFlags();
             }
@@ -636,6 +637,7 @@ namespace ORTS.Scripting.Script
             else if (aspectoSiguienteSenalRetroceso == AspectoRetroceso.Parada)
             {
                 aspectoEstaSenal = AspectoParada;
+                //paradaTotal = true;
             }
             else if (aspectoSiguienteSenalRetroceso == AspectoRetroceso.RebaseAutorizado)
             {
@@ -902,6 +904,8 @@ namespace ORTS.Scripting.Script
                 if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.ParadaPermisiva)
                 {
                     aspectoEstaSenal = AspectoParada;
+                    /*var t = (TipoSeñal)IdSignalLocalVariable(idSiguienteSenal, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
+                    if (t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Liberacion)) paradaTotal = true;*/
                 }
                 if ((aspectoSiguienteSenal == Aspecto.RebaseAutorizado || aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB) &&
                     aspectoEstaSenal != AspectoParada)
@@ -1103,7 +1107,6 @@ namespace ORTS.Scripting.Script
             anuncioParadaInmediata = FlagPresente("APARADA_INMEDIATA");
 
             int id = GetIdSiguienteSenal();
-            if (FlagPresente("OLIBERACION")) SendSignalMessage(id, "LIBERACION");
             var t = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
             siguienteSenalEsDeLiberacion = t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Liberacion);
             siguienteSenalEsAvanzadaBLA &= !siguienteSenalEsDeLiberacion;
@@ -1184,7 +1187,7 @@ namespace ORTS.Scripting.Script
             esEntrada = HasHead(9);
             esSalida = HasHead(10);
             esProteccion = HasHead(11);
-            esLiberacion = HasHead(12);
+            esLiberacion |= HasHead(12);
             esBSL = HasHead(13);
             esLZB = HasHead(14);
             esBLA = HasHead(15);

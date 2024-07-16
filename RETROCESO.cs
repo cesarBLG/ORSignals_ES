@@ -61,6 +61,7 @@ namespace ORTS.Scripting.Script
                 /*if (TrainRequiresSignal(idSigSeñal, 0)) AspectoEstaSeñal = AspectoRetroceso.Parada;
                 else AspectoEstaSeñal = AspectoRetroceso.RebaseAutorizado;*/
                 AspectoEstaSeñal = AspectoRetroceso.Parada;
+                //absoluta = true;
             }
             else if (maniobra || HoldState == HoldState.ManualApproach || (siguienteEsRetroceso && IdTextSignalAspect(idSigSeñal, "NORMAL") == "RebaseAutorizado"))
             {
@@ -73,6 +74,7 @@ namespace ORTS.Scripting.Script
             else if (CurrentBlockState == BlockState.Occupied && !callOn)
             {
                 AspectoEstaSeñal = AspectoRetroceso.Parada;
+                absoluta = true;
             }
             else
             {
