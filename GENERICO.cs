@@ -1287,6 +1287,7 @@ namespace ORTS.Scripting.Script
                             break;
                     }
                 }
+                if (focoRojo && focoBlanco && !focoVerde && !focoAmarillo && !focoAzul) esManiobra = true;
             }
             else if (esManiobra)
             {
