@@ -1229,8 +1229,8 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp4sbab"))			esSalida = true;
             if (nombreDeSenal.Equals("sp4msbab"))		esSalida = true;
             if (nombreDeSenal.Equals("sp4msbab_izq"))	esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbab_sc"))		esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbab_sc_izq"))	esSalida = true;
+            if (nombreDeSenal.Equals("sp4msbab_pq"))		esSalida = true;
+            if (nombreDeSenal.Equals("sp4msbab_pq_izq"))	esSalida = true;
             if (nombreDeSenal.Equals("sp4sbabl"))		esSalida = true;
             if (nombreDeSenal.Equals("sp4sbad200"))			esSalida = tipoDeSenalizacionDoscientos = true;
             if (nombreDeSenal.Equals("sp4sbad200mb"))		esSalida = tipoDeSenalizacionDoscientos = true;
@@ -1247,12 +1247,12 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp3sbemsp"))	    esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbeml"))		esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbeml_izq"))	esSalida		= esBLA = true;
-            if (nombreDeSenal.Equals("sp3msbeml_sc"))		esSalida		= esBLA = true;
-            if (nombreDeSenal.Equals("sp3msbeml_sc_izq"))	esSalida		= esBLA = true;
+            if (nombreDeSenal.Equals("sp3msbeml_pq"))		esSalida		= esBLA = true;
+            if (nombreDeSenal.Equals("sp3msbeml_pq_izq"))	esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbem"))		esSalida		= esBLA = true;
             if (nombreDeSenal.Equals("sp3msbem_izq"))	esSalida		= esBLA = true;
             
-            if (nombreDeSenal.Equals("sp2m") || nombreDeSenal.Equals("sp2mb")) esManiobra = true;
+            if (nombreDeSenal.StartsWith("sp2m") || nombreDeSenal.Equals("sp2mb")) esManiobra = true;
             
             /*if (nombreDeSenal.Equals("sp2vr"))
             if (nombreDeSenal.Equals("sp3tundersinp"))
