@@ -21,6 +21,7 @@ namespace ORTS.Scripting.Script
             else if (nom == "calera") Estacion = "Calera";
             else if (nom == "carthago") Estacion = "Carthago";
             else if (nom == "llamas") Estacion = "Llamas";
+            else if (nom == "sur") Estacion = "Sur";
         }
         public override void UpdatePacket()
         {
