@@ -25,7 +25,7 @@ namespace ORTS.Scripting.Script
         public override void UpdatePacket()
         {
             int id = NextSignalId("OLPN_T");
-            string pack = "01"+format_binary(id&127,8)+"{NextSignalDistanceM(OLPN_T,0)-50-(bgref)}"+format_etcs_distance(30);
+            string pack = "01"+format_binary(id&127,8)+"{NextSignalDistanceM(OLPN_T,0)-45-(bgref)}"+format_etcs_distance(20);
             var next_state = IdSignalAspect(id, "OLPN_T");
             if (next_state == Aspect.Approach_2 || next_state == Aspect.Clear_2) pack += "0";
             else

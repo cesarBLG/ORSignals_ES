@@ -476,6 +476,7 @@ namespace ORTS.Scripting.Script
     public class ETCS_LEVELTR : PaqueteETCS
     {
         int prevLevelId;
+        bool prevRBCactive;
         public ETCS_LEVELTR()
         {
             Reaction = 1;
@@ -484,6 +485,11 @@ namespace ORTS.Scripting.Script
         {
             int levelId = NextSignalId("ETCS_LEVEL");
             if (prevLevelId != levelId) SharedVariables[KeyPacketNeedsUpdate] = 1;
+            if (prevRBCactive != ETCS_CONEXION_RBC.RbcActive)
+            {
+                SharedVariables[KeyPacketNeedsUpdate] = 1;
+                prevRBCactive = ETCS_CONEXION_RBC.RbcActive;
+            }
             prevLevelId = levelId;
             base.Update();
         }

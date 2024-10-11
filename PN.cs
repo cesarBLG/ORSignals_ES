@@ -136,7 +136,7 @@ namespace ORTS.Scripting.Script
                 Estado = EstadoPN.Desarmado;
                 PedalActivo = false;
             }
-            if (ApproachControlPosition(25, true))
+            if (ApproachControlPosition(20, true))
             {
                 MstsSignalAspect = Aspect.Approach_3; // Desarmado (apagado en SPN) al rebasar el tren el PN
                 Estado = EstadoPN.Desarmado;
