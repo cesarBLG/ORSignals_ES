@@ -33,60 +33,8 @@ using System.Threading.Tasks;
 
 namespace ORTS.Scripting.Script
 {
-
-    // Aspectos
-    public enum Aspecto
+    public class GENERICO : CommonSignalScript
     {
-        Apagada,
-        Parada,
-        ParadaLZB,
-        ParadaSelectiva,
-        ParadaSelectivaDestellos,
-        ParadaPermisiva,
-        RebaseAutorizado,
-        RebaseAutorizadoCortaDistancia,
-        RebaseAutorizadoDestellos,
-        MovimientoAutorizado,
-        ParadaDiferida,
-        AnuncioParadaInmediata,
-        AnuncioParada,
-        AnuncioPrecaucion,
-        PreanuncioParada,
-        ViaLibreCondicional,
-        ViaLibre
-    }
-    [Flags]
-    public enum SistemaSeñalizacion
-    {
-        Ninguno=0,
-        ETCS_N1=1,
-        ETCS_N2=2,
-        ASFA=4,
-        LZB=8,
-    }
-    [Flags]
-    public enum TipoSeñal
-    {
-        Ninguno=0,
-        Entrada=1,
-        Salida=2,
-        Interior=4,
-        Intermedia=8,
-        Avanzada=16,
-        Liberacion=32,
-        Virtual=64,
-        Retroceso=128,
-        Topera=256,
-        Maniobra=512,
-    }
-    public enum TipoBloqueo
-    {
-        BLA,
-        BA,
-    }
-    public class GENERICO : CsSignalScript
-    {
-
         //Timer y constantes para retraso en actualizar estado de senal
         Timer actualizarAspectoTimer;
         bool estaComenzadoActualizarAspectoTimer;
@@ -116,7 +64,7 @@ namespace ORTS.Scripting.Script
         Aspecto previoAspectoEstaSenal;
         Aspecto aspectoSiguienteSenal;
         Aspecto reservaAspectoEstaSenal;
-        AspectoRetroceso aspectoSiguienteSenalRetroceso;
+        Aspecto aspectoSiguienteSenalRetroceso;
 
         bool paradaTotal;
         
@@ -124,13 +72,6 @@ namespace ORTS.Scripting.Script
 
         bool agujaEstaSenalDesviada = false;
         bool agujaSiguienteSenalDesviada = false;
-        readonly int KEY_VARIABLE_COMPARTIDA_AGUJA = 100;
-        readonly int KEY_VARIABLE_COMPARTIDA_ASPECTO_EXTENDIDO = 101;
-        readonly int KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO = 121;
-        readonly int KEY_VARIABLE_COMPARTIDA_SIG_SENAL = 150;
-        readonly int KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION = 200;
-        readonly int KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL = 201;
-        readonly int KEY_VARIABLE_COMPARTIDA_TIPO_BLOQUEO = 202;
         
         static Random rand = new Random();
 
@@ -172,6 +113,7 @@ namespace ORTS.Scripting.Script
 
         // Flags
         protected bool rebaseAutorizadoDestellos = false;
+        protected bool rebaseAutorizadoCorto = false;
 
         bool anuncioPrecaucionAnteriorReconocido = false;
         bool anuncioPrecaucionAnteriorNoReconocido = false;
@@ -237,36 +179,13 @@ namespace ORTS.Scripting.Script
             NO_PREPARADO
         }
 
-        // Compatibilidad MSTS
-        Dictionary<Aspecto, Aspect> compatibilidadAspectosMSTS = new Dictionary<Aspecto, Aspect>();
-        Dictionary<Aspecto, string> drawStates = new Dictionary<Aspecto, string>();
-        Dictionary<Aspecto, int> drawStates_fast = new Dictionary<Aspecto, int>();
-        Dictionary<string, Aspecto> textoAAspecto = new Dictionary<string, Aspecto>();
-        Dictionary<Aspecto, string> aspectoATexto = new Dictionary<Aspecto, string>();
-
         //Implementacion
         public override void Initialize()
         {
+            base.Initialize();
             InicializarTimers();
-            InicializarCompatibilidadMSTS();
 
             aspectoEstaSenal = Aspecto.Apagada;
-            
-            foreach (Aspecto a in Enum.GetValues(typeof(Aspecto)))
-            {
-                string rcf;
-                if (drawStates.TryGetValue(a, out rcf))
-                {
-                    int state = GetDrawState(rcf.ToLowerInvariant());
-                    if (state > 0) drawStates_fast[a] = state;
-                    else drawStates_fast[a] = DefaultDrawState(compatibilidadAspectosMSTS[a]);
-                }
-                else drawStates_fast[a] = -1;
-                
-                string name = a.ToString();
-                textoAAspecto[name] = a;
-                aspectoATexto[a] = name;
-            }
             
             DeterminarTipologia();
             ActualizarAspectos();
@@ -311,11 +230,11 @@ namespace ORTS.Scripting.Script
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_SENAL] = NextSignalId("NORMAL");
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION] = (int)Sistemas;
             
-            itinerarioRebase = aspectosDisponibles.Contains(Aspecto.RebaseAutorizado) && ((IdSignalLocalVariable(NextSignalId("NORMAL"), 803) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true)));
+            itinerarioRebase = aspectosDisponibles.Contains(Aspecto.RebaseAutorizado) && ((IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_REBASE) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true)));
 
-            SharedVariables[801] = (int)BlockState.Clear;
-            SharedVariables[802] = (int)Aspect.Stop;
-            SharedVariables[803] = 0;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_ESTADO_CANTON] = (int)BlockState.Clear;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_INFO_RUTA] = (int)Aspect.Stop;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_REBASE] = 0;
             
             CalcularAspecto();
             SetSNCA();
@@ -427,52 +346,13 @@ namespace ORTS.Scripting.Script
             estaComenzadoActualizarAspectoTimer = false;
         }
 
-
-        void InicializarCompatibilidadMSTS()
-        {
-            compatibilidadAspectosMSTS[Aspecto.Apagada] = Aspect.Stop;
-            compatibilidadAspectosMSTS[Aspecto.Parada] = Aspect.Stop;
-            compatibilidadAspectosMSTS[Aspecto.ParadaLZB] = Aspect.StopAndProceed;
-            compatibilidadAspectosMSTS[Aspecto.ParadaSelectiva] = Aspect.StopAndProceed;
-            compatibilidadAspectosMSTS[Aspecto.ParadaSelectivaDestellos] = Aspect.StopAndProceed;
-            compatibilidadAspectosMSTS[Aspecto.ParadaPermisiva] = Aspect.StopAndProceed;
-            compatibilidadAspectosMSTS[Aspecto.RebaseAutorizado] = Aspect.StopAndProceed;
-            compatibilidadAspectosMSTS[Aspecto.RebaseAutorizadoCortaDistancia] = Aspect.StopAndProceed;
-            compatibilidadAspectosMSTS[Aspecto.RebaseAutorizadoDestellos] = Aspect.Restricting;
-            compatibilidadAspectosMSTS[Aspecto.MovimientoAutorizado] = Aspect.Restricting;
-            compatibilidadAspectosMSTS[Aspecto.ParadaDiferida] = Aspect.Approach_1;
-            compatibilidadAspectosMSTS[Aspecto.AnuncioParadaInmediata] = Aspect.Approach_1;
-            compatibilidadAspectosMSTS[Aspecto.AnuncioParada] = Aspect.Approach_1;
-            compatibilidadAspectosMSTS[Aspecto.AnuncioPrecaucion] = Aspect.Approach_2;
-            compatibilidadAspectosMSTS[Aspecto.PreanuncioParada] = Aspect.Approach_3;
-            compatibilidadAspectosMSTS[Aspecto.ViaLibreCondicional] = Aspect.Clear_1;
-            compatibilidadAspectosMSTS[Aspecto.ViaLibre] = Aspect.Clear_2;
-
-            drawStates[Aspecto.ViaLibre] = "FF1A";
-            drawStates[Aspecto.ViaLibreCondicional] = "FF2";
-            drawStates[Aspecto.AnuncioPrecaucion] = "FF3A";
-            drawStates[Aspecto.PreanuncioParada] = "FF4";
-            drawStates[Aspecto.AnuncioParada] = "FF5A";
-            drawStates[Aspecto.AnuncioParadaInmediata] = "FF6";
-            drawStates[Aspecto.Parada] = "FF7A";
-            drawStates[Aspecto.ParadaPermisiva] = "FF7B";
-            drawStates[Aspecto.ParadaSelectiva] = "FF7C";
-            drawStates[Aspecto.ParadaSelectivaDestellos] = "FF7D";
-            drawStates[Aspecto.ParadaLZB] = "FF7I";
-            drawStates[Aspecto.RebaseAutorizadoDestellos] = "FF8A";
-            drawStates[Aspecto.RebaseAutorizado] = "FF8B";
-            drawStates[Aspecto.RebaseAutorizadoCortaDistancia] = "FF8C";
-            drawStates[Aspecto.MovimientoAutorizado] = "FF9";
-            drawStates[Aspecto.ParadaDiferida] = "FF12";
-        }
-
         void ProducirAveria()
         {
             if (estaPreparada ^ previoEstaPreparada)
             {
-                Console.WriteLine(SignalId + " cambio de estado de preparacion");
+                //Console.WriteLine(SignalId + " cambio de estado de preparacion");
                 var rn = 1;
-                Console.WriteLine(SignalId + " random " + rn);
+                //Console.WriteLine(SignalId + " random " + rn);
                 if (rn == 1)
                 {
 
@@ -634,18 +514,22 @@ namespace ORTS.Scripting.Script
                 aspectoEstaSenal = AspectoParada;
                 paradaTotal = true;
             }
-            else if (aspectoSiguienteSenalRetroceso == AspectoRetroceso.Parada)
+            else if (aspectoSiguienteSenalRetroceso == Aspecto.Parada)
             {
                 aspectoEstaSenal = AspectoParada;
                 //paradaTotal = true;
             }
-            else if (aspectoSiguienteSenalRetroceso == AspectoRetroceso.RebaseAutorizado)
+            else if (aspectoSiguienteSenalRetroceso == Aspecto.RebaseAutorizado)
             {
                 aspectoEstaSenal = Aspecto.RebaseAutorizado;
             }
             else if (aspectosDisponibles.Contains(Aspecto.RebaseAutorizado) && TrainHasCallOn(false, true))
             {
-                if (rebaseAutorizadoDestellos)
+                if (rebaseAutorizadoCorto)
+                {
+                    aspectoEstaSenal = Aspecto.RebaseAutorizadoCortaDistancia;
+                }
+                else if (rebaseAutorizadoDestellos)
                 {
                     aspectoEstaSenal = Aspecto.RebaseAutorizadoDestellos;
                 }
@@ -669,7 +553,7 @@ namespace ORTS.Scripting.Script
             }
             else if (forzarRebase || esManiobra/* || (!TrainRequiresSignal(NextSignalId("NORMAL"), 0) && !avanzadaSinParada)*/)
             {
-                aspectoEstaSenal = Aspecto.RebaseAutorizado;
+                aspectoEstaSenal = rebaseAutorizadoCorto ? Aspecto.RebaseAutorizadoCortaDistancia : Aspecto.RebaseAutorizado;
             }
             else if (!avanzadaSinParada && (estaPreparada || !reposoAnuncioParada) && pantallaERTMScerrada)
             {
@@ -917,7 +801,7 @@ namespace ORTS.Scripting.Script
 
         EstadoCanton GetEstadoDelCanton()
         {
-            var estadoDelCantonMSTS = (BlockState)Math.Max((int)CurrentBlockState, IdSignalLocalVariable(NextSignalId("NORMAL"), 801));
+            var estadoDelCantonMSTS = (BlockState)Math.Max((int)CurrentBlockState, IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_ESTADO_CANTON));
             pantallaERTMScerrada = false;
             for (int i=0; !pantallaERTMScerrada; i++)
             {
@@ -946,7 +830,7 @@ namespace ORTS.Scripting.Script
         InfoRuta getInformacionDeRuta()
         {
             var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
-            if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
+            if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_INFO_RUTA);
             switch (informacionDeRutaMSTS)
             {
                 case Aspect.Stop:
@@ -992,52 +876,13 @@ namespace ORTS.Scripting.Script
             }
             return -1;
         }
-        Aspecto GetAspectoSenal(int id, string tipo)
-        {
-            if (id < 0) return Aspecto.Parada;
-            var aspectoSiguienteSenalTexto = IdTextSignalAspect(id, tipo);
-            if (textoAAspecto.ContainsKey(aspectoSiguienteSenalTexto))
-            {
-                return textoAAspecto[aspectoSiguienteSenalTexto];
-            }
-            else
-            {
-                switch (IdSignalAspect(id, tipo))
-                {
-                    case Aspect.Stop:
-                        return Aspecto.Parada;
-
-                    case Aspect.StopAndProceed:
-                        return Aspecto.RebaseAutorizado;
-
-                    case Aspect.Restricting:
-                        return Aspecto.RebaseAutorizadoDestellos;
-
-                    case Aspect.Approach_1:
-                        return Aspecto.AnuncioParada;
-
-                    case Aspect.Approach_2:
-                        return Aspecto.AnuncioPrecaucion;
-
-                    case Aspect.Approach_3:
-                        return Aspecto.PreanuncioParada;
-
-                    case Aspect.Clear_1:
-                        return Aspecto.ViaLibreCondicional;
-
-                    case Aspect.Clear_2:
-                        return Aspecto.ViaLibre;
-                }
-            }
-            return Aspecto.Parada;
-        }
         Aspecto GetAspectoSiguienteSenal()
         {
             return GetAspectoSenal(idSiguienteSenal, siguienteSenalEsAvanzadaBLA ? "DISTANCE" : "NORMAL");
         }
-        AspectoRetroceso GetAspectoSiguienteSenalRetroceso()
+        Aspecto GetAspectoSiguienteSenalRetroceso()
         {
-            AspectoRetroceso asp = AspectoRetroceso.MovimientoAutorizado;
+            Aspecto asp = Aspecto.MovimientoAutorizado;
             for (int i=0; i<20; i++)
             {
                 int id = NextSignalId("NORMAL", i);
@@ -1045,8 +890,8 @@ namespace ORTS.Scripting.Script
                 if (IdSignalHasNormalSubtype(id, "RETROCESO"))
                 {
                     string s = IdTextSignalAspect(id, "NORMAL");
-                    if (s == "Parada") asp = AspectoRetroceso.Parada;
-                    else if (s == "RebaseAutorizado") asp = AspectoRetroceso.RebaseAutorizado;
+                    if (s == "Parada") asp = Aspecto.Parada;
+                    else if (s == "RebaseAutorizado") asp = Aspecto.RebaseAutorizado;
                     break;
                 }
                 if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) break;
@@ -1058,7 +903,7 @@ namespace ORTS.Scripting.Script
         {
             consultaFlag = false;
             if (siguienteEsRetroceso) EnviarMensaje(NextSignalId("NORMAL"), "FLAG:"+tipo);
-            return DistMultiSigMR(tipo, siguienteSenalEsAvanzadaBLA ? "DISTANCE" : "NORMAL", false) == Aspect.Clear_2 || consultaFlag;
+            return DistMultiSigMR(tipo, siguienteSenalEsAvanzadaBLA ? "DISTANCE" : "NORMAL", false) == Aspect.Approach_1 || consultaFlag;
         }
         void ActualizarInformacionFlags()
         {
@@ -1100,6 +945,7 @@ namespace ORTS.Scripting.Script
 
             tipoDeSenalizacionDoscientos |= FlagPresente("B_DOSCIENTOS");
             rebaseAutorizadoDestellos = FlagPresente("R_DESTELLOS");
+            //rebaseAutorizadoCorto = FlagPresente("R_CORTO");
 
             inhibirViaLibreAAnuncioPrecaucion = FlagPresente("I_VL_A_APREC");
             inhibirViaLibreAViaLibreCondicional = FlagPresente("I_VL_A_VLC");
@@ -1112,7 +958,7 @@ namespace ORTS.Scripting.Script
             siguienteSenalEsAvanzadaBLA &= !siguienteSenalEsDeLiberacion;
             
             id = NextSignalId("LZB");
-            if (id >= 0 && NextSignalId("NORMAL") == IdSignalLocalVariable(id, 150)) Sistemas |= SistemaSeñalizacion.LZB;
+            if (id >= 0 && NextSignalId("NORMAL") == IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SIG_SENAL)) Sistemas |= SistemaSeñalizacion.LZB;
             
             ActualizarAspectos();
         }
@@ -1144,16 +990,16 @@ namespace ORTS.Scripting.Script
                 if (SNCA_orig < 0) SNCA_orig = 2;
             }
 
-            if (siguienteSenalEsDeLiberacion || esInterior) SharedVariables[900] = 1; // Requerir liberacion abierta
-            else if (siguienteSenalEsAvanzadaBLA) SharedVariables[900] = -1; // Avanzada resta 1 a la secuencia
-            else SharedVariables[900] = 0;
+            if (siguienteSenalEsDeLiberacion || esInterior) SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 1; // Requerir liberacion abierta
+            else if (siguienteSenalEsAvanzadaBLA) SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = -1; // Avanzada resta 1 a la secuencia
+            else SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 0;
             
-            int snca = SNCA_orig + SharedVariables[900];
+            int snca = SNCA_orig + SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF];
             for (int i=0; i<snca-1; i++)
             {
                 int id = NextSignalId("NORMAL", i);
                 if (id < 0) break;
-                int sums = IdSignalLocalVariable(id, 900);
+                int sums = IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SNCA_DIFF);
                 if (i+2<snca || sums > 0) snca += sums; 
             }
             for (int i=snca-1; i<snca; i++)
@@ -1167,7 +1013,7 @@ namespace ORTS.Scripting.Script
                 }
             }
             SignalNumClearAhead = snca;
-            SharedVariables[901] = SignalNumClearAhead;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = SignalNumClearAhead;
         }
 
 

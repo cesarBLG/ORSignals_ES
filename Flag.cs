@@ -22,7 +22,7 @@ namespace ORTS.Scripting.Script
             {
                 SendSignalMessage(NextSignalId, "LIBERACION");
             }
-            MstsSignalAspect = Aspect.Clear_2;
+            MstsSignalAspect = RouteSet ? Aspect.Approach_1 : Aspect.Clear_2;
             DrawState = DefaultDrawState(MstsSignalAspect);
         }
     }

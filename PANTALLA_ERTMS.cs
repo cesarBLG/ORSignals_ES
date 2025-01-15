@@ -8,17 +8,11 @@ using System.Threading.Tasks;
 
 namespace ORTS.Scripting.Script
 {
-    public enum AspectoPantalla
+	public class PANTALLA_ERTMS : CommonSignalScript
     {
-        Parada,
-        ViaLibre
-    }
-	public class PANTALLA_ERTMS : CsSignalScript
-    {
-        AspectoPantalla AspectoEstaSeñal;
-        AspectoPantalla previoAspectoEstaSeñal;
+        Aspecto AspectoEstaSeñal;
+        Aspecto previoAspectoEstaSeñal;
         Timer actualizarAspectoTimer;
-        readonly int KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION = 200;
         public override void Initialize()
 		{
             actualizarAspectoTimer = new Timer(this);
@@ -27,15 +21,16 @@ namespace ORTS.Scripting.Script
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION] = (int)SistemaSeñalizacion.ETCS_N2;
 		}
 		public override void Update()
-		{
+        {
+            base.Initialize();
             previoAspectoEstaSeñal = AspectoEstaSeñal;
             if (!Enabled || CurrentBlockState != BlockState.Clear)
             {
-                AspectoEstaSeñal = AspectoPantalla.Parada;
+                AspectoEstaSeñal = Aspecto.Parada;
             }
             else
             {
-                AspectoEstaSeñal = AspectoPantalla.ViaLibre;
+                AspectoEstaSeñal = Aspecto.ViaLibre;
             }
             
             if (!PreUpdate())
@@ -50,7 +45,7 @@ namespace ORTS.Scripting.Script
                     actualizarAspectoTimer.Stop();
                 }
             }
-            if (AspectoEstaSeñal == AspectoPantalla.Parada)
+            if (AspectoEstaSeñal == Aspecto.Parada)
             {
                 MstsSignalAspect = Aspect.Stop;
                 TextSignalAspect = "Parada";
@@ -62,17 +57,17 @@ namespace ORTS.Scripting.Script
                 TextSignalAspect = "ViaLibre";
             }
             DrawState = DefaultDrawState(MstsSignalAspect);
-            SharedVariables[201] = (int)TipoSeñal.Virtual;
-            SharedVariables[801] = (int)BlockState.Clear;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL] = (int)TipoSeñal.Virtual;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_ESTADO_CANTON] = (int)BlockState.Clear;
             var informacionDeRutaMSTS = DistMultiSigMR("OPREANUNCIO", "NORMAL", false);
-            if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), 802);
-            SharedVariables[802] = (int)informacionDeRutaMSTS;
-            bool callOn = (IdSignalLocalVariable(NextSignalId("NORMAL"), 803) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true));
-            SharedVariables[803] = callOn ? 1 : 0;
+            if (informacionDeRutaMSTS == Aspect.Stop) informacionDeRutaMSTS = (Aspect)IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_INFO_RUTA);
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_INFO_RUTA] = (int)informacionDeRutaMSTS;
+            bool callOn = (IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_REBASE) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true));
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_REBASE] = callOn ? 1 : 0;
 
-            SharedVariables[900] = 1;
-            SignalNumClearAhead = IdSignalLocalVariable(NextSignalId("NORMAL"), 901) + 1;
-            SharedVariables[901] = SignalNumClearAhead;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 1;
+            SignalNumClearAhead = IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_SNCA) + 1;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = SignalNumClearAhead;
         }
     }
 }
