@@ -25,7 +25,11 @@ namespace ORTS.Scripting.Script
         MethodInfo? RBCUpdate;
         public ETCS_CONEXION_RBC()
         {
-            if (ipTask == null)
+            if (MPManager.IsClient())
+            {
+                RbcActiveChecked = true;
+            }
+            else if (ipTask == null)
             {
                 ipTask = GetIpAddress();
             }
@@ -59,7 +63,11 @@ namespace ORTS.Scripting.Script
                 .Where( nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback )
                 .Select( nic => nic.GetPhysicalAddress().GetAddressBytes() )
                 .FirstOrDefault();
-            if (firstMacAddress != null) NID_RBC = ((firstMacAddress[firstMacAddress.Length-2]<<8)|firstMacAddress[firstMacAddress.Length-1]) & 16383;
+            if (firstMacAddress != null)
+            {
+                if (firstMacAddress.Length > 1) NID_RBC = ((firstMacAddress[firstMacAddress.Length-2]<<8)|firstMacAddress[firstMacAddress.Length-1]) & 16383;
+                else if (firstMacAddress.Length > 0) NID_RBC = firstMacAddress[0] & 255;
+            }
             return localIP;
         }
         public override void Update()
