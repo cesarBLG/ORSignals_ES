@@ -563,4 +563,24 @@ namespace ORTS.Scripting.Script
             base.UpdatePacket();
         }
     }
+    public class ETCS_MSG_SALIDA_ERTMS : PaqueteETCS
+    {
+        public override void UpdatePacket()
+        {
+            double dist = 0;
+            for (int i=0; i<5; i++)
+            {
+                if (HasHead(i+1)) dist += (1<<i)*50;
+            }
+            string txt = (new string[]{"Salida de ERTMS", "Salida ERTMS"})[SignalId%2];
+            byte[] ascii = System.Text.Encoding.GetEncoding(28591).GetBytes(txt);
+            string packet = "01" + format_binary(1,2) + "0" + format_etcs_distance(0) + format_binary(15,4) + format_binary(5,3) + format_etcs_distance(dist) + format_binary(1023,10) + format_binary(15,4) + format_binary(5,3) + format_binary(0,2) + format_binary(ascii.Length, 8);
+            for (int i=0; i<ascii.Length; i++)
+            {
+                packet += format_binary((int)ascii[i],8);
+            }
+            Packet = create_packet(72,packet,1);
+            base.UpdatePacket();
+        }
+    }
 }
