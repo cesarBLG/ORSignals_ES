@@ -19,25 +19,12 @@ namespace ORTS.Scripting.Script
         {
             string dir = "";
             float dist = 2300;
-            switch(SignalTypeName)
-            {
-                case "etcs_bifurcacion_aranda":
-                    dir = "Aranda";
-                    dist = 2300;
-                    break;
-                case "etcs_bifurcacion_orobon":
-                    dir = "Orobón";
-                    dist = 2300;
-                    break;
-                case "etcs_bifurcacion_bpg":
-                    dir = "Parque Grande";
-                    dist = 1200;
-                    break;
-                case "etcs_bifurcacion_ps":
-                    dir = "P. Susana";
-                    dist = 1200;
-                    break;
-            }
+            string sub = SignalTypeName.Substring(17);
+            if (sub == "alcobendas") dir = "Alcobendas - SS Reyes";
+            else if (sub == "burgos") dir = "Burgos";
+            else if (sub == "aranjuez") dir = "Aranjuez";
+            else if (sub == "parla") dir = "Parla";
+            else if (sub == "pitis") dir = "Pitis";
             float distHead = 0;
             for (int i=0; i<7; i++)
             {

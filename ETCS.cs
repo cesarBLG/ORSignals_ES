@@ -22,7 +22,7 @@ namespace ORTS.Scripting.Script
         static public readonly int KeyBaliseReaction=111;
         static public readonly int KeyNextSignalId=150;
         
-        static public readonly int NID_C=352;
+        static public readonly int NID_C=364;
         
         Dictionary<string, Aspecto> textoAAspecto;
         public static string RouteDirectoryPath = null;
@@ -204,7 +204,7 @@ namespace ORTS.Scripting.Script
         }*/
         
         bool Infill;
-        bool Convencional;
+        bool Convencional = true;
         /*public enum TipoSeñal
         {
             Entrada,

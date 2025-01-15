@@ -13,12 +13,24 @@ namespace ORTS.Scripting.Script
         public override void Initialize()
         {
             string nom = SignalTypeName.Substring(14);
-            if (nom == "valparaiso_panam") Estacion = "Valparaíso - PANAM";
-			else if (nom == "el_paso_panam") Estacion = "El Paso - PANAM";
-			else if (nom == "la_cumbre_panam") Estacion = "La Cumbre - PANAM";
-			else if (nom == "tiltil_panam") Estacion = "Tiltil - PANAM";
-			else if (nom == "santiago_norte_panam") Estacion = "Santiago Norte - PANAM";
-			else if (nom == "santiago_alameda_panam") Estacion = "Santiago Alameda - PANAM";
+            if (nom == "chamartin") Estacion = "Madrid Chamartín";
+            else if (nom == "colmenar_viejo") Estacion = "Colmenar Viejo";
+            else if (nom == "tres_cantos") Estacion = "Tres Cantos";
+            else if (nom == "el goloso") Estacion = "El Goloso";
+            else if (nom == "alcobendas") Estacion = "Alcobendas-S.S. de los Reyes";
+            else if (nom == "valdefuentes") Estacion = "Valdelasfuentes";
+            else if (nom == "uni_comillas") Estacion = "Universidad P. Comillas";
+            else if (nom == "cantoblanco") Estacion = "Cantoblanco";
+            else if (nom == "fuencarral") Estacion = "Fuencarral";
+            else if (nom == "ministerios") Estacion = "Nuevos Ministerios";
+            else if (nom == "sol") Estacion = "Sol";
+            else if (nom == "atocha") Estacion = "Atocha";
+            else if (nom == "vbajo") Estacion = "Villaverde Bajo";
+            else if (nom == "valto") Estacion = "Villaverde Alto";
+            else if (nom == "margaritas") Estacion = "Las Margaritas";
+            else if (nom == "getacentro") Estacion = "Getafe Centro";
+            else if (nom == "sectortres") Estacion = "Getafe Sector 3";
+            else if (nom == "parla") Estacion = "Parla";
         }
         public override void UpdatePacket()
         {
