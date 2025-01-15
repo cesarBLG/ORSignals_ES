@@ -318,6 +318,8 @@ namespace ORTS.Scripting.Script
                     TipoSeñal t = (TipoSeñal)IdSignalLocalVariable(sig, 201);
                     bool stop = sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.ParadaLZB || a == Aspecto.RebaseAutorizado || a == Aspecto.RebaseAutorizadoCortaDistancia;
                     if (a == Aspecto.ParadaSelectivaDestellos && (sist & SistemaSeñalizacion.ETCS_N1) == 0 && (sist & SistemaSeñalizacion.ETCS_N2) == 0 && (sist & SistemaSeñalizacion.LZB) == 0) stop = true;
+                    bool esInicioRuta = t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Entrada) || t.HasFlag(TipoSeñal.Salida) || t.HasFlag(TipoSeñal.Interior)) && !t.HasFlag(TipoSeñal.Liberacion);
+                    if (esInicioRuta && totalsignals > maxToClear) stop = true;
                     if (stop)
                     {
                         if (sig < 0)
@@ -339,18 +341,13 @@ namespace ORTS.Scripting.Script
                         }
                         break;
                     }
-                    bool esInicioRuta = t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Entrada) || t.HasFlag(TipoSeñal.Salida) || t.HasFlag(TipoSeñal.Interior)) && !t.HasFlag(TipoSeñal.Liberacion);
-                    if (esInicioRuta)
+                    if (esInicioRuta && section < maxsections)
                     {
-                        if (totalsignals > maxToClear) break;
-                        if (section < maxsections)
-                        {
-                            sectionLength = "{NextSignalDistanceM("+i+")-("+startRef+")}";
-                            startRef = "NextSignalDistanceM("+i+")";
-                            sect += construirSeccion(SenalAsociada, Infill, sectionLength, section, senalUltimaSeccion, sig, nsignals);
-                            senalUltimaSeccion = sig;
-                            section++;
-                        }
+                        sectionLength = "{NextSignalDistanceM("+i+")-("+startRef+")}";
+                        startRef = "NextSignalDistanceM("+i+")";
+                        sect += construirSeccion(SenalAsociada, Infill, sectionLength, section, senalUltimaSeccion, sig, nsignals);
+                        senalUltimaSeccion = sig;
+                        section++;
                     }
                     nsignals++;
                 }
