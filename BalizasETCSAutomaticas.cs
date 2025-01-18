@@ -300,6 +300,7 @@ namespace ORTS.Scripting.Script
                     msg.Add(create_packet(137, "1", 1));
                     break;
             }
+            msg.Add("{pk}");
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }
