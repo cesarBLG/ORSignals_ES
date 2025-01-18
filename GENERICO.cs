@@ -945,7 +945,7 @@ namespace ORTS.Scripting.Script
 
             tipoDeSenalizacionDoscientos |= FlagPresente("B_DOSCIENTOS");
             rebaseAutorizadoDestellos = FlagPresente("R_DESTELLOS");
-            //rebaseAutorizadoCorto = FlagPresente("R_CORTO");
+            rebaseAutorizadoCorto = FlagPresente("R_CORTO");
 
             inhibirViaLibreAAnuncioPrecaucion = FlagPresente("I_VL_A_APREC");
             inhibirViaLibreAViaLibreCondicional = FlagPresente("I_VL_A_VLC");
@@ -975,6 +975,7 @@ namespace ORTS.Scripting.Script
             if (focoAzul && focoRojo) aspectosDisponibles.Add(Aspecto.ParadaSelectivaDestellos);
             if (focoRojo && focoBlanco) aspectosDisponibles.Add(Aspecto.RebaseAutorizado);
             if (focoRojo && focoBlanco) aspectosDisponibles.Add(Aspecto.RebaseAutorizadoDestellos);
+            if (focoRojo && focoBlanco) aspectosDisponibles.Add(Aspecto.RebaseAutorizadoCortaDistancia);
             if (focoRojo) aspectosDisponibles.Add(AspectoParada);
             if (focoBlanco) aspectosDisponibles.Add(Aspecto.ParadaLZB);
         }
