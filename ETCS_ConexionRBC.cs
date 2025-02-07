@@ -36,7 +36,7 @@ namespace ORTS.Scripting.Script
         }
         public static async Task<string> GetIpAddress()
         {
-            string localIP;
+            string localIP = null;
             try
             {
                 /*if (MPManager.IsMultiPlayer())
@@ -45,6 +45,24 @@ namespace ORTS.Scripting.Script
                     localIP = "127.0.0.1";
                 }
                 else*/
+                foreach (NetworkInterface netInterface in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    // Check if the interface is Hamachi (it typically contains "Hamachi" in its name)
+                    if (netInterface.Name.Contains("Hamachi") && netInterface.OperationalStatus == OperationalStatus.Up)
+                    {
+                        // Get the unicast IP addresses for this interface
+                        foreach (UnicastIPAddressInformation ipAddress in netInterface.GetIPProperties().UnicastAddresses)
+                        {
+                            // We are interested in IPv4 addresses (ignoring IPv6 for simplicity)
+                            if (ipAddress.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                localIP = ipAddress.Address.ToString();
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (localIP == null)
                 {
                     using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
                     {
@@ -98,7 +116,10 @@ namespace ORTS.Scripting.Script
                 try
                 {
                     byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(RouteDirectoryPath, "RBC.dll"));
-                    var ass = Assembly.Load(bytes);
+                    byte[] bytesPdb = null;
+                    var pdbPath = Path.Combine(RouteDirectoryPath, "RBC.pdb");
+                    if (File.Exists(pdbPath)) System.IO.File.ReadAllBytes(pdbPath);
+                    var ass = bytesPdb != null ? Assembly.Load(bytes, bytesPdb) : Assembly.Load(bytes);
                     var ty = ass.GetType("RBC.RBC");
                     var ctor = ty.GetConstructor(new[] {typeof(int), typeof(int), typeof(int)});
                     RBC = ctor.Invoke(new object[] {NID_C, NID_RBC, 0x7911});
