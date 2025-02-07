@@ -259,12 +259,13 @@ namespace ORTS.Scripting.Script
             return msg;
         }
     }
-    public class ETCS_MAIN_N2 : EurobalizaConmutable
+    public class ETCS_PIE : EurobalizaConmutable
     {
         Aspecto prevAspecto;
-        public ETCS_MAIN_N2()
+        public ETCS_PIE()
         {
             EsPrimera = true;
+            //BaliseReaction = 1;
         }
         public override void Update()
         {
@@ -273,15 +274,17 @@ namespace ORTS.Scripting.Script
             prevAspecto = a;
             base.Update();
         }
-        protected override List<string> ConstruirMensajes() 
+        protected override List<string> ConstruirMensajes()
         {
-            SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
             List<string> msg = new List<string>();
             Aspecto asp = GetAspectoSenal(NextSignalId("NORMAL"));
             switch(asp)
             {
                 case Aspecto.RebaseAutorizado:
                 case Aspecto.RebaseAutorizadoCortaDistancia:
+                case Aspecto.MovimientoAutorizado:
+                case Aspecto.IndicadoraDesviada:
+                case Aspecto.IndicadoraDirecta:
                     msg.Add(create_packet(132, "1", 1));
                     break;
                 default:
@@ -305,30 +308,16 @@ namespace ORTS.Scripting.Script
             return msg;
         }
     }
-	public class ETCS_RETROCESO : EurobalizaConmutable
+    public class ETCS_MAIN_N2 : ETCS_PIE
+    {
+        protected override List<string> ConstruirMensajes()
+        {
+            SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
+            return base.ConstruirMensajes();
+        }
+    }
+	public class ETCS_RETROCESO : ETCS_PIE
 	{
-        Aspect prevAspecto;
-        public ETCS_RETROCESO()
-        {
-            EsPrimera = true;
-            BaliseReaction = 1;
-        }
-        public override void Update()
-        {
-            Aspect a = IdSignalAspect(NextSignalId("NORMAL"), "NORMAL");
-            if (prevAspecto != a) needsUpdate++;
-            prevAspecto = a;
-            base.Update();
-        }
-        protected override List<string> ConstruirMensajes() 
-        {
-            var msg = base.ConstruirMensajes();
-            msg.Add(get_linking());
-            Aspect asp = IdSignalAspect(NextSignalId("NORMAL"),"NORMAL");
-            msg.Add(create_packet(132, (asp == Aspect.Stop || asp == Aspect.Restricting) ? "0" : "1", 1));
-            msg.Add(create_packet(137, (asp == Aspect.Stop || asp == Aspect.Restricting || asp == Aspect.StopAndProceed) ? "0" : "1", 1));
-            return msg;
-        }
     }
 	public class ETCS_DEFAULT_1_1 : EurobalizaFija
 	{
