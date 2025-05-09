@@ -22,8 +22,16 @@ namespace ORTS.Scripting.Script
 		}
 		void GenerarTelegrama()
         {
-            var msgs = ConstruirMensajes();
-            if (msgs != null) ConstruirTelegrama(255, msgs);
+            Faulty ^= rand.Next(1000000) == 500;
+            var msg = ConstruirMensajes();
+            if (Faulty || !Enabled || msg == null || NID_BG <= 0)
+            {
+                msg = new List<string>();
+                msg.Add(create_packet(254, "", 2));
+                ConstruirTelegrama(BaliseReaction == 2 ? 255 : 254, msg);
+                return;
+            }
+            ConstruirTelegrama(255, msg);
         }
     }
 }

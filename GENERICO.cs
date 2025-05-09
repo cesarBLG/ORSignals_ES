@@ -166,19 +166,6 @@ namespace ORTS.Scripting.Script
         Aspecto AspectoParada;
         List<Aspecto> aspectosDisponibles = new List<Aspecto>();
 
-        // Informacion de ruta
-        enum InfoRuta
-        {
-            NO_INSTALADO,
-            AG_DIR_SENAL_A_PARA,
-            AG_DIR_SENAL_A_PREC,
-            AG_DIR_SENAL_PREA,
-            AG_DES_SENAL_A_PARA,
-            AG_DES_SENAL_A_PREC,
-            AG_DES_SENAL_PREA,
-            NO_PREPARADO
-        }
-
         //Implementacion
         public override void Initialize()
         {
@@ -235,6 +222,7 @@ namespace ORTS.Scripting.Script
             SharedVariables[KEY_VARIABLE_COMPARTIDA_ESTADO_CANTON] = (int)BlockState.Clear;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_INFO_RUTA] = (int)Aspect.Stop;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_REBASE] = 0;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_INFO_RUTA] = (int)informacionDeRuta;
             
             CalcularAspecto();
             SetSNCA();

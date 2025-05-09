@@ -303,7 +303,6 @@ namespace ORTS.Scripting.Script
                     msg.Add(create_packet(137, "1", 1));
                     break;
             }
-            msg.Add("{pk}");
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }
@@ -313,7 +312,10 @@ namespace ORTS.Scripting.Script
         protected override List<string> ConstruirMensajes()
         {
             SendSignalMessage(NextSignalId("NORMAL"), "ETCS_N2");
-            return base.ConstruirMensajes();
+            List<string> msg = new List<string>();
+            msg.Add("{pk}");
+            msg.AddRange(base.ConstruirMensajes());
+            return msg;
         }
     }
 	public class ETCS_RETROCESO : ETCS_PIE
@@ -324,6 +326,11 @@ namespace ORTS.Scripting.Script
         public ETCS_DEFAULT_1_1()
         {
             EsPrimera = true;
+        }
+        public override void Initialize()
+        {
+            Faulty |= HasHead(1);
+            base.Initialize();
         }
         protected override List<string> ConstruirMensajes() 
         {

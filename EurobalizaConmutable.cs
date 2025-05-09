@@ -10,7 +10,6 @@ namespace ORTS.Scripting.Script
 	public class EurobalizaConmutable : Eurobaliza
 	{
         protected int needsUpdate = 1;
-        bool faulty = false;
         bool prevEnabled;
         int prevNumCleared;
         int prevSigId;
@@ -33,9 +32,11 @@ namespace ORTS.Scripting.Script
 		}
 		void ActualizarTelegrama(int msgcount)
         {
+            Faulty ^= rand.Next(1000000) == 500;
             needsUpdate = 0;
             List<string> msg = ConstruirMensajes();
-            if (faulty/* || !Enabled */|| msg == null || NID_BG <= 0)
+            if (!Enabled) msg.Add(create_packet(254, "", 2));
+            if (Faulty || msg == null || NID_BG <= 0)
             {
                 msg  = new List<string>();
                 msg.Add(create_packet(254, "", 2));

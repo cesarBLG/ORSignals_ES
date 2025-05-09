@@ -22,6 +22,7 @@ namespace ORTS.Scripting.Script
         protected int IdSigBaliza=-1;
         protected int BaliseReaction = 2;
         protected int GroupReaction = 2;
+        protected bool Faulty = false;
         public override void Initialize()
         {
             SharedVariables[KeyN_PIG] = -1;

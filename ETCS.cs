@@ -23,6 +23,7 @@ namespace ORTS.Scripting.Script
         static public readonly int KeyNextSignalId=150;
         
         static public readonly int NID_C=352;
+        static public readonly Random rand = new Random();
         
         Dictionary<string, Aspecto> textoAAspecto;
         public static string RouteDirectoryPath = null;

@@ -32,10 +32,16 @@ namespace ORTS.Scripting.Script
         IndicadoraDesviada,
         IndicadoraDirecta,
     }
-    public enum AspectoPantalla
+    enum InfoRuta
     {
-        Parada,
-        ViaLibre
+        NO_INSTALADO,
+        AG_DIR_SENAL_A_PARA,
+        AG_DIR_SENAL_A_PREC,
+        AG_DIR_SENAL_PREA,
+        AG_DES_SENAL_A_PARA,
+        AG_DES_SENAL_A_PREC,
+        AG_DES_SENAL_PREA,
+        NO_PREPARADO
     }
     [Flags]
     public enum SistemaSeñalizacion
@@ -78,6 +84,7 @@ namespace ORTS.Scripting.Script
         public readonly int KEY_VARIABLE_COMPARTIDA_ESTADO_CANTON = 801;
         public readonly int KEY_VARIABLE_COMPARTIDA_INFO_RUTA = 802;
         public readonly int KEY_VARIABLE_COMPARTIDA_REBASE = 803;
+        public readonly int KEY_VARIABLE_COMPARTIDA_SIG_INFO_RUTA = 804;
         public readonly int KEY_VARIABLE_COMPARTIDA_SNCA_DIFF = 900;
         public readonly int KEY_VARIABLE_COMPARTIDA_SNCA = 901;
 
