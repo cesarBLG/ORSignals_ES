@@ -1,4 +1,5 @@
 using Orts.Simulation.Signalling;
+using ORTS.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,25 +23,25 @@ namespace ORTS.Scripting.Script
         static public readonly int KeyBaliseReaction=111;
         static public readonly int KeyNextSignalId=150;
         
-        static public readonly int NID_C=352;
+        static public readonly int NID_C;
         static public readonly Random rand = new Random();
         
-        Dictionary<string, Aspecto> textoAAspecto;
+        static Dictionary<string, Aspecto> textoAAspecto;
         public static string RouteDirectoryPath = null;
         public static void InitializeScriptDirectoryPath([CallerFilePath] string sourceFilePath = "")
         {
             RouteDirectoryPath = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(sourceFilePath)), "..", "..");
         }
-        public ETCS()
+        static ETCS()
         {
             textoAAspecto = Enum.GetNames(typeof(Aspecto)).ToDictionary(x => x, x => (Aspecto)Enum.Parse(typeof(Aspecto), x), StringComparer.OrdinalIgnoreCase);
+            InitializeScriptDirectoryPath();
+            LoadParameter("General", "NID_C", ref NID_C);
+            LoadParameter("General", "Convencional", ref Convencional);
         }
         public override void Initialize()
         {
-            if (RouteDirectoryPath == null)
-            {
-                InitializeScriptDirectoryPath();
-            }
+
         }
         protected Aspecto GetAspectoSenal(int id, string tipo = "NORMAL")
 		{
@@ -205,7 +206,7 @@ namespace ORTS.Scripting.Script
         }*/
         
         bool Infill;
-        bool Convencional;
+        static bool Convencional;
         /*public enum TipoSeñal
         {
             Entrada,
@@ -388,6 +389,20 @@ namespace ORTS.Scripting.Script
             }
             else sect += "0"; // Sin temporizar
             return sect;
+        }
+        protected static void LoadParameter<T>(string sectionName, string keyName, ref T value)
+        {
+            string file = Path.Combine(RouteDirectoryPath, @"etcs.ini");
+            if (File.Exists(file))
+            {
+                string buffer = new string('\0', 256);
+                int length = NativeMethods.GetPrivateProfileString(sectionName, keyName, null, buffer, buffer.Length, file);
+
+                if (length > 0)
+                {
+                    value = (T)Convert.ChangeType(buffer.Trim('\0').Trim(), typeof(T), System.Globalization.CultureInfo.InvariantCulture);
+                }
+            }
         }
     }
     public class ETCSConfig

@@ -14,6 +14,7 @@ namespace ORTS.Scripting.Script
         bool prevRouteSet;
         public override void Initialize()
         {
+            base.Initialize();
             SharedVariables[KeyBaliseReaction] = Reaction;
         }
         public override void Update()

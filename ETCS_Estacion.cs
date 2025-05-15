@@ -12,13 +12,9 @@ namespace ORTS.Scripting.Script
         string Estacion;
         public override void Initialize()
         {
+            base.Initialize();
             string nom = SignalTypeName.Substring(14);
-            if (nom == "valparaiso_panam") Estacion = "Valparaíso - PANAM";
-			else if (nom == "el_paso_panam") Estacion = "El Paso - PANAM";
-			else if (nom == "la_cumbre_panam") Estacion = "La Cumbre - PANAM";
-			else if (nom == "tiltil_panam") Estacion = "Tiltil - PANAM";
-			else if (nom == "santiago_norte_panam") Estacion = "Santiago Norte - PANAM";
-			else if (nom == "santiago_alameda_panam") Estacion = "Santiago Alameda - PANAM";
+            LoadParameter("Estaciones", nom, ref Estacion);
         }
         public override void UpdatePacket()
         {

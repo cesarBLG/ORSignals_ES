@@ -17,27 +17,10 @@ namespace ORTS.Scripting.Script
         int id;
         public override void Initialize()
         {
+            base.Initialize();
             string dir = "";
+            LoadParameter("Bifurcaciones", SignalTypeName.Substring(17), ref dir);
             float dist = 2300;
-            switch(SignalTypeName)
-            {
-                case "etcs_bifurcacion_aranda":
-                    dir = "Aranda";
-                    dist = 2300;
-                    break;
-                case "etcs_bifurcacion_orobon":
-                    dir = "Orobón";
-                    dist = 2300;
-                    break;
-                case "etcs_bifurcacion_bpg":
-                    dir = "Parque Grande";
-                    dist = 1200;
-                    break;
-                case "etcs_bifurcacion_ps":
-                    dir = "P. Susana";
-                    dist = 1200;
-                    break;
-            }
             float distHead = 0;
             for (int i=0; i<7; i++)
             {
