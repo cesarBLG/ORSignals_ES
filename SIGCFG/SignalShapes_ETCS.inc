@@ -132,7 +132,7 @@ SignalShape (
 SignalShape (
     "etcs_aproxsecc.s"
     "Mensaje Aproximacion Seccionamiento ETCS"
-    SignalSubObjs ( 6
+    SignalSubObjs ( 8
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -140,78 +140,20 @@ SignalShape (
             SigSubSType ( "ETCS_MSG_SECCIONAMIENTO" )
             SignalFlags ( JN_LINK )
         )
-        SignalSubObj ( 1
-            "DECOR1"
-            "Sumar 50m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 2
-            "DECOR2"
-            "Sumar 100m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 3
-            "DECOR3"
-            "Sumar 200m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 4
-            "DECOR4"
-            "Sumar 400m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 5
-            "DECOR5"
-            "Sumar 800m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
     )
 )
 SignalShape (
     "etcs_ltv_desvios.s"
     "ETCS restriccion de velocidad por desvio para señal en rojo"
-    SignalSubObjs ( 6
+    SignalSubObjs ( 8
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_LTV_DESVIOS" )
         )
-        SignalSubObj ( 1
-            "DECOR1"
-            "Sumar 50m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 2
-            "DECOR1"
-            "Sumar 100m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 3
-            "DECOR2"
-            "Sumar 200m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 4
-            "DECOR3"
-            "Sumar 400m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 5
-            "DECOR4"
-            "Sumar 800m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
     )
 )
 
@@ -425,48 +367,7 @@ SignalShape (
             SigSubSType ( "ETCS_LEVELTR" )
             SignalFlags ( JN_LINK )
         )
-        SignalSubObj ( 1
-            "DECOR1"
-            "50m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 2
-            "DECOR2"
-            "100m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 3
-            "DECOR3"
-            "200m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 4
-            "DECOR4"
-            "400m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 5
-            "DECOR5"
-            "800m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 6
-            "DECOR6"
-            "1600m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-        SignalSubObj ( 7
-            "DECOR7"
-            "3200m"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
     )
 )
 

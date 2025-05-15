@@ -35,3 +35,9 @@ SignalSubObj ( 6
     SigSubType ( DECOR )
     SignalFlags ( OPTIONAL )
 )
+SignalSubObj ( 7
+    "DECOR4"
+    "Sumar 3200m"
+    SigSubType ( DECOR )
+    SignalFlags ( OPTIONAL )
+)
