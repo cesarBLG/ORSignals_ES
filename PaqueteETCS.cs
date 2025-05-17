@@ -19,6 +19,7 @@ namespace ORTS.Scripting.Script
         }
         public override void Update()
         {
+            base.Update();
             SharedVariables[KeyNextEurobaliseID] = NextSignalId("ETCS", 0);
             bool rs = RouteSet;
             if (rs) TextSignalAspect = Packet;

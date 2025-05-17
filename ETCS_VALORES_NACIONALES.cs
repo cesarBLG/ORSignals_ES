@@ -9,79 +9,59 @@ namespace ORTS.Scripting.Script
 {
 	public class ETCS_VALORES_NACIONALES : PaqueteETCS
 	{
-        int NID_C;
-        int V_SH = 30;
-        int V_SR = 100;
-        int V_OS = 30;
-        int V_LS = 100;
-        int V_UN = 200;
-        int V_release = 15;
-        int D_roll = 2;
-        int V_allowoverride = 0;
-        int V_override = 30;
-        int D_override = 80;
-        int T_override = 40;
-        int D_posttrip = 50;
         public ETCS_VALORES_NACIONALES()
         {
             Reaction = 1;
-            NID_C = ETCS.NID_C;
+        }
+        T GetParameter<T>(string nvset, string param, T defaultValue)
+        {
+            T val = defaultValue;
+            if (nvset != null) LoadParameter(nvset, param, ref val);
+            return val;
         }
 		public override void UpdatePacket()
 		{
-            if (NID_C == 364) //Madrid Cercanias
-            {
-                V_UN = 140;
-                D_roll = 5;
-            }
-            else if (NID_C == 352 || NID_C == 353 || NID_C == 357) // Madrid-Barcelona-Frontera, Zaragoza-Huesca-Figueres, Madrid-Valladolid
-            {
-                V_UN = 200;
-                D_roll = 2;
-            }
+            string nvset = null;
+            LoadParameter(string.Format("NID_C.{0}", NID_C), "NV", ref nvset);
+            List<int> nid_cs = GetParameter(nvset, "NID_Cs", "").Split(',').Select(int.Parse).ToList();
+            nid_cs.Remove(NID_C);
             string data = "";
             data += "01";
             data += format_binary(32767, 15);
-            if (NID_C == 352 || NID_C == 353 || NID_C == 357)
+            data += format_binary(NID_C, 10);
+            data += format_binary(nid_cs.Count ,5);
+            foreach (int nid in nid_cs)
             {
-                data += format_binary(352, 10);
-                data += format_binary(2, 5);
-                data += format_binary(353, 10);
-                data += format_binary(357, 10);
+                data += format_binary(nid, 10);
             }
-            else
-            {
-                data += format_binary(NID_C, 10);
-                data += format_binary(0, 5);
-            }
-            data += format_etcs_speedKpH(V_SH);
-            data += format_etcs_speedKpH(V_SR);
-            data += format_etcs_speedKpH(V_OS);
-            data += format_etcs_speedKpH(V_LS);
-            data += format_etcs_speedKpH(V_UN);
-            data += format_etcs_speedKpH(V_release);
-            data += format_etcs_distance(D_roll);
-            data += format_binary(1, 1);
-            data += format_binary(0, 1);
-            data += format_binary(0, 1);
-            data += format_binary(0, 1);
-            data += format_binary(0, 1);
-            data += format_etcs_speedKpH(V_allowoverride);
-            data += format_etcs_speedKpH(V_override);
-            data += format_etcs_distance(D_override);
-            data += format_binary(T_override, 8);
-            data += format_etcs_distance(D_posttrip);
-            data += format_binary(1, 2);
-            data += format_binary(20, 8);
-            data += format_binary(1, 1);
-            data += format_binary(32767, 15);
-            data += format_binary(0, 1);
-            data += format_binary(20, 6);
-            data += format_binary(14, 6);
-            data += format_binary(14, 6);
-            data += format_binary(12, 6);
-            data += format_binary(0, 5);
-            data += format_binary(9, 4);
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVSHUNT", 30));
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVSTFF", 40));
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVONSIGHT", 30));
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVLIMSUPERV", 100));
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVUNFIT", 100));
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVREL", 40));
+            data += format_etcs_distance(GetParameter(nvset, "D_NVROLL", 2));
+            data += format_binary(GetParameter(nvset, "Q_NVSBTSMPERM", true) ? 1 : 0, 1);
+            data += format_binary(GetParameter(nvset, "Q_NVEMRRLS", false) ? 1 : 0, 1);
+            data += format_binary(GetParameter(nvset, "Q_NVGUIPERM", false) ? 1 : 0, 1);
+            data += format_binary(GetParameter(nvset, "Q_NVSBFBPERM", false) ? 1 : 0, 1);
+            data += format_binary(GetParameter(nvset, "Q_NVINHSMICPERM", false) ? 1 : 0, 1);
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVALLOWOVTRP", 0));
+            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVSUPOVTRP", 30));
+            data += format_etcs_distance(GetParameter(nvset, "D_NVOVTRP", 200));
+            data += format_binary(GetParameter(nvset, "T_NVOVTRP", 60), 8);
+            data += format_etcs_distance(GetParameter(nvset, "D_NVPOTRP", 200));
+            data += format_binary(GetParameter(nvset, "M_NVCONTACT", 1), 2);
+            data += format_binary(GetParameter(nvset, "T_NVCONTACT", 255), 8);
+            data += format_binary(GetParameter(nvset, "M_NVDERUN", 1), 1);
+            data += format_etcs_distance(GetParameter(nvset, "D_NVSTFF", 32767));
+            data += format_binary(GetParameter(nvset, "Q_NVDRIVER_ADHES", false) ? 1 : 0, 1);
+            data += format_binary(GetParameter(nvset, "A_NVMAXREDADH1", 20), 6);
+            data += format_binary(GetParameter(nvset, "A_NVMAXREDADH2", 14), 6);
+            data += format_binary(GetParameter(nvset, "A_NVMAXREDADH3", 14), 6);
+            data += format_binary(GetParameter(nvset, "Q_NVLOCACC", 12), 6);
+            data += format_binary(GetParameter(nvset, "M_NVAVADH", 0), 5);
+            data += format_binary(GetParameter(nvset, "M_NVEBCL", 9), 4);
             data += format_binary(0, 1);
             Packet = create_packet(3, data, 1);
             base.UpdatePacket();

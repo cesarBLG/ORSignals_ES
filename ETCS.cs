@@ -11,21 +11,25 @@ using System.Runtime.CompilerServices;
 
 namespace ORTS.Scripting.Script
 {
-	public abstract class ETCS : CsSignalScript
+    public abstract class ETCS : CsSignalScript
     {
         static protected readonly int KeyNextEurobaliseID=151;
         static protected readonly int KeyPacketNeedsUpdate=1001;
-        
+
         static public readonly int KeyNID_BG=100;
         static public readonly int KeyN_PIG=101;
         static public readonly int KeyN_TOTAL=102;
         static public readonly int KeyGroupReaction=110;
         static public readonly int KeyBaliseReaction=111;
         static public readonly int KeyNextSignalId=150;
-        
-        static public readonly int NID_C;
+
+        static public readonly int DefaultNID_C;
+
+        protected int NID_C=-1;
+        protected bool Convencional;
+
         static public readonly Random rand = new Random();
-        
+
         static Dictionary<string, Aspecto> textoAAspecto;
         public static string RouteDirectoryPath = null;
         public static void InitializeScriptDirectoryPath([CallerFilePath] string sourceFilePath = "")
@@ -36,52 +40,72 @@ namespace ORTS.Scripting.Script
         {
             textoAAspecto = Enum.GetNames(typeof(Aspecto)).ToDictionary(x => x, x => (Aspecto)Enum.Parse(typeof(Aspecto), x), StringComparer.OrdinalIgnoreCase);
             InitializeScriptDirectoryPath();
-            LoadParameter("General", "NID_C", ref NID_C);
-            LoadParameter("General", "Convencional", ref Convencional);
+            LoadParameter("NID_C", "Default", ref DefaultNID_C);
         }
         public override void Initialize()
         {
 
         }
+        public override void Update()
+        {
+            if (NID_C < 0)
+            {
+                int id = NextSignalId("ETCS_CFG");
+                if (id >= 0)
+                {
+                    int next = IdSignalLocalVariable(id, 1);
+                    if (next == NextSignalId("NORMAL")) NID_C = IdSignalLocalVariable(id, 0);
+                    else if (next > -2) NID_C = DefaultNID_C;
+                }
+                else NID_C = DefaultNID_C;
+                if (NID_C >= 0)
+                {
+                    string section = string.Format("NID_C.{0}", NID_C);
+                    string rules = null;
+                    LoadParameter(section, "Rules", ref rules);
+                    Convencional = rules == "ADIF_CONV";
+                }
+            }
+        }
         protected Aspecto GetAspectoSenal(int id, string tipo = "NORMAL")
-		{
+        {
             if (id < 0) return Aspecto.Parada;
-			var aspectoSiguienteSenalTexto = IdTextSignalAspect(id, tipo);
-			if (textoAAspecto.ContainsKey(aspectoSiguienteSenalTexto))
-			{
-				return textoAAspecto[aspectoSiguienteSenalTexto];
-			}
-			else
-			{
-				switch (IdSignalAspect(id, tipo))
-				{
-					case Aspect.Stop:
-						return Aspecto.Parada;
+            var aspectoSiguienteSenalTexto = IdTextSignalAspect(id, tipo);
+            if (textoAAspecto.ContainsKey(aspectoSiguienteSenalTexto))
+            {
+                return textoAAspecto[aspectoSiguienteSenalTexto];
+            }
+            else
+            {
+                switch (IdSignalAspect(id, tipo))
+                {
+                    case Aspect.Stop:
+                        return Aspecto.Parada;
 
-					case Aspect.StopAndProceed:
-						return Aspecto.RebaseAutorizado;
+                    case Aspect.StopAndProceed:
+                        return Aspecto.RebaseAutorizado;
 
-					case Aspect.Restricting:
-						return Aspecto.RebaseAutorizadoDestellos;
+                    case Aspect.Restricting:
+                        return Aspecto.RebaseAutorizadoDestellos;
 
-					case Aspect.Approach_1:
-						return Aspecto.AnuncioParada;
+                    case Aspect.Approach_1:
+                        return Aspecto.AnuncioParada;
 
-					case Aspect.Approach_2:
-						return Aspecto.AnuncioPrecaucion;
+                    case Aspect.Approach_2:
+                        return Aspecto.AnuncioPrecaucion;
 
-					case Aspect.Approach_3:
-						return Aspecto.PreanuncioParada;
+                    case Aspect.Approach_3:
+                        return Aspecto.PreanuncioParada;
 
-					case Aspect.Clear_1:
-						return Aspecto.ViaLibreCondicional;
+                    case Aspect.Clear_1:
+                        return Aspecto.ViaLibreCondicional;
 
-					case Aspect.Clear_2:
-						return Aspecto.ViaLibre;
-				}
-			}
-			return Aspecto.Parada;
-		}
+                    case Aspect.Clear_2:
+                        return Aspecto.ViaLibre;
+                }
+            }
+            return Aspecto.Parada;
+        }
         protected static string format_binary(int value, int size)
         {
             if (value < 0) value = 0;
@@ -108,7 +132,9 @@ namespace ORTS.Scripting.Script
         }
         protected static string format_etcs_distance(double distm)
         {
-            int val = Math.Max(Math.Min((int)distm, 32767),0);
+            if (distm > 32767) distm = 32767;
+            if (distm < 0) distm = 0;
+            int val = (int)distm;
             return format_binary(val, 15);
         }
         protected static string create_packet(int nid_packet, string info, int dir)
@@ -204,9 +230,7 @@ namespace ORTS.Scripting.Script
             string str = create_packet(41, "01" + (order ? format_binary(32767, 15) : "{(NextSignalDistanceM(0)+50)*1.05}") + "011" + format_etcs_distance(300) + "00011" + "010" + format_etcs_distance(0) + "001" + format_binary(0, 8) + format_etcs_distance(300) + "000" + format_etcs_distance(300), 1);
             return str;
         }*/
-        
-        bool Infill;
-        static bool Convencional;
+
         /*public enum TipoSeñal
         {
             Entrada,
@@ -285,7 +309,7 @@ namespace ORTS.Scripting.Script
                 string sectionLength="";
                 float dangerPoint=50;
                 bool first = false;
-                for(int i=0;; i++) 
+                for(int i=0;; i++)
                 {
                     sig = NextSignalId("NORMAL", i);
                     for (int j=npn;; j++)
@@ -404,9 +428,5 @@ namespace ORTS.Scripting.Script
                 }
             }
         }
-    }
-    public class ETCSConfig
-    {
-        
     }
 }

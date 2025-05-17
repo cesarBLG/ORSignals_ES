@@ -1,5 +1,5 @@
 
-ORTSSignalFunctions ( 38
+ORTSSignalFunctions ( 39
     ORTSSignalFunctionType ( INDAGUJAS )
 
     ORTSSignalFunctionType ( OPEDALPN_T )
@@ -39,8 +39,9 @@ ORTSSignalFunctions ( 38
     ORTSSignalFunctionType ( ASFA )
     ORTSSignalFunctionType ( ETCS )
     ORTSSignalFunctionType ( ETCS_LEVEL )
-    ORTSSignalFunctionType ( VELOCIDAD SPEED )
     ORTSSignalFunctionType ( ETCS_PACKET )
+    ORTSSignalFunctionType ( ETCS_CFG )
+    ORTSSignalFunctionType ( VELOCIDAD SPEED )
     ORTSSignalFunctionType ( LZB )
     ORTSSignalFunctionType ( ATO )
 

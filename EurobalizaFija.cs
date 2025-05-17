@@ -13,12 +13,12 @@ namespace ORTS.Scripting.Script
 		public override void Update()
 		{
             if (Telegrama != "") return;
+            base.Update();
             if (NID_BG > 0)
             {
                 count++;
                 if (count > 5) GenerarTelegrama();
             }
-            base.Update();
 		}
 		void GenerarTelegrama()
         {

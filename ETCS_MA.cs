@@ -13,6 +13,7 @@ namespace ORTS.Scripting.Script
         bool Infill;
         public override void Update()
         {
+            base.Update();
             if (SenalAsociada < 0)
             {
                 SenalAsociada = NextSignalId("NORMAL");
