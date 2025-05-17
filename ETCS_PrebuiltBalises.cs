@@ -352,6 +352,7 @@ namespace ORTS.Scripting.Script
             base.Initialize();
         }
     }
+    [Obsolete("Deprecated, insert the message packet to any balise instead")]
     public class ETCS_SECCIONAMIENTO_1_1 : EurobalizaFija
 	{
         public ETCS_SECCIONAMIENTO_1_1()
@@ -374,26 +375,28 @@ namespace ORTS.Scripting.Script
             return msg;
         }
     }
+    [Obsolete("Deprecated, insert a level transition packet to any balise instead")]
 	public class ETCS_LEVELTR_ANNOUNCEMENT_0_FIJA_1_2 : EurobalizaFija
-	{
+    {
         public ETCS_LEVELTR_ANNOUNCEMENT_0_FIJA_1_2()
         {
             EsPrimera = true;
             BaliseReaction = 1;
         }
-        protected override List<string> ConstruirMensajes() 
+        protected override List<string> ConstruirMensajes()
         {
             List<string> msg = new List<string>();
-            float dist=0;
-            for (int i=0; i<5; i++)
+            float dist = 0;
+            for (int i = 0; i < 5; i++)
             {
-                if (HasHead(i+1)) dist += 20*(1<<i);
+                if (HasHead(i + 1)) dist += 20 * (1 << i);
             }
-            if (dist == 0) dist=500;
-            msg.Add(level_tr(dist, level_table(new List<int>{1}, dist/2)));
+            if (dist == 0) dist = 500;
+            msg.Add(level_tr(dist, level_table(new List<int> { 1 }, dist / 2)));
             return msg;
         }
     }
+    [Obsolete("Deprecated, insert a level transition packet to any balise instead")]
 	public class ETCS_LEVELTR_ANNOUNCEMENT_1_FIJA_1_2 : EurobalizaFija
 	{
         public ETCS_LEVELTR_ANNOUNCEMENT_1_FIJA_1_2()
@@ -409,6 +412,7 @@ namespace ORTS.Scripting.Script
             return msg;
         }
     }
+    [Obsolete("Deprecated, insert a level transition packet to any balise instead")]
     public class ETCS_LEVELTR_ORDER_0_FIJA_1_2 : EurobalizaFija
 	{
         public ETCS_LEVELTR_ORDER_0_FIJA_1_2()
@@ -423,7 +427,7 @@ namespace ORTS.Scripting.Script
             return msg;
         }
     }
-
+    [Obsolete("Deprecated, insert a level transition packet to any balise instead")]
 	public class ETCS_LEVELTR_ANNOUNCEMENT_LINKED_1_2 : EurobalizaConmutable
 	{
         public ETCS_LEVELTR_ANNOUNCEMENT_LINKED_1_2()
@@ -444,7 +448,7 @@ namespace ORTS.Scripting.Script
             return msg;
         }
     }
-
+    [Obsolete("Deprecated, insert a level transition packet to any balise instead")]
 	public class ETCS_LEVELTR_ORDER_LINKED_1_2 : EurobalizaConmutable
 	{
         public ETCS_LEVELTR_ORDER_LINKED_1_2()
@@ -467,137 +471,6 @@ namespace ORTS.Scripting.Script
                 }
             }
             return msg;
-        }
-    }
-    
-    public class ETCS_LEVELTR : PaqueteETCS
-    {
-        int prevLevelId;
-        bool prevRBCactive;
-        public ETCS_LEVELTR()
-        {
-            Reaction = 1;
-        }
-        public override void Update()
-        {
-            int levelId = NextSignalId("ETCS_LEVEL");
-            if (prevLevelId != levelId) SharedVariables[KeyPacketNeedsUpdate] = 1;
-            if (prevRBCactive != ETCS_CONEXION_RBC.RbcActive)
-            {
-                SharedVariables[KeyPacketNeedsUpdate] = 1;
-                prevRBCactive = ETCS_CONEXION_RBC.RbcActive;
-            }
-            prevLevelId = levelId;
-            base.Update();
-        }
-        public override void UpdatePacket()
-        {
-            Packet = "";
-            float dist=0;
-            for (int i=0; i<7; i++)
-            {
-                if (HasHead(i+1)) dist += 50*(1<<i);
-            }
-            
-            int levelId = NextSignalId("ETCS_LEVEL");
-            int lsig = IdSignalLocalVariable(levelId, 601);
-            if (levelId >= 0 && (lsig == NextSignalId("NORMAL", 0)  || lsig == NextSignalId("NORMAL", 1)))
-            {
-                Packet = level_tr(dist, level_table(levelId, Math.Max(350, Math.Min(dist/2+50, 1000))));
-            }
-            base.UpdatePacket();
-        }
-    }
-    
-    public class ETCS_STOPSR : PaqueteETCS
-	{
-        public ETCS_STOPSR()
-        {
-            Reaction = 1;
-        }
-        public override void UpdatePacket()
-        {
-            Packet = create_packet(137, "0", 1);
-            base.UpdatePacket();
-        }
-    }
-    public class ETCS_MSG_TUNNEL : PaqueteETCS
-    {
-        public override void UpdatePacket()
-        {
-            int ahead = 0;
-            for (int i=0; i<5; i++)
-            {
-                if (HasHead(i+1)) ahead += (1<<i);
-            }
-            Packet = "{tunnel_msg("+ahead+")}";
-            base.UpdatePacket();
-        }
-    }
-    public class ETCS_MSG_VIADUCTO : PaqueteETCS
-    {
-        public override void UpdatePacket()
-        {
-            int ahead = 0;
-            for (int i=0; i<5; i++)
-            {
-                if (HasHead(i+1)) ahead += (1<<i);
-            }
-            Packet = "{viaducto_msg("+ahead+")}";
-            base.UpdatePacket();
-        }
-    }
-    public class ETCS_MSG_BRIDGE : PaqueteETCS
-    {
-        public override void UpdatePacket()
-        {
-            int ahead = 0;
-            for (int i=0; i<5; i++)
-            {
-                if (HasHead(i+1)) ahead += (1<<i);
-            }
-            Packet = "{puente_msg("+ahead+")}";
-            base.UpdatePacket();
-        }
-    }
-    public class ETCS_MSG_SALIDA_ERTMS : PaqueteETCS
-    {
-        public override void UpdatePacket()
-        {
-            double dist = 0;
-            for (int i=0; i<5; i++)
-            {
-                if (HasHead(i+1)) dist += (1<<i)*50;
-            }
-            string txt = (new string[]{"Salida de ERTMS", "Salida ERTMS"})[SignalId%2];
-            byte[] ascii = System.Text.Encoding.GetEncoding(28591).GetBytes(txt);
-            string packet = "01" + format_binary(1,2) + "0" + format_etcs_distance(0) + format_binary(15,4) + format_binary(5,3) + format_etcs_distance(dist) + format_binary(1023,10) + format_binary(15,4) + format_binary(5,3) + format_binary(0,2) + format_binary(ascii.Length, 8);
-            for (int i=0; i<ascii.Length; i++)
-            {
-                packet += format_binary((int)ascii[i],8);
-            }
-            Packet = create_packet(72,packet,1);
-            base.UpdatePacket();
-        }
-    }
-    public class ETCS_MSG_ENTRADA_ERTMS : PaqueteETCS
-    {
-        public override void UpdatePacket()
-        {
-            double dist = 0;
-            for (int i=0; i<5; i++)
-            {
-                if (HasHead(i+1)) dist += (1<<i)*50;
-            }
-            string txt = "Entrada ERTMS";
-            byte[] ascii = System.Text.Encoding.GetEncoding(28591).GetBytes(txt);
-            string packet = "01" + format_binary(1,2) + "0" + format_etcs_distance(0) + format_binary(15,4) + format_binary(5,3) + format_etcs_distance(dist) + format_binary(1023,10) + format_binary(15,4) + format_binary(5,3) + format_binary(0,2) + format_binary(ascii.Length, 8);
-            for (int i=0; i<ascii.Length; i++)
-            {
-                packet += format_binary((int)ascii[i],8);
-            }
-            Packet = create_packet(72,packet,1);
-            base.UpdatePacket();
         }
     }
 }

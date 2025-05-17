@@ -178,7 +178,7 @@ namespace ORTS.Scripting.Script
         }
         protected string level_table(List<int> levels, float lack)
         {
-            if (!ETCS_CONEXION_RBC.RbcActive && levels.Contains(3))
+            if ((EtcsRbcManager.DefaultRbc == null || !EtcsRbcManager.DefaultRbc.Active) && levels.Contains(3))
             {
                 levels.Remove(3);
                 levels.Add(3); // Lowest priority

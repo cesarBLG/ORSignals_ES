@@ -109,7 +109,11 @@ SignalType ( "ETCS_LTV_DESVIOS"
     SignalFnType ( ETCS_PACKET )
     Include ( "sigcfg_ocultas.inc" )
 )
-
+SignalType ( "ETCS_VALORES_NACIONALES"
+    ORTSScript( ETCS_NV )
+    SignalFnType ( ETCS_PACKET )
+    Include ( "sigcfg_ocultas.inc" )
+)
 SignalType ( "inicioviaducto"
     SignalFnType ( INFO )
     Include ( "sigcfg_ocultas.inc" )
@@ -119,7 +123,6 @@ SignalType ( "finviaducto"
     SignalFnType ( INFO )
     Include ( "sigcfg_ocultas.inc" )
 )
-
 
 SignalType ( "iniciopuente"
     SignalFnType ( INFO )
@@ -131,6 +134,25 @@ SignalType ( "finpuente"
     Include ( "sigcfg_ocultas.inc" )
 )
 
+SignalType ( "finzonaneutra"
+	SignalFnType ( INFO )
+	Include ( "sigcfg_ocultas.inc" )
+)
+	
+SignalType ( "avisozonaneutra"
+	SignalFnType ( INFO )
+	Include ( "sigcfg_ocultas.inc" )
+)
+
+SignalType ( "ETCS_MSG_APROXIMACIONZN"
+    SignalFnType ( ETCS_PACKET )
+    Include ( "sigcfg_ocultas.inc" )
+)
+	
+  SignalType ( "ETCS_MSG_LLEGADAZN"
+    SignalFnType ( ETCS_PACKET )
+    Include ( "sigcfg_ocultas.inc" )
+)
 
 
 

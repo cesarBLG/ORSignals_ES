@@ -206,6 +206,126 @@ SignalShape (
     )
 )
 SignalShape (
+    "etcs_aproxzn.s"
+    "Mensaje Aproximacion ZN ETCS"
+    SignalSubObjs ( 6
+    SignalSubObj ( 0
+        "HEAD1"
+        "Signal Head 1"
+        SigSubType ( SIGNAL_HEAD )
+        SigSubSType ( "ETCS_MSG_APROXIMACIONZN" )
+            )
+            SignalSubObj ( 1
+                "DECOR1"
+                "Sumar 50m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+            SignalSubObj ( 2
+                "DECOR2"
+                "Sumar 100m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+            SignalSubObj ( 3
+                "DECOR3"
+                "Sumar 200m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+            SignalSubObj ( 4
+                "DECOR4"
+                "Sumar 400m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+            SignalSubObj ( 5
+                "DECOR5"
+                "Sumar 800m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+        )
+    )
+	SignalShape (
+        "etcs_llegadazn.s"
+        "Mensaje Llegada ZN ETCS"
+        SignalSubObjs ( 6
+            SignalSubObj ( 0
+                "HEAD1"
+                "Signal Head 1"
+                SigSubType ( SIGNAL_HEAD )
+                SigSubSType ( "ETCS_MSG_LLEGADAZN" )
+            )
+            SignalSubObj ( 1
+                "DECOR1"
+                "Sumar 50m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+            SignalSubObj ( 2
+                "DECOR2"
+                "Sumar 100m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+            SignalSubObj ( 3
+                "DECOR3"
+                "Sumar 200m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+            )
+            SignalSubObj ( 4
+                "DECOR4"
+                "Sumar 400m"
+                SigSubType ( DECOR )
+                SignalFlags ( OPTIONAL )
+        )
+        SignalSubObj ( 5
+            "DECOR5"
+            "Sumar 800m"
+            SigSubType ( DECOR )
+            SignalFlags ( OPTIONAL )
+        )
+    )
+)
+SignalShape (
+	"inicio_azul_zona_neutra.s"
+	"Cartel para indicar inicio de Zona Neutra F.Azul"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SigSubSType ( "iniciozonaneutra" )
+		)
+	)
+)
+SignalShape (
+	"inicio_blanco_zona_neutra.s"
+	"Cartel para indicar inicio de Zona Neutra F.Blanco"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SigSubSType ( "iniciozonaneutra" )
+		)
+	)
+)
+SignalShape (
+	"fin_zona_neutra.s"
+	"Cartel para indicar fin de Zona Neutra"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SigSubSType ( "finzonaneutra" )
+		)
+	)
+)
+SignalShape (
     "eurobaliza_ltv.s"
     "ETCS baliza LTV, para limitaciones temporales de velocidad. Baliza 1/3"
     SignalSubObjs ( 1
