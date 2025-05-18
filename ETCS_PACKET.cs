@@ -110,6 +110,14 @@ namespace ORTS.Scripting.Script
             base.UpdatePacket();
         }
     }
+	public class ETCS_LINKING : PaqueteETCS
+	{
+        public override void UpdatePacket()
+        {
+            Packet = get_linking();
+            base.UpdatePacket();
+        }
+    }
     public class ETCS_NV : PaqueteETCS
     {
         public ETCS_NV()
