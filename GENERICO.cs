@@ -124,6 +124,7 @@ namespace ORTS.Scripting.Script
         protected bool forzarViaLibre = false;
         protected bool forzarParada = false;
         protected bool forzarRebase = false;
+        protected bool forzarParadaSelectiva = false;
         protected bool itinerarioRebase = false;
         protected bool itinerarioERTMS = false;
 
@@ -205,6 +206,7 @@ namespace ORTS.Scripting.Script
                 ActualizarInformacionFlags();
             }
             if (!estaPreparada) itinerarioERTMS = esLZB && (!esAvanzada || !esBSL) && ((Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0);
+            if (forzarParadaSelectiva) itinerarioERTMS = true;
 
             deslizamientoSiguienteSenalOcupado = IdSignalLocalVariable(idSiguienteSenal, KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO) == 1;
             bool deslizamientoOcupado = false;
@@ -944,6 +946,11 @@ namespace ORTS.Scripting.Script
             var t = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
             siguienteSenalEsDeLiberacion = t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Liberacion);
             siguienteSenalEsAvanzadaBLA &= !siguienteSenalEsDeLiberacion;
+
+            var sist = (SistemaSeñalizacion)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION);
+            forzarParadaSelectiva = (sist.HasFlag(SistemaSeñalizacion.ETCS_N1) || sist.HasFlag(SistemaSeñalizacion.ETCS_N2)) && !sist.HasFlag(SistemaSeñalizacion.ASFA);
+            sist = Sistemas;
+            forzarParadaSelectiva |= (sist.HasFlag(SistemaSeñalizacion.ETCS_N1) || sist.HasFlag(SistemaSeñalizacion.ETCS_N2)) && !sist.HasFlag(SistemaSeñalizacion.ASFA);
             
             id = NextSignalId("LZB");
             if (id >= 0 && NextSignalId("NORMAL") == IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SIG_SENAL)) Sistemas |= SistemaSeñalizacion.LZB;
