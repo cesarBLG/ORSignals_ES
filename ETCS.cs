@@ -27,6 +27,7 @@ namespace ORTS.Scripting.Script
 
         protected int NID_C=-1;
         protected bool Convencional;
+        protected int M_VERSION=33;
 
         static public readonly Random rand = new Random();
 
@@ -64,6 +65,7 @@ namespace ORTS.Scripting.Script
                     string rules = null;
                     LoadParameter(section, "Rules", ref rules);
                     Convencional = rules == "ADIF_CONV";
+                    LoadParameter(section, "M_VERSION", ref M_VERSION);
                 }
             }
         }

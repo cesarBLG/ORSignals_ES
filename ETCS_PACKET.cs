@@ -135,28 +135,32 @@ namespace ORTS.Scripting.Script
             string nvset = null;
             LoadParameter(string.Format("NID_C.{0}", NID_C), "NV", ref nvset);
             List<int> nid_cs = GetParameter(nvset, "NID_Cs", "").Split(',').Select(int.Parse).ToList();
-            nid_cs.Remove(NID_C);
+            if (M_VERSION >= 32) nid_cs.Remove(NID_C);
             string data = "";
             data += "01";
-            data += format_binary(32767, 15);
-            data += format_binary(NID_C, 10);
+            data += format_binary(M_VERSION < 32 ? 0 : 32767, 15);
+            if (M_VERSION >= 32) data += format_binary(NID_C, 10);
             data += format_binary(nid_cs.Count, 5);
             foreach (int nid in nid_cs)
             {
                 data += format_binary(nid, 10);
             }
+            string data2 = "";
             data += format_etcs_speedKpH(GetParameter(nvset, "V_NVSHUNT", 30));
             data += format_etcs_speedKpH(GetParameter(nvset, "V_NVSTFF", 40));
             data += format_etcs_speedKpH(GetParameter(nvset, "V_NVONSIGHT", 30));
-            data += format_etcs_speedKpH(GetParameter(nvset, "V_NVLIMSUPERV", 100));
+            if (M_VERSION >= 32) data += format_etcs_speedKpH(GetParameter(nvset, "V_NVLIMSUPERV", 100));
             data += format_etcs_speedKpH(GetParameter(nvset, "V_NVUNFIT", 100));
             data += format_etcs_speedKpH(GetParameter(nvset, "V_NVREL", 40));
             data += format_etcs_distance(GetParameter(nvset, "D_NVROLL", 2));
             data += format_binary(GetParameter(nvset, "Q_NVSBTSMPERM", true) ? 1 : 0, 1);
             data += format_binary(GetParameter(nvset, "Q_NVEMRRLS", false) ? 1 : 0, 1);
-            data += format_binary(GetParameter(nvset, "Q_NVGUIPERM", false) ? 1 : 0, 1);
-            data += format_binary(GetParameter(nvset, "Q_NVSBFBPERM", false) ? 1 : 0, 1);
-            data += format_binary(GetParameter(nvset, "Q_NVINHSMICPERM", false) ? 1 : 0, 1);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "Q_NVGUIPERM", false) ? 1 : 0, 1);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "Q_NVGUIPERM", false) ? 1 : 0, 1);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "Q_NVSBFBPERM", false) ? 1 : 0, 1);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "Q_NVSBFBPERM", false) ? 1 : 0, 1);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "Q_NVINHSMICPERM", false) ? 1 : 0, 1);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "Q_NVINHSMICPERM", false) ? 1 : 0, 1);
             data += format_etcs_speedKpH(GetParameter(nvset, "V_NVALLOWOVTRP", 0));
             data += format_etcs_speedKpH(GetParameter(nvset, "V_NVSUPOVTRP", 30));
             data += format_etcs_distance(GetParameter(nvset, "D_NVOVTRP", 200));
@@ -167,14 +171,21 @@ namespace ORTS.Scripting.Script
             data += format_binary(GetParameter(nvset, "M_NVDERUN", 1), 1);
             data += format_etcs_distance(GetParameter(nvset, "D_NVSTFF", 32767));
             data += format_binary(GetParameter(nvset, "Q_NVDRIVER_ADHES", false) ? 1 : 0, 1);
-            data += format_binary(GetParameter(nvset, "A_NVMAXREDADH1", 20), 6);
-            data += format_binary(GetParameter(nvset, "A_NVMAXREDADH2", 14), 6);
-            data += format_binary(GetParameter(nvset, "A_NVMAXREDADH3", 14), 6);
-            data += format_binary(GetParameter(nvset, "Q_NVLOCACC", 12), 6);
-            data += format_binary(GetParameter(nvset, "M_NVAVADH", 0), 5);
-            data += format_binary(GetParameter(nvset, "M_NVEBCL", 9), 4);
-            data += format_binary(0, 1);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "A_NVMAXREDADH1", 20), 6);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "A_NVMAXREDADH1", 20), 6);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "A_NVMAXREDADH2", 14), 6);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "A_NVMAXREDADH2", 14), 6);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "A_NVMAXREDADH3", 14), 6);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "A_NVMAXREDADH3", 14), 6);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "Q_NVLOCACC", 12), 6);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "M_NVAVADH", 0), 5);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "M_NVAVADH", 0), 5);
+            if (M_VERSION >= 32) data += format_binary(GetParameter(nvset, "M_NVEBCL", 9), 4);
+            else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "M_NVEBCL", 9), 4);
+            if (M_VERSION >= 32) data += format_binary(0, 1);
+            else if (M_VERSION >= 17) data2 += format_binary(0, 1);
             Packet = create_packet(3, data, 1);
+            if (M_VERSION >= 17 && M_VERSION < 32) Packet += create_packet(203, data2, 1);
             base.UpdatePacket();
         }
     }
