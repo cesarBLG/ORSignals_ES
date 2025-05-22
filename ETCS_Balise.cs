@@ -160,7 +160,7 @@ namespace ORTS.Scripting.Script
         {
             Faulty ^= rand.Next(1000000) == 500;
             var msg = ConstruirMensajes();
-            if (Faulty || !Enabled || msg == null || NID_BG <= 0)
+            if (Faulty || msg == null || NID_BG <= 0)
             {
                 msg = new List<string>();
                 msg.Add(create_packet(254, "", 2));
