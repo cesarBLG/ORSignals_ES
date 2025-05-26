@@ -93,7 +93,7 @@ SignalShape (
 SignalShape (
     "etcs_aproxtunnel.s"
     "Mensaje Aproximacion Túnel"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 6
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -101,12 +101,13 @@ SignalShape (
             SigSubSType ( "ETCS_MSG_TUNNEL" )
             SignalFlags ( JN_LINK )
         )
+        Include ( "sigcfg_head_etcs_discrete.inc" )
     )
 )
 SignalShape (
     "etcs_aproxviaducto.s"
     "Mensaje Aproximacion Viaducto"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 6
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -114,12 +115,13 @@ SignalShape (
             SigSubSType ( "ETCS_MSG_VIADUCTO" )
             SignalFlags ( JN_LINK )
         )
+        Include ( "sigcfg_head_etcs_discrete.inc" )
     )
 )
 SignalShape (
     "etcs_aproxbridge.s"
     "Mensaje Aproximacion Puente"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 6
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -127,6 +129,7 @@ SignalShape (
             SigSubSType ( "ETCS_MSG_BRIDGE" )
             SignalFlags ( JN_LINK )
         )
+        Include ( "sigcfg_head_etcs_discrete.inc" )
     )
 )
 SignalShape (
