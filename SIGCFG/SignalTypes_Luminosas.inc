@@ -29,7 +29,7 @@ SignalType ( "SP2VRP"
 	ORTSScript(GENERICO)
 	SigFlashDuration ( 0.5 0.5 )
 	Include ( "SignalLights_Alta.inc" )
-	Include ( "SignalDrawStates_permisiva.inc" )
+	Include ( "SignalDrawStates.inc" )
 	Include ( "SignalAspects.inc" )
 	SignalNumClearAhead ( 5 )
 )
@@ -147,7 +147,7 @@ SignalType ( "SP3P"
 	ORTSScript(GENERICO)
 	SigFlashDuration ( 0.5 0.5 )
 	Include ( "SignalLights_Alta.inc" )
-	Include ( "SignalDrawStates_permisiva.inc" )
+	Include ( "SignalDrawStates.inc" )
 	Include ( "SignalAspects.inc" )
 	SignalNumClearAhead ( 5 )
 )
@@ -168,7 +168,8 @@ SignalType ( "SP5EBAB"
 	SignalLightTex ( "ltex" )
 	SigFlashDuration ( 0.5 0.5 )
 	ORTSScript(GENERICO)
-	SignalLights ( 5
+		
+			SignalLights ( 5
 		SignalLight ( 0 "Red Light"
 			Position ( -0.005 5.094 0.118 )
 			Radius ( 0.13 )
@@ -189,102 +190,114 @@ SignalType ( "SP5EBAB"
 			Position ( -0.005 4.68 0.118 )
 			Radius ( 0.13 )
 		)
-	)
-	SignalDrawStates ( 11
-		SignalDrawState ( 0
-			"FF7A"
-			DrawLights ( 1
-				DrawLight ( 0 )
 			)
+		
+		SignalDrawStates ( 13
+			SignalDrawState ( 0
+		"FF7A"
+		DrawLights ( 1
+			DrawLight ( 0 )
 		)
-		SignalDrawState ( 1
-			"FF7C"
-			DrawLights ( 2
-				DrawLight ( 0 )
-				DrawLight ( 4 )
 			)
+			SignalDrawState ( 1
+		"FF5A"
+		DrawLights ( 1
+			DrawLight ( 1 )
 		)
-		SignalDrawState ( 2
-			"FF7D"
-			DrawLights ( 2
-				DrawLight ( 0 )
-				DrawLight ( 4 SignalFlags(FLASHING) )
 			)
+			SignalDrawState ( 2
+		"FF2"
+		DrawLights ( 1
+			DrawLight ( 2   SignalFlags ( FLASHING )  )
 		)
-		SignalDrawState ( 3
-			"FF8A"
-			DrawLights ( 2
-				DrawLight ( 0 )
-				DrawLight ( 3 SignalFlags(FLASHING) )
 			)
+			SignalDrawState ( 3
+		"FF3A"
+		DrawLights ( 2
+			DrawLight ( 1 )
+			DrawLight ( 2 )
 		)
-		SignalDrawState ( 4
-			"FF8B"
-			DrawLights ( 2
-				DrawLight ( 0 )
-				DrawLight ( 3 )
 			)
+			SignalDrawState ( 4
+		"FF1A"
+		DrawLights ( 1
+			DrawLight ( 2 )
 		)
-		SignalDrawState ( 5
-			"FF1A"
-			DrawLights ( 1
-				DrawLight ( 2 )
 			)
+			SignalDrawState ( 5
+		"FF8B"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 3 )
 		)
+			)
 			SignalDrawState ( 6
-			"FF2"
-			DrawLights ( 1
-				DrawLight ( 2 SignalFlags(FLASHING) )
-			)
+		"FF8A"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 3 SignalFlags ( FLASHING ) )
 		)
+			)
 			SignalDrawState ( 7
-			"FF3A"
-			DrawLights ( 2
-				DrawLight ( 2 )
-				DrawLight ( 1 )
-			)
+		"FF9"
+		DrawLights ( 1
+			DrawLight ( 3 )
 		)
+			)
 			SignalDrawState ( 8
-			"FF5A"
-			DrawLights ( 1
-				DrawLight ( 1 )
-			)
+		"FF6"
+		DrawLights ( 1
+			DrawLight ( 1 SignalFlags ( FLASHING ) )
 		)
+			)
 			SignalDrawState ( 9
-			"FF4"
-			DrawLights ( 1
-				DrawLight ( 1 )
+		"FF4"
+		DrawLights ( 1
+			DrawLight ( 1 )
+		)
+			)
+			SignalDrawState ( 10
+		"FF7B"
+		DrawLights ( 1
+			DrawLight ( 0 )
+		)
+			)
+			SignalDrawState ( 11
+		"FF7C"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 4 )
+		)
+			)
+			SignalDrawState ( 12
+		"FF7D"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 4 SignalFlags ( FLASHING ) )
+		)
 			)
 		)
-		SignalDrawState ( 10
-			"FF7B"
-			DrawLights ( 1
-				DrawLight ( 0 )
-			)
+		
+		SignalAspects ( 8
+			SignalAspect ( STOP					"FF7A"	)
+			SignalAspect ( APPROACH_1			"FF5A"	)
+			SignalAspect ( APPROACH_2			"FF3A"	)
+			SignalAspect ( APPROACH_3			"FF4"	)
+			SignalAspect ( CLEAR_1				"FF2"	)
+			SignalAspect ( CLEAR_2				"FF1A"  )
+			SignalAspect ( STOP_AND_PROCEED		"FF8B"  )
+			SignalAspect ( RESTRICTING			"FF8A"	)
 		)
-	)
-
-	SignalAspects ( 7
-		SignalAspect ( STOP                        "FF7A"                    SpeedMPH ( 0 )  )
-		
-		SignalAspect ( CLEAR_2                        "FF1A"                            )
-		SignalAspect ( CLEAR_1                                 "FF2" )
-		SignalAspect ( APPROACH_1                                 "FF5A" )
-		SignalAspect ( APPROACH_2                              "FF3A" )
-		SignalAspect ( APPROACH_3                              "FF4" )
-		SignalAspect ( RESTRICTING                               "FF8A" )
-		
-	)
-
 	SignalNumClearAhead ( 5 )
-)
+	)
 
 SignalType ( "SP4IBAB"
 	SignalFnType ( NORMAL )
 	SignalLightTex ( "ltex" )
 	SigFlashDuration ( 0.5 0.5 )
 	ORTSScript(GENERICO)
-	SignalLights ( 4
+		
+			SignalLights ( 5
 		SignalLight ( 0 "Red Light"
 			Position ( -0.005 5.094 0.118 )
 			Radius ( 0.13 )
@@ -297,84 +310,114 @@ SignalType ( "SP4IBAB"
 			Position ( -0.005 5.51 0.118 )
 			Radius ( 0.13 )
 		)
-		SignalLight ( 3 "Blue Light"
+		SignalLight ( 3 "White Light"
+			Position ( -0.005 3.070 0.45 )
+			Radius ( 0.11 )
+		)
+		SignalLight ( 4 "Blue Light"
 			Position ( -0.005 4.68 0.118 )
 			Radius ( 0.13 )
 		)
-	)
-	SignalDrawStates ( 9
-		SignalDrawState ( 0
-			"FF7A"
-			DrawLights ( 1
-				DrawLight ( 0 )
 			)
+		
+		SignalDrawStates ( 13
+			SignalDrawState ( 0
+		"FF7A"
+		DrawLights ( 1
+			DrawLight ( 0 )
 		)
-		SignalDrawState ( 1
-			"FF7C"
-			DrawLights ( 2
-				DrawLight ( 0 )
-				DrawLight ( 3 )
 			)
+			SignalDrawState ( 1
+		"FF5A"
+		DrawLights ( 1
+			DrawLight ( 1 )
 		)
-		SignalDrawState ( 2
-			"FF7D"
-			DrawLights ( 2
-				DrawLight ( 0 )
-				DrawLight ( 3 SignalFlags(FLASHING) )
 			)
+			SignalDrawState ( 2
+		"FF2"
+		DrawLights ( 1
+			DrawLight ( 2   SignalFlags ( FLASHING )  )
 		)
-		SignalDrawState ( 5
-			"FF1A"
-			DrawLights ( 1
-				DrawLight ( 2 )
 			)
+			SignalDrawState ( 3
+		"FF3A"
+		DrawLights ( 2
+			DrawLight ( 1 )
+			DrawLight ( 2 )
 		)
+			)
+			SignalDrawState ( 4
+		"FF1A"
+		DrawLights ( 1
+			DrawLight ( 2 )
+		)
+			)
+			SignalDrawState ( 5
+		"FF8B"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 3 )
+		)
+			)
 			SignalDrawState ( 6
-			"FF2"
-			DrawLights ( 1
-				DrawLight ( 2 SignalFlags(FLASHING) )
-			)
+		"FF8A"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 3 SignalFlags ( FLASHING ) )
 		)
+			)
 			SignalDrawState ( 7
-			"FF3A"
-			DrawLights ( 2
-				DrawLight ( 2 )
-				DrawLight ( 1 )
-			)
+		"FF9"
+		DrawLights ( 1
+			DrawLight ( 3 )
 		)
+			)
 			SignalDrawState ( 8
-			"FF5A"
-			DrawLights ( 1
-				DrawLight ( 1 )
-			)
+		"FF6"
+		DrawLights ( 1
+			DrawLight ( 1 SignalFlags ( FLASHING ) )
 		)
+			)
 			SignalDrawState ( 9
-			"FF4"
-			DrawLights ( 1
-				DrawLight ( 1 )
+		"FF4"
+		DrawLights ( 1
+			DrawLight ( 1 )
+		)
+			)
+			SignalDrawState ( 10
+		"FF7B"
+		DrawLights ( 1
+			DrawLight ( 0 )
+		)
+			)
+			SignalDrawState ( 11
+		"FF7C"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 4 )
+		)
+			)
+			SignalDrawState ( 12
+		"FF7D"
+		DrawLights ( 2
+			DrawLight ( 0 )
+			DrawLight ( 4 SignalFlags ( FLASHING ) )
+		)
 			)
 		)
-		SignalDrawState ( 10
-			"FF7B"
-			DrawLights ( 1
-				DrawLight ( 0 )
-			)
+		
+		SignalAspects ( 8
+			SignalAspect ( STOP					"FF7A"	)
+			SignalAspect ( APPROACH_1			"FF5A"	)
+			SignalAspect ( APPROACH_2			"FF3A"	)
+			SignalAspect ( APPROACH_3			"FF4"	)
+			SignalAspect ( CLEAR_1				"FF2"	)
+			SignalAspect ( CLEAR_2				"FF1A"  )
+			SignalAspect ( STOP_AND_PROCEED		"FF8B"  )
+			SignalAspect ( RESTRICTING			"FF8A"	)
 		)
-	)
-
-	SignalAspects ( 6
-		SignalAspect ( STOP                        "FF7A"                    SpeedMPH ( 0 )  )
-		
-		SignalAspect ( CLEAR_2                        "FF1A"                            )
-		SignalAspect ( CLEAR_1                                 "FF2" )
-		SignalAspect ( APPROACH_1                                 "FF5A" )
-		SignalAspect ( APPROACH_2                              "FF3A" )
-		SignalAspect ( APPROACH_3                              "FF4" )
-		
-	)
-
 	SignalNumClearAhead ( 5 )
-)
+	)
 
 SignalType ( "SELU2MONOTOPERA"
 	ORTSScript (TOPERA)
@@ -517,14 +560,7 @@ SignalType ( "SP2AV"
 	SignalLightTex ( "ltex" )
 	Include ( "SignalLights_Alta.inc" )
 	Include ( "SignalDrawStates.inc" )
-	SignalAspects ( 6
-		SignalAspect ( RESTRICTING				"Yellow"					)
-		SignalAspect ( APPROACH_1				"Yellow"					)
-		SignalAspect ( APPROACH_2				"YellowGreen"				)
-		SignalAspect ( APPROACH_3				"Yellow"					)
-		SignalAspect ( CLEAR_1					"Flashing Green" 			)
-		SignalAspect ( CLEAR_2					"Green" 				    )
-	)
+	Include ( "SignalAspects.inc" )
 	SignalNumClearAhead ( 5 )
 )
 
@@ -536,11 +572,7 @@ SignalType ( "SP1V"
 	SigFlashDuration ( 0.5 0.5 )
 	Include ( "SignalLights_Alta.inc" )
 	Include ( "SignalDrawStates.inc" )
-	SignalAspects ( 3
-		SignalAspect ( RESTRICTING				"Flashing Green"			)
-		SignalAspect ( CLEAR_1					"Flashing Green" 			)
-		SignalAspect ( CLEAR_2					"Green" 				    )
-	)
+	Include ( "SignalAspects.inc" )
 	SignalNumClearAhead ( 5 )
 )
 

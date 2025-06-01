@@ -1,52 +1,52 @@
 
-SignalDrawStates ( 9
+SignalDrawStates ( 11
 	SignalDrawState ( 0
-		"Red"
+		"FF7A"
 		DrawLights ( 1
 			DrawLight ( 0 )
 		)
 	)
 	SignalDrawState ( 1
-		"Yellow"
+		"FF5A"
 		DrawLights ( 1
 			DrawLight ( 1 )
 		)
 	)
 	SignalDrawState ( 2
-		"Flashing Green"
+		"FF2"
 		DrawLights ( 1
 			DrawLight ( 2   SignalFlags ( FLASHING )  )
 		)
 	)
 	SignalDrawState ( 3
-		"YellowGreen"
+		"FF3A"
 		DrawLights ( 2
 			DrawLight ( 1 )
 			DrawLight ( 2 )
 		)
 	)
 	SignalDrawState ( 4
-		"Green"
+		"FF1A"
 		DrawLights ( 1
 			DrawLight ( 2 )
 		)
 	)
 	SignalDrawState ( 5
-		"RedWhite"
+		"FF8B"
 		DrawLights ( 2
 			DrawLight ( 0 )
 			DrawLight ( 3 )
 		)
 	)
 	SignalDrawState ( 6
-		"RedWhiteFlashing"
+		"FF8A"
 		DrawLights ( 2
 			DrawLight ( 0 )
 			DrawLight ( 3 SignalFlags ( FLASHING ) )
 		)
 	)
 	SignalDrawState ( 7
-		"FF7I"
+		"FF9"
 		DrawLights ( 1
 			DrawLight ( 3 )
 		)
@@ -55,6 +55,18 @@ SignalDrawStates ( 9
 		"FF6"
 		DrawLights ( 1
 			DrawLight ( 1 SignalFlags ( FLASHING ) )
+		)
+	)
+	SignalDrawState ( 9
+		"FF4"
+		DrawLights ( 1
+			DrawLight ( 1 )
+		)
+	)
+	SignalDrawState ( 10
+		"FF7B"
+		DrawLights ( 1
+			DrawLight ( 0 )
 		)
 	)
 )

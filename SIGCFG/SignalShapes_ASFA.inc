@@ -75,6 +75,7 @@ SignalShape (
 		)
 	)
 )
+
 SignalShape (
 	"ESRNASFA_PRE_PBLA.s"
 	"RENFE Baliza ASFA PRE PREAVANZADA BLA"
@@ -353,6 +354,149 @@ SignalShape (
 			"Signal Head 1"
 			SigSubType ( SIGNAL_HEAD )
 			SigSubSType ( "ASFA_BALIZA_L11_FASE_2" )
+		)
+	)
+)
+
+SignalShape (
+		"ESRNASFA_PIE_AV.s"
+		"RENFE Baliza ASFA PIE AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_SENAL" )
+			)
+		)
+	)
+
+SignalShape (
+		"ESRNASFA_PIE_FASE_2_AV.s"
+		"RENFE Baliza ASFA PIE Fase 2 AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_SENAL" )
+			)
+		)
+	)
+	
+SignalShape (
+		"ESRNASFA_PRE_AV.s"
+		"RENFE Baliza ASFA PRE AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_PREVIA_SENAL" )
+			)
+		)
+	)
+	
+SignalShape (
+		"ESRNASFA_PRE_FASE_2_AV.s"
+		"RENFE Baliza ASFA PRE Fase 2 AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_PREVIA_SENAL" )
+			)
+		)
+	)
+
+SignalShape (
+		"ESRNASFA_PRE_BLA_AV.s"
+		"RENFE Baliza ASFA PRE AVANZADA BLA AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_PREVIA_Eprima_BLA" )
+			)
+		)
+	)
+	
+SignalShape (
+		"ESRNASFA_L1_AV.s"
+		"RENFE Baliza ASFA L1 AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_L1" )
+			)
+		)
+	)
+	
+SignalShape (
+		"ESRNASFA_L9_FASE_2_AV.s"
+		"RENFE Baliza ASFA L9 Fase 2 AV" 
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_L9" )
+			)
+		)
+	)
+	
+SignalShape (
+		"ESRNASFA_L10_FASE_2_AV.s"
+		"RENFE Baliza ASFA L10 Fase 2 AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_L10" )
+			)
+		)
+	)
+	
+SignalShape (
+		"ESRNASFA_L11_FASE_2_AV.s"
+		"RENFE Baliza ASFA L11 Fase 2 AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_L11" )
+			)
+		)
+	)
+	
+SignalShape (
+		"ESRNASFA_L8_AV.s"
+		"RENFE Baliza ASFA L8 AV"
+		SignalSubObjs ( 1
+			SignalSubObj ( 0
+				"HEAD1"
+				"Signal Head 1"
+				SigSubType ( SIGNAL_HEAD )
+				SigSubSType ( "ASFA_BALIZA_L8" )
+			)
+		)
+	)
+	
+SignalShape (
+	"ESRNASFA_PRE_BLA_FASE_2_AV.s"
+	"RENFE Baliza ASFA PRE AVANZADA BLA Fase 2 AV"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SigSubSType ( "ASFA_BALIZA_PREVIA_Eprima_BLA_FASE_2" )
 		)
 	)
 )
