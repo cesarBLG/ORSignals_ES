@@ -13,7 +13,7 @@ namespace ORTS.Scripting.Script
         {
             base.Initialize();
             NID_C = ETCS.DefaultNID_C;
-            LoadParameter("NID_C", SignalTypeName.Substring(0), ref NID_C);
+            LoadParameter("NID_C", SignalTypeName.Substring(9), ref NID_C);
             SharedVariables[0] = NID_C;
             SharedVariables[1] = -2;
         }
