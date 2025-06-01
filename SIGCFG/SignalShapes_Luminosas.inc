@@ -191,6 +191,36 @@ SignalShape (
 )
 
 SignalShape (
+	"ESRN_Luminosa_3_focos_Tunel_Izq.s"
+	"RENFE Lum 3 focos Tunel Izq VRA Intermedia"
+	SignalSubObjs ( 16
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SP3" )
+		)
+		Include ( "sigcfg_head_caracteristicas.inc" )
+	)
+)
+
+SignalShape (
+	"ESRN_Luminosa_3_focos_Tunel_Der.s"
+	"RENFE Lum 3 focos Tunel Der VRA Intermedia"
+	SignalSubObjs ( 16
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SP3" )
+		)
+		Include ( "sigcfg_head_caracteristicas.inc" )
+	)
+)
+
+SignalShape (
 	"perm.s"
 	"RENFE Lum 3 focos VRA Intermedia Permisiva"
 	SignalSubObjs ( 16
@@ -207,6 +237,36 @@ SignalShape (
 SignalShape (
 	"3lucesmas1.s"
 	"RENFE Lum 3+1 focos VRAB"
+	SignalSubObjs ( 16
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SP4EBAB" )
+		)
+		Include ( "sigcfg_head_caracteristicas.inc" )
+	)
+)
+
+SignalShape (
+	"ESRN_Luminosa_3+1_focos_Tunel_Izq.s"
+	"RENFE Lum 3+1 focos Tunel Izq VRAB"
+	SignalSubObjs ( 16
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SP4EBAB" )
+		)
+		Include ( "sigcfg_head_caracteristicas.inc" )
+	)
+)
+
+SignalShape (
+	"ESRN_Luminosa_3+1_focos_Tunel_Der.s"
+	"RENFE Lum 3+1 focos Tunel Der VRAB"
 	SignalSubObjs ( 16
 		SignalSubObj ( 0
 			"HEAD1"
