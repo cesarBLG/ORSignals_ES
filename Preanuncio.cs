@@ -55,7 +55,7 @@ namespace ORTS.Scripting.Script
             if (VelocidadPantalla == 0) VelocidadPantalla = 60;
             for (int i=50; i<160; i+=10)
             {
-                int index = GetDrawState("PAP"+i);
+                int index = GetDrawState(("PAP"+i).ToLowerInvariant());
                 if (index >= 0) VelocidadADrawState[i] = index;
             }
         }
@@ -70,13 +70,14 @@ namespace ORTS.Scripting.Script
             InfoRuta infoRuta = (InfoRuta)IdSignalLocalVariable(idSenal, KEY_VARIABLE_COMPARTIDA_SIG_INFO_RUTA);
 
             if (preanuncio &&
-                (((infoRuta == InfoRuta.AG_DIR_SENAL_A_PARA || infoRuta == InfoRuta.NO_PREPARADO) && SigAnuncioParada) ||
+                (((infoRuta == InfoRuta.AG_DIR_SENAL_A_PARA || infoRuta == InfoRuta.NO_PREPARADO) && SigAnuncioParada) ||
                 (infoRuta == InfoRuta.AG_DIR_SENAL_A_PREC && SigAnuncioPrecaucion) ||
                 (infoRuta == InfoRuta.AG_DIR_SENAL_PREA && SigAnuncioPrecaucion)))
             {
                 MstsSignalAspect = Aspect.Approach_3;
                 if (VelocidadADrawState.TryGetValue(VelocidadPantalla, out int drawState)) DrawState = drawState;
                 else DrawState = DefaultDrawState(MstsSignalAspect);
+                Console.WriteLine(drawState + " " + MstsSignalAspect);
             }
             else
             {

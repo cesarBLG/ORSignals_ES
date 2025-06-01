@@ -2,6 +2,7 @@
 SignalType ( "PAP"
 	SignalFnType ( PPREANUNCIO )
 	ORTSScript(PAPGENERICO)
+	SignalLightTex ( "6PAP" )
 	SignalLights ( 11
 		SignalLight ( 0 "Amber Light"
 			Position ( 0 2.200 0.47 )
