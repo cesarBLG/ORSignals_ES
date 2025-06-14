@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ORTS.Scripting.Script
 {
@@ -68,21 +67,29 @@ namespace ORTS.Scripting.Script
                 case Aspecto.ParadaLZB:
                     msg.Add(create_packet(137, "0", 1));
                     break;
+                case Aspecto.RebaseAutorizado:
+                case Aspecto.RebaseAutorizadoCortaDistancia:
+                {
+                    bool shProfile = false;
+                    LoadParameter(string.Format("NID_C.{0}", NID_C), "ShProfile", ref shProfile);
+                    msg.Add(create_packet(137, shProfile ? "1" : "0", 1));
+                    if (shProfile)
+                    {
+                        string prof = "01" + format_etcs_distance(0) + "01" + "1111111" + format_binary(32767, 15) + format_etcs_distance(0) + "0" + "00000";
+                        msg.Add(create_packet(80, prof, 1));
+                    }
+                    break;
+                }
                 default:
                     msg.Add(create_packet(137, "1", 1));
                     break;
             }
-            if (asp == Aspecto.RebaseAutorizado || asp == Aspecto.RebaseAutorizadoCortaDistancia)
-            {
-                string prof = "01" + format_etcs_distance(0) + "01" + "1111111" + format_binary(32767, 15) + format_etcs_distance(0) + "0" + "00000";
-                msg.Add(create_packet(80, prof, 1));
-            }
-            else if (asp == Aspecto.RebaseAutorizadoDestellos)
+            if (asp == Aspecto.RebaseAutorizadoDestellos)
             {
                 int start = 0;
                 int end = 1;
                 bool sigfound = false;
-                for (int i=0; ; i++)
+                for (int i = 0; ; i++)
                 {
                     int id = NextSignalId("NORMAL", i);
                     if (id < 0) break;
@@ -96,7 +103,7 @@ namespace ORTS.Scripting.Script
                     if (IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
                     sigfound = true;
                 }
-                for (int i=start+1; ; i++)
+                for (int i = start + 1; ; i++)
                 {
                     end = i;
                     int id = NextSignalId("NORMAL", i);
@@ -104,7 +111,7 @@ namespace ORTS.Scripting.Script
                     if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
                     break;
                 }
-                string prof = "01" + "{NextSignalDistanceM("+start+")-bgref}" + "00" + "1111111" + "{NextSignalDistanceM("+end+")-NextSignalDistanceM("+start+")}" + format_etcs_distance(300) + "1" + "00000";
+                string prof = "01" + "{NextSignalDistanceM(" + start + ")-bgref}" + "00" + "1111111" + "{NextSignalDistanceM(" + end + ")-NextSignalDistanceM(" + start + ")}" + format_etcs_distance(300) + "1" + "00000";
                 msg.Add(create_packet(80, prof, 1));
             }
             msg.AddRange(base.ConstruirMensajes());
@@ -299,6 +306,14 @@ namespace ORTS.Scripting.Script
                 case Aspecto.ParadaLZB:
                     msg.Add(create_packet(137, "0", 1));
                     break;
+                case Aspecto.RebaseAutorizado:
+                case Aspecto.RebaseAutorizadoCortaDistancia:
+                {
+                    bool shProfile = false;
+                    LoadParameter(string.Format("NID_C.{0}", NID_C), "ShProfile", ref shProfile);
+                    msg.Add(create_packet(137, shProfile ? "1" : "0", 1));
+                    break;
+                }
                 default:
                     msg.Add(create_packet(137, "1", 1));
                     break;
