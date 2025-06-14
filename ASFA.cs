@@ -125,7 +125,20 @@ namespace ORTS.Scripting.Script
                 if (SenalAsociada < 0)
                 {
                     if (avanzadaBLA || preavanzadaBLA) SenalAsociada = NextSignalId("DISTANCE");
-                    else SenalAsociada = NextSignalId("NORMAL");
+                    else if (!previa) SenalAsociada = NextSignalId("NORMAL");
+                    else
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            int id = NextSignalId("NORMAL", id);
+                            if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
+                            if (id >= 0)
+                            {
+                                SenalAsociada = id;
+                                break;
+                            }
+                        }
+                    }
                     SendSignalMessage(SenalAsociada, "ASFA");
                 }
                 if (SenalAsociada < 0)
