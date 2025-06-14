@@ -277,7 +277,10 @@ namespace ORTS.Scripting.Script
                 if (HasHead(i+1)) dist += (1<<i)*50;
             }
             double length = 600;
-            string txt = (new string[]{"Cierre del Regulador", "Cierre de regulador", "Cierre de Regulador"})[SignalId%3];
+            string txt;
+            if (SignalTypeName.Contains("lamina")) txt = "Seccionamiento de lámina";
+            else if (SignalTypeName.Contains("aislador")) txt = "Aislador de sección";
+            else txt = (new string[] { "Cierre del Regulador", "Cierre de regulador", "Cierre de Regulador" })[SignalId % 3];
             byte[] ascii = System.Text.Encoding.GetEncoding(28591).GetBytes(txt); 
             string packet = "01" + format_binary(1,2) + "0" + format_etcs_distance(dist) + format_binary(15,4) + format_binary(5,3) + format_etcs_distance(length) + format_binary(1023,10) + format_binary(15,4) + format_binary(5,3) + format_binary(0,2) + format_binary(ascii.Length, 8);   
             for (int i=0; i<ascii.Length; i++)
