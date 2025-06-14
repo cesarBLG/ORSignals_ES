@@ -355,29 +355,29 @@ SignalShape (
 )
 
 SignalShape (
-	"mono4luces2.s"
-	"RENFE Lum Mono 4 focos RBBB Retroceso"
+	"ESRN_Mono4Focos_Retroceso.s"
+	"RENFE Lum Mono 4 focos RBBB Retroceso V2"
 	SignalSubObjs ( 1
 		SignalSubObj ( 0
 			"HEAD1"
 			"Signal Head 1"
 			SigSubType ( SIGNAL_HEAD )
 			SignalFlags ( JN_LINK )
-			SigSubSType ( "SP4MD" )
+			SigSubSType ( "SP4MD_pq" )
 		)
 	)
 )
 
 SignalShape (
-	"mono4luces2_izq.s"
-	"RENFE Lum Mono 4 focos Izq RBBB Retroceso"
+	"ESRN_Mono4Focos_Retroceso_Izq.s"
+	"RENFE Lum Mono 4 focos Izq RBBB Retroceso V2"
 	SignalSubObjs ( 1
 		SignalSubObj ( 0
 			"HEAD1"
 			"Signal Head 1"
 			SigSubType ( SIGNAL_HEAD )
 			SignalFlags ( JN_LINK )
-			SigSubSType ( "SP4MD_izq" )
+			SigSubSType ( "SP4MD_pq_izq" )
 		)
 	)
 )
@@ -397,7 +397,7 @@ SignalShape (
 )
 
 SignalShape (
-	"mono2focos_pq.s"
+	"ESRN_Mono2Focos_Maniobra.s"
 	"RENFE Lum Mono 2 focos RB Maniobras Pequeña"
 	SignalSubObjs ( 1
 		SignalSubObj ( 0
