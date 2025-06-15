@@ -635,28 +635,29 @@ SignalType ( "SP3MSBEML_PQ_izq"
 	SignalNumClearAhead ( 5 )
 )
 
-SignalType ( "SP4MD"
+SignalType ( "SP4MD_pq"
 
 	SignalFnType ( NORMAL )
 	ORTSNormalSubtype( RETROCESO )
+	ORTSScript(SP4MD)
 	SignalLightTex ( "ltex" )
 	ORTSShowInDispatcher( 1 )
 	SignalLights ( 4
 		SignalLight ( 0 "Red Light"
-			Position ( 0.294 0.805 0.18 )
-			Radius ( 0.13 )
+			Position ( 0.22 0.67 0.14 )
+			Radius ( 0.11 )
 		)
 		SignalLight ( 1 "White Light"
-			Position ( -0.283 0.401 0.18 )
-			Radius ( 0.13 )
+			Position ( -0.21 0.37 0.14 )
+			Radius ( 0.11 )
 		)
 		SignalLight ( 2 "White Light"
-			Position ( -0.283 0.805 0.18 )
-			Radius ( 0.13 )
+			Position ( -0.21 0.67 0.14 )
+			Radius ( 0.11 )
 		)
 		SignalLight ( 3 "White Light"
-			Position ( 0.294 0.401 0.18 )
-			Radius ( 0.13 )
+			Position ( 0.22 0.37 0.14 )
+			Radius ( 0.11 )
 		)
 
 	)
@@ -698,29 +699,30 @@ SignalType ( "SP4MD"
 	SignalNumClearAhead ( -1 )
 )
 
-SignalType ( "SP4MD_izq"
+SignalType ( "SP4MD_pq_izq"
 
 	SignalFnType ( NORMAL )
 	ORTSNormalSubtype( RETROCESO )
+	ORTSScript(SP4MD)
 	SignalLightTex ( "ltex" )
 	ORTSShowInDispatcher( 1 )
 	ORTSScript(SP4MD)
 	SignalLights ( 4
 		SignalLight ( 0 "White Light"
-			Position ( 0.294 0.401 0.18 )
-			Radius ( 0.13 )
+			Position ( 0.22 0.37 0.14 )
+			Radius ( 0.11 )
 		)
 		SignalLight ( 1 "White Light"
-			Position ( -0.283 0.401 0.18 )
-			Radius ( 0.13 )
+			Position ( -0.21 0.37 0.14 )
+			Radius ( 0.11 )
 		)
 		SignalLight ( 2 "White Light"
-			Position ( 0.294 0.805 0.18 )
-			Radius ( 0.13 )
+			Position ( 0.22 0.67 0.14 )
+			Radius ( 0.11 )
 		)
 		SignalLight ( 3 "Red Light"
-			Position ( -0.283 0.805 0.18 )
-			Radius ( 0.13 )
+			Position ( -0.21 0.67 0.14 )
+			Radius ( 0.11 )
 		)
 
 	)
@@ -863,12 +865,12 @@ SignalType ( "SP2MB_pq"
 
 	SignalLights ( 2
 		SignalLight ( 0 "Red Light"
-			Position ( -0.01 0.67 0.2 )
-			Radius ( 0.1 )
+			Position ( -0.012 0.67 0.14 )
+			Radius ( 0.11 )
 		)
 		SignalLight ( 1 "White Light"
-			Position ( -0.01 0.37 0.2 )
-			Radius ( 0.1 )
+			Position ( -0.012 0.37 0.14 )
+			Radius ( 0.11 )
 		)
 	)
 	SignalDrawStates ( 3
