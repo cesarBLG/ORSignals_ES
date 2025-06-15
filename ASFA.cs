@@ -130,7 +130,7 @@ namespace ORTS.Scripting.Script
                     {
                         for (int i = 0; i < 3; i++)
                         {
-                            int id = NextSignalId("NORMAL", id);
+                            int id = NextSignalId("NORMAL", i);
                             if (IdSignalHasNormalSubtype(id, "RETROCESO") || IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) continue;
                             if (id >= 0)
                             {
