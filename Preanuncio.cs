@@ -77,7 +77,6 @@ namespace ORTS.Scripting.Script
                 MstsSignalAspect = Aspect.Approach_3;
                 if (VelocidadADrawState.TryGetValue(VelocidadPantalla, out int drawState)) DrawState = drawState;
                 else DrawState = DefaultDrawState(MstsSignalAspect);
-                Console.WriteLine(drawState + " " + MstsSignalAspect);
             }
             else
             {
