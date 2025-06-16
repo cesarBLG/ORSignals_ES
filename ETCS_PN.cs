@@ -22,8 +22,13 @@ namespace ORTS.Scripting.Script
             aspect = next_state;
             base.Update();
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
+            if (backfacing)
+            {
+                base.UpdatePacket(backfacing);
+                return;
+            }
             int id = NextSignalId("OLPN_T");
             string pack = "01"+format_binary(id&127,8)+"{NextSignalDistanceM(OLPN_T,0)-45-(bgref)}"+format_etcs_distance(20);
             var next_state = IdSignalAspect(id, "OLPN_T");
@@ -33,12 +38,12 @@ namespace ORTS.Scripting.Script
                 pack += "1"+format_etcs_speedKpH(10)+"1"+format_etcs_distance(50);
             }
             Packet = create_packet(88, pack, 1);
-            base.UpdatePacket();
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_MSG_PN : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             string txt = "Aproximación a Paso a Nivel";
             byte[] ascii = System.Text.Encoding.GetEncoding(28591).GetBytes(txt); 
@@ -47,8 +52,8 @@ namespace ORTS.Scripting.Script
             {
                 packet += format_binary((int)ascii[i],8);
             }
-            Packet = create_packet(72,packet,1);
-            base.UpdatePacket();
+            Packet = create_packet(72, packet, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
 }

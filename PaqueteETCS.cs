@@ -20,21 +20,21 @@ namespace ORTS.Scripting.Script
         public override void Update()
         {
             base.Update();
-            SharedVariables[KeyNextEurobaliseID] = NextSignalId("ETCS", 0);
             bool rs = RouteSet;
             if (rs) TextSignalAspect = Packet;
             else TextSignalAspect = "";
             if (prevRouteSet != rs) SharedVariables[KeyPacketNeedsUpdate] = 1;
             prevRouteSet = rs;
         }
-        public virtual void UpdatePacket() 
+        public virtual void UpdatePacket(bool backfacing) 
         {
             SharedVariables[KeyPacketNeedsUpdate] = 0;
             Update();
         }
         public override void HandleSignalMessage(int id, string msg)
         {
-            if (msg == "UPDATE_PACKET") UpdatePacket();
+            if (msg == "UPDATE_PACKET") UpdatePacket(false);
+            else if (msg == "UPDATE_PACKET_BACKFACING") UpdatePacket(true);
         }
     }
 }

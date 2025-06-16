@@ -13,6 +13,7 @@ namespace ORTS.Scripting.Script
         public ETCS_MAIN_MA_1_2()
         {
             BaliseReaction = 1;
+            BaliseProvidesLinking = 1;
             //EsPrimera = true;
         }
         public override void Initialize()
@@ -130,11 +131,6 @@ namespace ORTS.Scripting.Script
             msg.Add("{gradient}");
             msg.Add("{trackcond}");
             msg.Add("{pk}");
-            /*int levelId = NextSignalId("ETCS_LEVEL");
-            if (levelId >= 0 && NextSignalId("NORMAL", 1) == IdSignalLocalVariable(levelId, 601))
-            {
-                msg.Add(level_tr(0, level_table(levelId, 0)));
-            }*/
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }
@@ -160,6 +156,7 @@ namespace ORTS.Scripting.Script
         {
             EsPrimera = true;
             BaliseReaction = 1;
+            BaliseProvidesLinking = 1;
         }
         public override void Update()
         {
@@ -257,11 +254,6 @@ namespace ORTS.Scripting.Script
             List<string> msg = new List<string>();
             msg.Add("{gradient}");
             msg.Add("{trackcond}");
-            /*int levelId = NextSignalId("ETCS_LEVEL");
-            if (levelId >= 0 && NextSignalId("NORMAL", 1) == IdSignalLocalVariable(levelId, 601))
-            {
-                msg.Add(level_tr(-1, level_table(levelId, 500)));
-            }*/
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }
@@ -341,10 +333,11 @@ namespace ORTS.Scripting.Script
         public ETCS_DEFAULT_1_1()
         {
             EsPrimera = true;
+            BaliseProvidesLinking = 1;
         }
         public override void Initialize()
         {
-            Faulty |= HasHead(1);
+            Faulty |= HasHead(2);
             base.Initialize();
         }
         protected override List<string> ConstruirMensajes() 
@@ -354,7 +347,6 @@ namespace ORTS.Scripting.Script
             msg.AddRange(base.ConstruirMensajes());
             return msg;
         }
-		Dictionary<string, Aspecto> textoAAspecto;
     }
 	public class ETCS_DEFAULT_2_2 : EurobalizaFija
 	{
@@ -418,6 +410,7 @@ namespace ORTS.Scripting.Script
         {
             EsPrimera = true;
             BaliseReaction = 1;
+            BaliseProvidesLinking = 1;
         }
         protected override List<string> ConstruirMensajes() 
         {
@@ -449,6 +442,7 @@ namespace ORTS.Scripting.Script
         {
             EsPrimera = true;
             BaliseReaction = 1;
+            BaliseProvidesLinking = 1;
         }
         protected override List<string> ConstruirMensajes() 
         {
@@ -470,6 +464,7 @@ namespace ORTS.Scripting.Script
         {
             EsPrimera = true;
             BaliseReaction = 1;
+            BaliseProvidesLinking = 1;
         }
         protected override List<string> ConstruirMensajes() 
         {

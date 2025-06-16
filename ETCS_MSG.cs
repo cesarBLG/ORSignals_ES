@@ -16,7 +16,7 @@ namespace ORTS.Scripting.Script
             string nom = SignalTypeName.Substring(14);
             LoadParameter("Estaciones", nom, ref Estacion);
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double end = 0;
             for (int i = 0; i < 8; i++)
@@ -31,8 +31,8 @@ namespace ORTS.Scripting.Script
             {
                 pack += format_binary((int)ascii[i], 8);
             }
-            Packet = create_packet(72, pack, 1);
-            base.UpdatePacket();
+            Packet = create_packet(72, pack, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_BIFURCACION : PaqueteETCS
@@ -66,7 +66,7 @@ namespace ORTS.Scripting.Script
             aspect = next_state;
             base.Update();
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             bool show = false;
             if (Enabled && CurrentBlockState == BlockState.Clear)
@@ -78,8 +78,8 @@ namespace ORTS.Scripting.Script
                     show = true;
                 }
             }
-            Packet = show ? Mensaje : "";
-            base.UpdatePacket();
+            Packet = show ? create_packet(72, Mensaje, backfacing ? 0 : 1) : "";
+            base.UpdatePacket(backfacing);
         }
         string get_bifurcacion(string nombre, float length)
         {
@@ -90,51 +90,51 @@ namespace ORTS.Scripting.Script
             {
                 msg += format_binary((int)ascii[i], 8);
             }
-            return create_packet(72, msg, 1);
+            return msg;
         }
     }
     public class ETCS_MSG_TUNNEL : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             int ahead = 0;
             for (int i = 0; i < 5; i++)
             {
                 if (HasHead(i + 1)) ahead += (1 << i);
             }
-            Packet = "{tunnel_msg(" + ahead + ")}";
-            base.UpdatePacket();
+            if (!backfacing) Packet = "{tunnel_msg(" + ahead + ")}";
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_MSG_VIADUCTO : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             int ahead = 0;
             for (int i = 0; i < 5; i++)
             {
                 if (HasHead(i + 1)) ahead += (1 << i);
             }
-            Packet = "{viaducto_msg(" + ahead + ")}";
-            base.UpdatePacket();
+            if (!backfacing) Packet = "{viaducto_msg(" + ahead + ")}";
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_MSG_BRIDGE : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             int ahead = 0;
             for (int i = 0; i < 5; i++)
             {
                 if (HasHead(i + 1)) ahead += (1 << i);
             }
-            Packet = "{puente_msg(" + ahead + ")}";
-            base.UpdatePacket();
+            if (!backfacing) Packet = "{puente_msg(" + ahead + ")}";
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_MSG_SALIDA_ERTMS : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist = 0;
             for (int i = 0; i < 5; i++)
@@ -148,13 +148,13 @@ namespace ORTS.Scripting.Script
             {
                 packet += format_binary((int)ascii[i], 8);
             }
-            Packet = create_packet(72, packet, 1);
-            base.UpdatePacket();
+            Packet = create_packet(72, packet, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_MSG_ENTRADA_ERTMS : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist = 0;
             for (int i = 0; i < 5; i++)
@@ -168,8 +168,8 @@ namespace ORTS.Scripting.Script
             {
                 packet += format_binary((int)ascii[i], 8);
             }
-            Packet = create_packet(72, packet, 1);
-            base.UpdatePacket();
+            Packet = create_packet(72, packet, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
     
@@ -179,7 +179,7 @@ namespace ORTS.Scripting.Script
         {
             Reaction = 1;
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist=0;
             for (int i=0; i<5; i++)
@@ -193,8 +193,8 @@ namespace ORTS.Scripting.Script
             {
                 msg += format_binary((int)ascii[i],8);
             }
-            Packet = create_packet(72, msg, 1);
-            base.UpdatePacket();
+            Packet = create_packet(72, msg, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
 	public class ETCS_MSG_LLEGADAZN : PaqueteETCS
@@ -203,7 +203,7 @@ namespace ORTS.Scripting.Script
         {
             Reaction = 1;
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist=0;
             for (int i=0; i<5; i++)
@@ -220,13 +220,13 @@ namespace ORTS.Scripting.Script
             {
                 pack += format_binary((int)ascii[i],8);
             }
-            Packet = create_packet(72, pack, 1);
-            base.UpdatePacket();
+            Packet = create_packet(72, pack, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
 	public class ETCS_MSG_APROXIMACIONZCT : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist=0;
             for (int i=0; i<5; i++)
@@ -240,13 +240,13 @@ namespace ORTS.Scripting.Script
             {
                 msg += format_binary((int)ascii[i],8);
             }
-            Packet = create_packet(72, msg, 1);
-            base.UpdatePacket();
+            Packet = create_packet(72, msg, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
 	public class ETCS_MSG_LLEGADAZCT : PaqueteETCS
     {
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist=0;
             for (int i=0; i<5; i++)
@@ -263,13 +263,13 @@ namespace ORTS.Scripting.Script
             {
                 pack += format_binary((int)ascii[i],8);
             }
-            Packet = create_packet(72, pack, 1);
-            base.UpdatePacket();
+            Packet = create_packet(72, pack, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_MSG_SECCIONAMIENTO : PaqueteETCS
 	{
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist = 0;
             for (int i=0; i<5; i++)
@@ -287,8 +287,8 @@ namespace ORTS.Scripting.Script
             {
                 packet += format_binary((int)ascii[i],8);
             }
-            Packet = create_packet(72,packet,1);
-            base.UpdatePacket();
+            Packet = create_packet(72, packet, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
 }

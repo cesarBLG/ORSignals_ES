@@ -1,41 +1,5 @@
 
 SignalShape (
-    "eurobaliza_fija.s"
-    "ETCS Baliza de relocalizacion"
-    SignalSubObjs ( 2
-        SignalSubObj ( 0
-            "HEAD1"
-            "Signal Head 1"
-            SigSubType ( SIGNAL_HEAD )
-            SigSubSType ( "ETCS_DEFAULT_1_1" )
-        )
-        SignalSubObj ( 1
-            "DECOR1"
-            "Defecto baliza"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-    )
-)
-SignalShape (
-    "eurobaliza_conmutable.s"
-    "ETCS Baliza conmutable generica"
-    SignalSubObjs ( 2
-        SignalSubObj ( 0
-            "HEAD1"
-            "Signal Head 1"
-            SigSubType ( SIGNAL_HEAD )
-            SigSubSType ( "ETCS_GENERIC" )
-        )
-        SignalSubObj ( 1
-            "DECOR1"
-            "Primera baliza de grupo"
-            SigSubType ( DECOR )
-            SignalFlags ( OPTIONAL )
-        )
-    )
-)
-SignalShape (
     "etcs_pn.s"
     "Paquete informacion paso a nivel ETCS"
     SignalSubObjs ( 1
@@ -329,45 +293,116 @@ SignalShape (
 	)
 )
 SignalShape (
+    "eurobaliza_fija.s"
+    "ETCS Baliza de relocalizacion"
+    SignalSubObjs ( 3
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_DEFAULT_1_1" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+        SignalSubObj ( 2
+            "DECOR1"
+            "Defecto baliza"
+            SigSubType ( DECOR )
+            SignalFlags ( OPTIONAL )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_conmutable.s"
+    "ETCS Baliza conmutable generica"
+    SignalSubObjs ( 3
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_GENERIC" )
+        )
+        SignalSubObj ( 1
+            "DECOR1"
+            "Primera baliza de grupo"
+            SigSubType ( DECOR )
+            SignalFlags ( OPTIONAL )
+        )
+        SignalSubObj ( 2
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
     "eurobaliza_ltv.s"
     "ETCS baliza LTV, para limitaciones temporales de velocidad. Baliza 1/3"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 2
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_LTV" )
         )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
     )
 )
 SignalShape (
     "eurobaliza_infill_ma.s"
     "ETCS Informacion via infill. Baliza 1/2"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 2
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_INFILL_MA_1_2" )
         )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
     )
 )
 SignalShape (
     "eurobaliza_infill_fija.s"
     "ETCS Datos fijos infill. Baliza 2/2"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 2
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_INFILL_FIXED_2_2" )
         )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
     )
 )
 SignalShape (
     "eurobaliza_pie_ma.s"
     "ETCS Informacion via pie de señal. Baliza 2/3"
-    SignalSubObjs ( 2
+    SignalSubObjs ( 3
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -380,53 +415,88 @@ SignalShape (
             SigSubType ( DECOR )
             SignalFlags ( OPTIONAL )
         )
+        SignalSubObj ( 2
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
     )
 )
 SignalShape (
     "eurobaliza_pie_n2.s"
     "ETCS Informacion via N2. Baliza 1/2"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 2
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_MAIN_N2" )
         )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
     )
 )
 SignalShape (
     "eurobaliza_pie_fija.s"
     "ETCS Datos fijos pie de señal. Baliza 3/3"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 2
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_MAIN_FIXED_2_2" )
         )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
     )
 )
 SignalShape (
     "eurobaliza_retroceso.s"
     "ETCS Datos señal retroceso. Baliza 2/2"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 2
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_RETROCESO" )
         )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
     )
 )
 SignalShape (
     "eurobaliza_default.s"
     "ETCS baliza sin informacion, para determinar sentido de paso. Baliza 2/2"
-    SignalSubObjs ( 1
+    SignalSubObjs ( 2
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
             SigSubSType ( "ETCS_DEFAULT_2_2" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( OPTIONAL BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
         )
     )
 )

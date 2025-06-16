@@ -1,5 +1,5 @@
 
-ORTSSignalFunctions ( 39
+ORTSSignalFunctions ( 40
     ORTSSignalFunctionType ( INDAGUJAS )
 
     ORTSSignalFunctionType ( OPEDALPN_T )
@@ -38,6 +38,7 @@ ORTSSignalFunctions ( 39
 
     ORTSSignalFunctionType ( ASFA )
     ORTSSignalFunctionType ( ETCS )
+    ORTSSignalFunctionType ( ETCS_BACKFACING )
     ORTSSignalFunctionType ( ETCS_LEVEL )
     ORTSSignalFunctionType ( ETCS_PACKET )
     ORTSSignalFunctionType ( ETCS_CFG )

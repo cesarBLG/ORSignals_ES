@@ -14,13 +14,22 @@ namespace ORTS.Scripting.Script
     public abstract class ETCS : CsSignalScript
     {
         static protected readonly int KeyNextEurobaliseID=151;
+        static protected readonly int KeyNextEurobaliseBackfacingID=152;
         static protected readonly int KeyPacketNeedsUpdate=1001;
 
         static public readonly int KeyNID_BG=100;
         static public readonly int KeyN_PIG=101;
         static public readonly int KeyN_TOTAL=102;
+        static public readonly int KeyNID_C=103;
         static public readonly int KeyGroupReaction=110;
         static public readonly int KeyBaliseReaction=111;
+        static public readonly int KeyGroupReactionBackfacing=112;
+        static public readonly int KeyBaliseReactionBackfacing=113;
+        static public readonly int KeyGroupLinkBackfacing=114;
+        static public readonly int KeyBaliseLinkBackfacing=115;
+        static public readonly int KeyGroupProvidesLinking=116;
+        static public readonly int KeyBaliseProvidesLinking=117;
+        static public readonly int KeyBackfacingSignalId=120;
         static public readonly int KeyNextSignalId=150;
 
         static public readonly int DefaultNID_C;
@@ -68,6 +77,8 @@ namespace ORTS.Scripting.Script
                     LoadParameter(section, "M_VERSION", ref M_VERSION);
                 }
             }
+            SharedVariables[KeyNextEurobaliseID] = NextSignalId("ETCS");
+            SharedVariables[KeyNextEurobaliseBackfacingID] = NextSignalId("ETCS_BACKFACING");
         }
         protected Aspecto GetAspectoSenal(int id, string tipo = "NORMAL")
         {
@@ -152,13 +163,37 @@ namespace ORTS.Scripting.Script
             string link="01";
             var links = new List<string>();
             string prevref = "0";
-            for (int i=0; links.Count < 3; i++)
+            int nomCount = 0;
+            int revCount = 0;
+            int countLimit = 2;
+            while (links.Count < countLimit)
             {
-                int id = NextSignalId("ETCS", i);
-                if (id < 0) break;
+                int id1 = NextSignalId("ETCS", nomCount);
+                int id2 = NextSignalId("ETCS_BACKFACING", revCount);
+                if (id1 < 0 && id2 < 0) break;
+                int id;
+                bool backfacing = false;
+                if (id2 > 0 && (id1 < 0 || IdSignalLocalVariable(id2, KeyNextEurobaliseID) == id1))
+                {
+                    id = IdSignalLocalVariable(id2, KeyBackfacingSignalId);
+                    ++revCount;
+                    backfacing = true;
+                }
+                else
+                {
+                    id = id1;
+                    ++nomCount;
+                }
                 if (IdSignalLocalVariable(id, KeyN_PIG) != 0) continue;
-                string r = "bg_reference("+id+")";
-                string l = "{"+r+"-("+prevref+")}"+"0"+format_binary(IdSignalLocalVariable(id, KeyNID_BG), 14)+"1"+format_binary(IdSignalLocalVariable(id, KeyGroupReaction), 2)+format_binary(3, 6);
+                if (backfacing && IdSignalLocalVariable(id2, KeyGroupLinkBackfacing) == 0) continue;
+                if (countLimit < 15 && (backfacing || IdSignalLocalVariable(id, KeyGroupProvidesLinking) == 0)) ++countLimit;
+
+                string r = (backfacing ? "bg_reference_back(" : "bg_reference(") + id + ")";
+                string l = "{" + r + "-(" + prevref + ")}";
+                int nid_c = IdSignalLocalVariable(id, KeyNID_C);
+                if (nid_c != NID_C) l += "1" + format_binary(nid_c, 10);
+                else l += "0";
+                l += format_binary(IdSignalLocalVariable(id, KeyNID_BG), 14) + (backfacing ? "0" : "1") + format_binary(IdSignalLocalVariable(id, backfacing ? KeyGroupReactionBackfacing : KeyGroupReaction), 2) + format_binary(3, 6);
                 links.Add(l);
                 prevref = r;
             }
@@ -202,52 +237,16 @@ namespace ORTS.Scripting.Script
             }
             return sb.ToString();
         }
-        protected string level_tr(float distance, string table)
+        protected string level_tr(float distance, string table, bool backfacing=false)
         {
             string dist;
             if (distance == 0) dist = format_binary(32767, 15);
-            else if (distance < 0) dist = "{(NextSignalDistanceM(0)+50)*1.05}";
+            else if (distance < 0 && !backfacing) dist = "{(NextSignalDistanceM(0)+50)*1.05}";
             else dist = format_etcs_distance(distance);
-            return create_packet(41, "01"+dist+table, 1);
+            return create_packet(41, "01"+dist+table, backfacing ? 0 : 1);
         }
-        /*protected string level0_tr(float distance, float lack=-1)
-        {
-            if (lack < 0) lack = distance/2;
-            if (distance <= 0) distance = 32767;
-            return create_packet(41, "01" + format_etcs_distance(distance) + "001" + format_binary(0, 8) + format_etcs_distance(lack) + "00001" + "000" + format_etcs_distance(lack), 1);
-        }
-        protected string level01_tr(bool order)
-        {
-            string str = create_packet(41, "01" + (order ? format_binary(32767, 15) : "{(NextSignalDistanceM(0)+50)*1.05}") + "010" + format_etcs_distance(300) + "00010" + "001" + format_binary(0, 8) + format_etcs_distance(300) + "000" + format_etcs_distance(300), 1);
-            return str;
-        }
-        protected string level02_tr(bool order)
-        {
-            string str = create_packet(41, "01" + (order ? format_binary(32767, 15) : "{(NextSignalDistanceM(0)+50)*1.05}") + "011" + format_etcs_distance(300) + "00010" + "001" + format_binary(0, 8) + format_etcs_distance(300) + "000" + format_etcs_distance(300), 1);
-            if (!order) str = str.Substring(0, 25)+"{(NextSignalDistanceM(0)+50)*1.05}"+str.Substring(40);
-            return "";
-        }
-        protected string level012_tr(bool order)
-        {
-            string str = create_packet(41, "01" + (order ? format_binary(32767, 15) : "{(NextSignalDistanceM(0)+50)*1.05}") + "011" + format_etcs_distance(300) + "00011" + "010" + format_etcs_distance(0) + "001" + format_binary(0, 8) + format_etcs_distance(300) + "000" + format_etcs_distance(300), 1);
-            return str;
-        }*/
-
-        /*public enum TipoSeñal
-        {
-            Entrada,
-            Salida,
-            Interior,
-            Intermedia,
-            Avanzada
-        }
-        public TipoSeñal GetTipoSeñal(int id)
-        {
-            return TipoSeñal.Entrada;
-        }*/
         public string get_ma(int SenalAsociada, bool Infill)
         {
-            //return Infill ? "{ma_infill}" : "{ma}";
             string ma = "01";
             Aspecto aspectoAsociada = GetAspectoSenal(SenalAsociada);
             int maxToClear = 0;

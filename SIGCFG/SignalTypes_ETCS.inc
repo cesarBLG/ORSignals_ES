@@ -64,6 +64,12 @@ SignalType ( "ETCS_DEFAULT_1_1"
     SignalNumClearAhead ( 5 )
 )
 
+SignalType ( "ETCS_BACKFACING"
+
+    SignalFnType ( ETCS_BACKFACING )
+    Include ( "sigcfg_ocultas.inc" )
+)
+
 SignalType ( "ETCS_PN"
 
     SignalFnType ( ETCS_PACKET )

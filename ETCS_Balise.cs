@@ -19,12 +19,16 @@ namespace ORTS.Scripting.Script
         protected bool Linked = true;
         protected bool EsPrimera;
         protected int IdSigBaliza = -1;
+        protected int BackfacingId = -1;
+        protected string BackfacingMessages = "";
         protected int BaliseReaction = 2;
-        protected int GroupReaction = 2;
+        protected int BaliseProvidesLinking;
         protected bool Faulty = false;
+        private int updateCount = 0;
         public override void Initialize()
         {
             SharedVariables[KeyN_PIG] = -1;
+            SharedVariables[KeyBackfacingSignalId] = -1;
             base.Initialize();
             TextSignalAspect = "1" + "0000000" + "0" + format_binary(EsPrimera ? 0 : 1, 3);
         }
@@ -40,6 +44,11 @@ namespace ORTS.Scripting.Script
                 if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS")) break;
             }
             SharedVariables[KeyNextSignalId] = id;
+            if (updateCount < 5)
+            {
+                updateCount++;
+                return;
+            }
             if (EsPrimera)
             {
                 if (N_TOTAL < 0) NumeraGrupo();
@@ -66,10 +75,15 @@ namespace ORTS.Scripting.Script
         protected virtual List<string> ConstruirMensajes()
         {
             List<string> msg = new List<string>();
+            if (BackfacingId >= 0)
+            {
+                SendSignalMessage(BackfacingId, "UPDATE_PACKET");
+                if (BackfacingMessages != "") msg.Add(BackfacingMessages);
+            }
             for (int i = 0; ; i++)
             {
                 int id = NextSignalId("ETCS_PACKET", i);
-                if (id < 0 || IdSignalLocalVariable(id, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
+                if (id < 0 || IdSignalLocalVariable(id, KeyNextEurobaliseBackfacingID) != NextSignalId("ETCS_BACKFACING") || IdSignalLocalVariable(id, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
                 SendSignalMessage(id, "UPDATE_PACKET");
                 string pack = IdTextSignalAspect(id, "ETCS_PACKET");
                 if (pack != "") msg.Add(pack);
@@ -81,6 +95,7 @@ namespace ORTS.Scripting.Script
             SharedVariables[KeyNID_BG] = NID_BG;
             SharedVariables[KeyN_PIG] = N_PIG;
             SharedVariables[KeyN_TOTAL] = N_TOTAL;
+            SharedVariables[KeyNID_C] = NID_C;
         }
         protected void NumeraGrupo()
         {
@@ -90,7 +105,7 @@ namespace ORTS.Scripting.Script
             IdSigBaliza = NextSignalId("ETCS");
             if (IdSigBaliza < 0)
             {
-                if (Enabled) N_TOTAL = 0;
+                /*if (Enabled) */N_TOTAL = 0;
             }
             else SendSignalMessage(IdSigBaliza, "NUMERA:" + NID_BG + "," + 1);
             SaveVariables();
@@ -119,26 +134,58 @@ namespace ORTS.Scripting.Script
                 N_TOTAL = int.Parse(message.Substring(6, 1));
                 if (N_PIG < N_TOTAL) SendSignalMessage(IdSigBaliza, message);
                 SaveVariables();
+                if (BackfacingId >= 0)
+                {
+                    SendSignalMessage(BackfacingId, message);
+                    SharedVariables[KeyBaliseLinkBackfacing] = IdSignalLocalVariable(BackfacingId, KeyBaliseLinkBackfacing);
+                    SharedVariables[KeyBaliseReactionBackfacing] = IdSignalLocalVariable(BackfacingId, KeyBaliseReaction);
+                }
+                else
+                {
+                    SharedVariables[KeyBaliseLinkBackfacing] = 0;
+                    SharedVariables[KeyBaliseReactionBackfacing] = 2;
+                }
                 for (int i = 0; ; i++)
                 {
                     int id2 = NextSignalId("ETCS_PACKET", i);
-                    if (id2 < 0 || IdSignalLocalVariable(id2, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
-                    BaliseReaction = Math.Min(IdSignalLocalVariable(id2, KeyBaliseReaction), BaliseReaction);
+                    if (id2 < 0 || IdSignalLocalVariable(id2, KeyNextEurobaliseBackfacingID) != NextSignalId("ETCS_BACKFACING") || IdSignalLocalVariable(id2, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
+                    BaliseProvidesLinking = Math.Max(IdSignalLocalVariable(id2, KeyBaliseProvidesLinking), BaliseProvidesLinking);
                 }
                 SharedVariables[KeyBaliseReaction] = BaliseReaction;
+                SharedVariables[KeyBaliseProvidesLinking] = BaliseProvidesLinking;
+
                 if (EsPrimera)
                 {
                     int reaction = SharedVariables[KeyBaliseReaction];
+                    int reactionBack = SharedVariables[KeyBaliseReactionBackfacing];
+                    int linkBack = SharedVariables[KeyBaliseLinkBackfacing];
+                    int sendsLink = SharedVariables[KeyBaliseProvidesLinking];
                     for (int i = 0; i < N_TOTAL; i++)
                     {
-                        reaction = Math.Min(reaction, IdSignalLocalVariable(NextSignalId("ETCS", i), KeyBaliseReaction));
+                        int id2 = NextSignalId("ETCS", i);
+                        reaction = Math.Min(reaction, IdSignalLocalVariable(id2, KeyBaliseReaction));
+                        reactionBack = Math.Min(reactionBack, IdSignalLocalVariable(id2, KeyBaliseReactionBackfacing));
+                        linkBack = Math.Max(linkBack, IdSignalLocalVariable(id2, KeyBaliseLinkBackfacing));
+                        sendsLink = Math.Max(sendsLink, IdSignalLocalVariable(id2, KeyBaliseProvidesLinking));
                     }
                     SharedVariables[KeyGroupReaction] = reaction;
+                    SharedVariables[KeyGroupReactionBackfacing] = reactionBack;
+                    SharedVariables[KeyGroupLinkBackfacing] = linkBack;
+                    SharedVariables[KeyGroupProvidesLinking] = sendsLink;
                 }
             }
             else if (message.StartsWith("ACTUALIZA:"))
             {
                 ActualizarGrupo = true;
+            }
+            else if (message.StartsWith("BACKFACING_ID"))
+            {
+                BackfacingId = id;
+                SharedVariables[KeyBackfacingSignalId] = BackfacingId;
+            }
+            else if (message.StartsWith("BACKFACING_MSG:"))
+            {
+                BackfacingMessages = message.Substring(15);
             }
             else if (N_PIG < N_TOTAL) SendSignalMessage(IdSigBaliza, message);
         }
@@ -170,19 +217,19 @@ namespace ORTS.Scripting.Script
             ConstruirTelegrama(255, msg);
         }
     }
-    
-	public class EurobalizaConmutable : Eurobaliza
-	{
+
+    public class EurobalizaConmutable : Eurobaliza
+    {
         protected int needsUpdate = 1;
         bool prevEnabled;
         int prevNumCleared;
         int prevSigId;
-		public override void Update()
-		{
+        public override void Update()
+        {
             base.Update();
             if (NID_BG <= 0) return;
             if (needsUpdate > 0) needsUpdate++;
-            for (int i=0; ; i++)
+            for (int i = 0; ; i++)
             {
                 int id = NextSignalId("ETCS_PACKET", i);
                 if (id < 0 || IdSignalLocalVariable(id, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
@@ -193,8 +240,8 @@ namespace ORTS.Scripting.Script
                 }
             }
             if (needsUpdate > 3) SendSignalMessage(NID_BG, "ACTUALIZA:");
-		}
-		void ActualizarTelegrama(int msgcount)
+        }
+        void ActualizarTelegrama(int msgcount)
         {
             Faulty ^= rand.Next(1000000) == 500;
             needsUpdate = 0;
@@ -202,7 +249,7 @@ namespace ORTS.Scripting.Script
             if (!Enabled) msg.Add(create_packet(254, "", 2));
             if (Faulty || msg == null || NID_BG <= 0)
             {
-                msg  = new List<string>();
+                msg = new List<string>();
                 msg.Add(create_packet(254, "", 2));
                 ConstruirTelegrama(254, msg);
                 return;
@@ -210,9 +257,71 @@ namespace ORTS.Scripting.Script
             ConstruirTelegrama(msgcount, msg);
         }
         public override void HandleSignalMessage(int id, string message)
-		{
+        {
             if (message.StartsWith("ACTUALIZAR:")) ActualizarTelegrama(int.Parse(message.Substring(11)));
             base.HandleSignalMessage(id, message);
+        }
+    }
+    public class ETCS_BACKFACING : ETCS
+    {
+        int BaliseId;
+        bool Init = false;
+        protected int BaliseReaction = 2;
+        protected bool LinkBackfacing = false;
+        public override void Initialize()
+        {
+            BaliseId = SignalId;
+        }
+        public override void Update()
+        {
+            if (!Init)
+            {
+                SendSignalMessage(BaliseId, "BACKFACING_ID");
+                SharedVariables[KeyBackfacingSignalId] = BaliseId;
+                Init = true;
+            }
+            base.Update();
+            TextSignalAspect = IdTextSignalAspect(BaliseId, "ETCS");
+        }
+        public override void HandleSignalMessage(int id, string message)
+        {
+            if (id != BaliseId) return;
+            if (message == "UPDATE_PACKET")
+            {
+                var list = ConstruirMensajes();
+                var sb = new StringBuilder();
+                sb.Append("BACKFACING_MSG:");
+                foreach (var msg in list)
+                {
+                    sb.Append(msg);
+                }
+                SendSignalMessage(id, sb.ToString());
+            }
+            else if (message.StartsWith("TOTAL:"))
+            {
+                for (int i = 0; ; i++)
+                {
+                    int id2 = NextSignalId("ETCS_PACKET", i);
+                    if (id2 < 0 || IdSignalLocalVariable(id2, KeyNextEurobaliseBackfacingID) != NextSignalId("ETCS_BACKFACING") || IdSignalLocalVariable(id2, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
+                    BaliseReaction = Math.Min(IdSignalLocalVariable(id2, KeyBaliseReaction), BaliseReaction);
+                    LinkBackfacing = true;
+                }
+                SharedVariables[KeyBaliseReaction] = BaliseReaction;
+                SharedVariables[KeyBaliseLinkBackfacing] = LinkBackfacing ? 1 : 0;
+            }
+        }
+        protected virtual List<string> ConstruirMensajes()
+        {
+            List<string> msg = new List<string>();
+            for (int i = 0; ; i++)
+            {
+                int id = NextSignalId("ETCS_PACKET", i);
+                if (id < 0 || IdSignalLocalVariable(id, KeyNextEurobaliseBackfacingID) != NextSignalId("ETCS_BACKFACING") || IdSignalLocalVariable(id, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
+                SendSignalMessage(id, "UPDATE_PACKET_BACKFACING");
+                string pack = IdTextSignalAspect(id, "ETCS_PACKET");
+                if (pack != "") msg.Add(pack);
+            }
+            return msg;
         }
     }
 }

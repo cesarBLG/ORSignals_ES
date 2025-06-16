@@ -19,10 +19,10 @@ namespace ORTS.Scripting.Script
                 SenalAsociada = NextSignalId("NORMAL");
             }
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
-            Packet = get_ma(SenalAsociada, Infill);
-            base.UpdatePacket();
+            if (!backfacing) Packet = get_ma(SenalAsociada, Infill);
+            base.UpdatePacket(backfacing);
         }
     }
 
@@ -45,7 +45,7 @@ namespace ORTS.Scripting.Script
             }
             base.Update();
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             double dist = 0;
             for (int i = 0; i < 5; i++)
@@ -54,9 +54,9 @@ namespace ORTS.Scripting.Script
             }
             if (dist == 0) dist = 300;
             string ltv = "01" + format_binary(255, 8) + format_etcs_distance(0) + format_etcs_distance(dist) + "0" + format_etcs_speedKpH(30);
-            if (aspecto == Aspecto.Parada) Packet = create_packet(65, ltv, 1);
+            if (aspecto == Aspecto.Parada) Packet = create_packet(65, ltv, backfacing ? 0 : 1);
             else Packet = "";
-            base.UpdatePacket();
+            base.UpdatePacket(backfacing);
         }
     }
 
@@ -80,7 +80,7 @@ namespace ORTS.Scripting.Script
             prevLevelId = levelId;
             base.Update();
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             Packet = "";
             float dist = 0;
@@ -93,9 +93,9 @@ namespace ORTS.Scripting.Script
             int lsig = IdSignalLocalVariable(levelId, 601);
             if (levelId >= 0 && (lsig == NextSignalId("NORMAL", 0) || lsig == NextSignalId("NORMAL", 1)))
             {
-                Packet = level_tr(dist, level_table(levelId, Math.Max(350, Math.Min(dist / 2 + 50, 1000))));
+                Packet = level_tr(dist, level_table(levelId, Math.Max(350, Math.Min(dist / 2 + 50, 1000))), backfacing);
             }
-            base.UpdatePacket();
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_STOPSR : PaqueteETCS
@@ -104,18 +104,23 @@ namespace ORTS.Scripting.Script
         {
             Reaction = 1;
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
-            Packet = create_packet(137, "0", 1);
-            base.UpdatePacket();
+            Packet = create_packet(137, "0", backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
 	public class ETCS_LINKING : PaqueteETCS
 	{
-        public override void UpdatePacket()
+        public override void Initialize()
         {
-            Packet = get_linking();
-            base.UpdatePacket();
+            SharedVariables[KeyBaliseProvidesLinking] = 1;
+            base.Initialize();
+        }
+        public override void UpdatePacket(bool backfacing)
+        {
+            if (!backfacing) Packet = get_linking();
+            base.UpdatePacket(backfacing);
         }
     }
     public class ETCS_NV : PaqueteETCS
@@ -130,7 +135,7 @@ namespace ORTS.Scripting.Script
             if (nvset != null) LoadParameter(nvset, param, ref val);
             return val;
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             string nvset = null;
             LoadParameter(string.Format("NID_C.{0}", NID_C), "NV", ref nvset);
@@ -184,9 +189,9 @@ namespace ORTS.Scripting.Script
             else if (M_VERSION >= 17) data2 += format_binary(GetParameter(nvset, "M_NVEBCL", 9), 4);
             if (M_VERSION >= 32) data += format_binary(0, 1);
             else if (M_VERSION >= 17) data2 += format_binary(0, 1);
-            Packet = create_packet(3, data, 1);
-            if (M_VERSION >= 17 && M_VERSION < 32) Packet += create_packet(203, data2, 1);
-            base.UpdatePacket();
+            Packet = create_packet(3, data, backfacing ? 0 : 1);
+            if (M_VERSION >= 17 && M_VERSION < 32) Packet += create_packet(203, data2, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
         }
     }
     
@@ -218,18 +223,18 @@ namespace ORTS.Scripting.Script
                 prevActive = Rbc.Active;
             }
         }
-        public override void UpdatePacket()
+        public override void UpdatePacket(bool backfacing)
         {
             if (Rbc != null && Rbc.Active)
             {
                 Connect = !HasHead(1);
-                Packet = create_packet(42, (Connect ? "1" : "0")+format_binary(Rbc.NID_C, 10)+format_binary(Rbc.NID_RBC, 14)+format_binary(Rbc.NID_RADIO, 64)+"0", 1);
+                Packet = create_packet(42, (Connect ? "1" : "0")+format_binary(Rbc.NID_C, 10)+format_binary(Rbc.NID_RBC, 14)+format_binary(Rbc.NID_RADIO, 64)+"0", backfacing ? 0 : 1);
             }
             else
             {
                 Packet = "";
             }
-            base.UpdatePacket();
+            base.UpdatePacket(backfacing);
         }
     }
 }
