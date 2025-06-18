@@ -246,7 +246,7 @@ namespace ORTS.Scripting.Script
             Faulty ^= rand.Next(1000000) == 500;
             needsUpdate = 0;
             List<string> msg = ConstruirMensajes();
-            if (!Enabled) msg.Add(create_packet(254, "", 2));
+            if (!Enabled && (BackfacingId < 0 || !IdSignalEnabled(BackfacingId))) msg.Add(create_packet(254, "", 2));
             if (Faulty || msg == null || NID_BG <= 0)
             {
                 msg = new List<string>();
