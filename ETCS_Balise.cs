@@ -271,6 +271,7 @@ namespace ORTS.Scripting.Script
         public override void Initialize()
         {
             BaliseId = SignalId;
+            base.Initialize();
         }
         public override void Update()
         {

@@ -306,7 +306,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
         SignalSubObj ( 2
@@ -337,7 +337,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -356,7 +356,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -375,7 +375,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -394,7 +394,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -419,7 +419,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -438,7 +438,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -457,7 +457,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -476,7 +476,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
@@ -495,7 +495,7 @@ SignalShape (
             "HEAD2"
             "Backfacing"
             SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( OPTIONAL BACK_FACING )
+            SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
         )
     )
