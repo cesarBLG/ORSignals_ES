@@ -228,17 +228,20 @@ namespace ORTS.Scripting.Script
         {
             base.Update();
             if (NID_BG <= 0) return;
-            if (needsUpdate > 0) needsUpdate++;
+            bool packetUpdate = false;
             for (int i = 0; ; i++)
             {
                 int id = NextSignalId("ETCS_PACKET", i);
                 if (id < 0 || IdSignalLocalVariable(id, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
                 if (IdSignalLocalVariable(id, KeyPacketNeedsUpdate) != 0)
                 {
-                    needsUpdate++;
+                    packetUpdate = true;
                     break;
                 }
             }
+            bool enabled = Enabled || (BackfacingId >= 0 && IdSignalEnabled(BackfacingId));
+            if (needsUpdate > 0 || packetUpdate || (enabled && !prevEnabled)) needsUpdate++;
+            prevEnabled = enabled;
             if (needsUpdate > 3) SendSignalMessage(NID_BG, "ACTUALIZA:");
         }
         void ActualizarTelegrama(int msgcount)
