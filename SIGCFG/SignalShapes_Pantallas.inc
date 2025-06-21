@@ -98,6 +98,34 @@ SignalShape (
 )
 
 SignalShape (
+	"ESRNindagu_SP14.s"
+	"RENFE Panel Aguja 20 Derecha Av SP"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SPIA20D" )
+		)
+	)
+)
+
+SignalShape (
+	"ESRNindagu_SP15.s"
+	"RENFE Panel Aguja 20 Izquierda Av SP"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SPIA20I" )
+		)
+	)
+)
+
+SignalShape (
 	"ESRNindagu_SP4.s"
 	"RENFE Panel Aguja 30 Derecha Av SP"
 	SignalSubObjs ( 1
@@ -182,6 +210,34 @@ SignalShape (
 )
 
 SignalShape (
+	"ESRNindagu_SP16.s"
+	"RENFE Panel Aguja 80 Derecha Av SP"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SPIA80D" )
+		)
+	)
+)
+
+SignalShape (
+	"ESRNindagu_SP17.s"
+	"RENFE Panel Aguja 80 Izquierda Av SP"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SPIA80I" )
+		)
+	)
+)
+
+SignalShape (
 	"ESRNindagu_SP10.s"
 	"RENFE Panel Aguja 100 Derecha Av SP"
 	SignalSubObjs ( 1
@@ -233,6 +289,34 @@ SignalShape (
 			SigSubType ( SIGNAL_HEAD )
 			SignalFlags ( JN_LINK )
 			SigSubSType ( "SPIA160I" )
+		)
+	)
+)
+
+SignalShape (
+	"ESRNindagumastilavanzada_20_d.s"
+	"RENFE Panel Aguja 20 Derecha Avanzada SP"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SPIVAMASTILAVANZADA_20_D" )
+		)
+	)
+)
+
+SignalShape (
+	"ESRNindagumastilavanzada_20_i.s"
+	"RENFE Panel Aguja 20 Izquierda Avanzada SP"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "SPIVAMASTILAVANZADA_20_I" )
 		)
 	)
 )
