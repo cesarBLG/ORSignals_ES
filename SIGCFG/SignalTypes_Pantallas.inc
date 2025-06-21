@@ -213,7 +213,18 @@ SignalType ( "SPIA100D"
 	SignalLightTex ( "ia10dtex" )
 	Include ( "sigcfg_vel_ia.inc" )
 )
-
+SignalType ( "SPIA160I"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia16itex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
+SignalType ( "SPIA160D"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia16dtex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
 SignalType ( "SPIVAMASTILAVANZADA_40_D"
 	SignalFnType ( INDAGUJAS )
 	ORTSScript(MFIA)
@@ -278,4 +289,16 @@ SignalType ( "SPIVAMASTILAVANZADA_100_I"
 	ORTSScript(MFIA)
 	SignalLightTex ( "ia10itex" )
 	Include ( "sigcfg_vel_aprec.inc" )
+)
+SignalType ( "SPIVAMASTILAVANZADA_160_D"
+	SignalFnType ( INDAGUJAS )
+	ORTSScript(MFIA)
+	SignalLightTex ( "ia16dtex" )
+	Include ( "inc/sigcfg_vel_aprec.inc" )
+)
+SignalType ( "SPIVAMASTILAVANZADA_160_I"
+	SignalFnType ( INDAGUJAS )
+	ORTSScript(MFIA)
+	SignalLightTex ( "ia16itex" )
+	Include ( "inc/sigcfg_vel_aprec.inc" )
 )
