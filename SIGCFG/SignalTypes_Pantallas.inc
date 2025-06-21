@@ -294,11 +294,11 @@ SignalType ( "SPIVAMASTILAVANZADA_160_D"
 	SignalFnType ( INDAGUJAS )
 	ORTSScript(MFIA)
 	SignalLightTex ( "ia16dtex" )
-	Include ( "inc/sigcfg_vel_aprec.inc" )
+	Include ( "sigcfg_vel_aprec.inc" )
 )
 SignalType ( "SPIVAMASTILAVANZADA_160_I"
 	SignalFnType ( INDAGUJAS )
 	ORTSScript(MFIA)
 	SignalLightTex ( "ia16itex" )
-	Include ( "inc/sigcfg_vel_aprec.inc" )
+	Include ( "sigcfg_vel_aprec.inc" )
 )
