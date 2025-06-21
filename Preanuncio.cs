@@ -46,7 +46,6 @@ namespace ORTS.Scripting.Script
             }
             if (VelocidadPantalla == 0)
             {
-                VelocidadPantalla = 60;
                 for (int i=0; i<4; i++)
                 {
                     if (HasHead(4+i)) VelocidadPantalla += (1<<i)*10;
