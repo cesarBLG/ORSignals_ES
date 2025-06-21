@@ -95,6 +95,12 @@ SignalType ( "s_R_DESTELLOS"
 	Include ( "sigcfg_ocultas.inc" )	
 )
 
+SignalType ( "s_R_CORTO"
+	SignalFnType ( R_CORTO )
+	ORTSScript(FLAG)
+	Include ( "sigcfg_ocultas.inc" )
+)
+
 SignalType ( "s_R_APARADA"
 	SignalFnType ( R_APARADA )
 	ORTSScript(FLAG)
