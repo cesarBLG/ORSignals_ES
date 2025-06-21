@@ -22,4 +22,3 @@ SignalAspects ( 2
 	SignalAspect ( CLEAR_2			"Unlit"					   )
 	SignalAspect ( APPROACH_1				"Unlit"					   )
 )
-

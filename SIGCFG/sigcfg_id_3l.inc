@@ -21,4 +21,3 @@ SignalAspects ( 2
 	SignalAspect ( APPROACH_1				"Unlit"					   )
 	SignalAspect ( CLEAR_2					"Whitedes" 				         )
 )
-

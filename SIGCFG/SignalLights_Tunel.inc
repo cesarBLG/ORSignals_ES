@@ -17,4 +17,3 @@ SignalLights ( 4
 		Radius ( 0.10 )
 	)
 )
-
