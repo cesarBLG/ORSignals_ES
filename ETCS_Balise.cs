@@ -20,8 +20,10 @@ namespace ORTS.Scripting.Script
         protected bool EsPrimera;
         protected int IdSigBaliza = -1;
         protected int BackfacingId = -1;
-        protected string BackfacingMessages = "";
+        private string BackfacingPackets = "";
+        protected bool LinkBackfacing;
         protected int BaliseReaction = 2;
+        protected int BaliseReactionBackfacing = 2;
         protected int BaliseProvidesLinking;
         protected bool Faulty = false;
         private int updateCount = 0;
@@ -78,7 +80,7 @@ namespace ORTS.Scripting.Script
             if (BackfacingId >= 0)
             {
                 SendSignalMessage(BackfacingId, "UPDATE_PACKET");
-                if (BackfacingMessages != "") msg.Add(BackfacingMessages);
+                if (BackfacingPackets != "") msg.Add(BackfacingPackets);
             }
             for (int i = 0; ; i++)
             {
@@ -137,8 +139,10 @@ namespace ORTS.Scripting.Script
                 if (BackfacingId >= 0)
                 {
                     SendSignalMessage(BackfacingId, message);
-                    SharedVariables[KeyBaliseLinkBackfacing] = IdSignalLocalVariable(BackfacingId, KeyBaliseLinkBackfacing);
-                    SharedVariables[KeyBaliseReactionBackfacing] = IdSignalLocalVariable(BackfacingId, KeyBaliseReaction);
+                    LinkBackfacing |= IdSignalLocalVariable(BackfacingId, KeyBaliseLinkBackfacing) != 0;
+                    BaliseReactionBackfacing = Math.Min(BaliseReactionBackfacing, IdSignalLocalVariable(BackfacingId, KeyBaliseReaction));
+                    SharedVariables[KeyBaliseLinkBackfacing] = LinkBackfacing ? 1 : 0;
+                    SharedVariables[KeyBaliseReactionBackfacing] = BaliseReactionBackfacing;
                 }
                 else
                 {
@@ -185,7 +189,7 @@ namespace ORTS.Scripting.Script
             }
             else if (message.StartsWith("BACKFACING_MSG:"))
             {
-                BackfacingMessages = message.Substring(15);
+                BackfacingPackets = message.Substring(15);
             }
             else if (N_PIG < N_TOTAL) SendSignalMessage(IdSigBaliza, message);
         }
@@ -269,8 +273,6 @@ namespace ORTS.Scripting.Script
     {
         int BaliseId;
         bool Init = false;
-        protected int BaliseReaction = 2;
-        protected bool LinkBackfacing = false;
         public override void Initialize()
         {
             BaliseId = SignalId;
@@ -303,18 +305,20 @@ namespace ORTS.Scripting.Script
             }
             else if (message.StartsWith("TOTAL:"))
             {
+                bool linkBackfacing = false;
+                int baliseReaction = 2;
                 for (int i = 0; ; i++)
                 {
                     int id2 = NextSignalId("ETCS_PACKET", i);
                     if (id2 < 0 || IdSignalLocalVariable(id2, KeyNextEurobaliseBackfacingID) != NextSignalId("ETCS_BACKFACING") || IdSignalLocalVariable(id2, KeyNextEurobaliseID) != NextSignalId("ETCS")) break;
-                    BaliseReaction = Math.Min(IdSignalLocalVariable(id2, KeyBaliseReaction), BaliseReaction);
-                    LinkBackfacing = true;
+                    baliseReaction = Math.Min(IdSignalLocalVariable(id2, KeyBaliseReaction), baliseReaction);
+                    linkBackfacing = true;
                 }
-                SharedVariables[KeyBaliseReaction] = BaliseReaction;
-                SharedVariables[KeyBaliseLinkBackfacing] = LinkBackfacing ? 1 : 0;
+                SharedVariables[KeyBaliseReaction] = baliseReaction;
+                SharedVariables[KeyBaliseLinkBackfacing] = linkBackfacing ? 1 : 0;
             }
         }
-        protected virtual List<string> ConstruirMensajes()
+        protected List<string> ConstruirMensajes()
         {
             List<string> msg = new List<string>();
             for (int i = 0; ; i++)

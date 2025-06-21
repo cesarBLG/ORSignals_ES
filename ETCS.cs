@@ -157,27 +157,27 @@ namespace ORTS.Scripting.Script
             });
             return format_binary(nid_packet, 8)+format_binary(dir, 2)+format_binary(infocorr.Length+23,13)+info;
         }
-        protected string get_linking()
+        protected string get_linking(bool backfacing=false)
         {
-            //return "{linking}";
             string link="01";
             var links = new List<string>();
             string prevref = "0";
             int nomCount = 0;
             int revCount = 0;
             int countLimit = 2;
+            int current_nid_c = NID_C;
             while (links.Count < countLimit)
             {
                 int id1 = NextSignalId("ETCS", nomCount);
                 int id2 = NextSignalId("ETCS_BACKFACING", revCount);
                 if (id1 < 0 && id2 < 0) break;
                 int id;
-                bool backfacing = false;
+                bool reverse = false;
                 if (id2 > 0 && (id1 < 0 || IdSignalLocalVariable(id2, KeyNextEurobaliseID) == id1))
                 {
                     id = IdSignalLocalVariable(id2, KeyBackfacingSignalId);
                     ++revCount;
-                    backfacing = true;
+                    reverse = true;
                 }
                 else
                 {
@@ -185,22 +185,23 @@ namespace ORTS.Scripting.Script
                     ++nomCount;
                 }
                 if (IdSignalLocalVariable(id, KeyN_PIG) != 0) continue;
-                if (backfacing && IdSignalLocalVariable(id2, KeyGroupLinkBackfacing) == 0) continue;
-                if (countLimit < 15 && (backfacing || IdSignalLocalVariable(id, KeyGroupProvidesLinking) == 0)) ++countLimit;
+                if (reverse && IdSignalLocalVariable(id2, KeyGroupLinkBackfacing) == 0) continue;
+                if (countLimit < 15 && (reverse || IdSignalLocalVariable(id, KeyGroupProvidesLinking) == 0)) ++countLimit;
 
-                string r = (backfacing ? "bg_reference_back(" : "bg_reference(") + id + ")";
+                string r = (reverse ? "bg_reference_back(" : "bg_reference(") + id + ")";
                 string l = "{" + r + "-(" + prevref + ")}";
                 int nid_c = IdSignalLocalVariable(id, KeyNID_C);
-                if (nid_c != NID_C) l += "1" + format_binary(nid_c, 10);
+                if (nid_c != current_nid_c) l += "1" + format_binary(nid_c, 10);
                 else l += "0";
-                l += format_binary(IdSignalLocalVariable(id, KeyNID_BG), 14) + (backfacing ? "0" : "1") + format_binary(IdSignalLocalVariable(id, backfacing ? KeyGroupReactionBackfacing : KeyGroupReaction), 2) + format_binary(3, 6);
+                current_nid_c = nid_c;
+                l += format_binary(IdSignalLocalVariable(id, KeyNID_BG), 14) + (reverse ? "0" : "1") + format_binary(IdSignalLocalVariable(id, reverse ? KeyGroupReactionBackfacing : KeyGroupReaction), 2) + format_binary(3, 6);
                 links.Add(l);
                 prevref = r;
             }
             if (links.Count == 0) return "";
             link += links[0]+format_binary(links.Count-1, 5);
             for (int i=1; i<links.Count; i++) link += links[i];
-            return create_packet(5, link, 1);
+            return create_packet(5, link, backfacing ? 0 : 1);
         }
         protected string level_table(int tableId, float lack)
         {

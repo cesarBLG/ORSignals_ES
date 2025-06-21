@@ -119,7 +119,7 @@ namespace ORTS.Scripting.Script
         }
         public override void UpdatePacket(bool backfacing)
         {
-            if (!backfacing) Packet = get_linking();
+            if (!backfacing) Packet = get_linking(backfacing);
             base.UpdatePacket(backfacing);
         }
     }
