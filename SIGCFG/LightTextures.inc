@@ -48,4 +48,3 @@
 	LightTex ( "IND_EC" 		"IND_EC.ace"		0 0 1 1 )
 	LightTex ( "ltexLED"        "SigLightLED.ace"         0 0 1 1)
 	LightTex ( "ltexLEDraya"        "SigLightLEDraya.ace"         0 0 1 1)
-	
