@@ -55,19 +55,6 @@ SignalShape (
     )
 )
 
-SignalShape (
-    "SELULED2FOCOSMONOTOPES.s"
-    "Señal luminosa LED MONO 2 focos Topera"
-    SignalSubObjs ( 1
-        SignalSubObj ( 0
-            "HEAD1"
-            "Signal Head 1"
-            SigSubType ( SIGNAL_HEAD )
-            SignalFlags ( JN_LINK )
-            SigSubSType ( "LED2RR" )
-        )
-    )
-)
 
 SignalShape (
     "SELULED2FOCOSMONOALTOS.s"

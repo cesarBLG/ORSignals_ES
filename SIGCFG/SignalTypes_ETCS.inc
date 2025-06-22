@@ -140,6 +140,11 @@ SignalType ( "finpuente"
     Include ( "sigcfg_ocultas.inc" )
 )
 
+SignalType ( "iniciozonaneutra"
+	SignalFnType ( INFO )
+	Include ( "sigcfg_ocultas.inc" )
+)
+
 SignalType ( "finzonaneutra"
 	SignalFnType ( INFO )
 	Include ( "sigcfg_ocultas.inc" )

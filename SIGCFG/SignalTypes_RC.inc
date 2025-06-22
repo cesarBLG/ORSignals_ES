@@ -1,5 +1,4 @@
 
-
 SignalType ( "s_MASTER_ECEAC"
 	SignalFnType ( MASTER_ECEAC )
 	ORTSShowInDispatcher( 1 )

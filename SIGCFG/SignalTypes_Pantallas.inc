@@ -144,6 +144,20 @@ SignalType ( "SPIAD"
 	Include ( "sigcfg_vel_ia.inc" )
 )
 
+SignalType ( "SPIA20I"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia2itex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
+
+SignalType ( "SPIA20D"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia2dtex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
+
 SignalType ( "SPIA30I"
 	SignalFnType ( SPEED )
 	ORTSScript(SPIA)
@@ -200,6 +214,20 @@ SignalType ( "SPIAI60"
 	Include ( "sigcfg_vel_ia.inc" )
 )
 
+SignalType ( "SPIA80I"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia8itex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
+	
+SignalType ( "SPIA80D"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia8dtex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
+
 SignalType ( "SPIA100I"
 	SignalFnType ( SPEED )
 	ORTSScript(SPIA)
@@ -212,6 +240,32 @@ SignalType ( "SPIA100D"
 	ORTSScript(SPIA)
 	SignalLightTex ( "ia10dtex" )
 	Include ( "sigcfg_vel_ia.inc" )
+)
+SignalType ( "SPIA160I"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia16itex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
+SignalType ( "SPIA160D"
+	SignalFnType ( SPEED )
+	ORTSScript(SPIA)
+	SignalLightTex ( "ia16dtex" )
+	Include ( "sigcfg_vel_ia.inc" )
+)
+
+SignalType ( "SPIVAMASTILAVANZADA_20_D"
+	SignalFnType ( INDAGUJAS )
+	ORTSScript(MFIA)
+	SignalLightTex ( "ia2dtex" )
+	Include ( "sigcfg_vel_aprec.inc" )
+)
+	
+SignalType ( "SPIVAMASTILAVANZADA_20_I"
+	SignalFnType ( INDAGUJAS )
+	ORTSScript(MFIA)
+	SignalLightTex ( "ia2itex" )
+	Include ( "sigcfg_vel_aprec.inc" )
 )
 
 SignalType ( "SPIVAMASTILAVANZADA_40_D"
@@ -277,5 +331,17 @@ SignalType ( "SPIVAMASTILAVANZADA_100_I"
 	SignalFnType ( INDAGUJAS )
 	ORTSScript(MFIA)
 	SignalLightTex ( "ia10itex" )
+	Include ( "sigcfg_vel_aprec.inc" )
+)
+SignalType ( "SPIVAMASTILAVANZADA_160_D"
+	SignalFnType ( INDAGUJAS )
+	ORTSScript(MFIA)
+	SignalLightTex ( "ia16dtex" )
+	Include ( "sigcfg_vel_aprec.inc" )
+)
+SignalType ( "SPIVAMASTILAVANZADA_160_I"
+	SignalFnType ( INDAGUJAS )
+	ORTSScript(MFIA)
+	SignalLightTex ( "ia16itex" )
 	Include ( "sigcfg_vel_aprec.inc" )
 )

@@ -224,6 +224,20 @@ SignalShape (
 )
 
 SignalShape (
+	"ESRNindagu_R_CORtO.s"
+	"RENFE Oculto rebase corta distancia"
+	SignalSubObjs ( 1
+		SignalSubObj ( 0
+			"HEAD1"
+			"Signal Head 1"
+			SigSubType ( SIGNAL_HEAD )
+			SignalFlags ( JN_LINK )
+			SigSubSType ( "s_R_CORTO" )
+		)
+	)
+)
+	
+SignalShape (
 	"ESRNindagu_R_APARADA.s"
 	"RENFE Oculto reposo anuncio de parada"
 	SignalSubObjs ( 1
