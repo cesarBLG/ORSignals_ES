@@ -212,34 +212,6 @@ SignalType ( "LED2RBMONO"
     )
     SignalNumClearAhead ( 5 )
 )
-SignalType ( "LED2RR"
-    ORTSScript (TOPERA)
-    SignalFnType ( NORMAL )
-    SignalLightTex ( "ltexLED" )
-    SignalLights ( 2
-        SignalLight ( 0 "Red Light"
-            Position ( 0 0.68 0.04 )
-                Radius ( 0.07 )
-        )
-        SignalLight ( 1 "Red Light"
-            Position ( 0 0.43 0.04 )
-                Radius ( 0.07 )
-        )
-    )
-    SignalDrawStates ( 1
-        SignalDrawState ( 0
-            "Red"
-            DrawLights ( 2
-                DrawLight ( 0 )					
-                DrawLight ( 1 )					
-            )
-        )
-    )
-    SignalAspects ( 1
-        SignalAspect ( STOP					"Red"				SpeedKPH ( 0 ) 	)
-    )
-    SignalNumClearAhead ( 5 )
-)
 SignalType ( "LED2RBMEDIANA"
     ORTSScript(GENERICO)
     SignalFnType ( NORMAL )
