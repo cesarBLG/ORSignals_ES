@@ -27,14 +27,14 @@ SignalType ( "GIFIZSPIVAMASTILAVANZADA_60_I"
 
 SignalType ( "GIFDEPAP70SOLOAPARA"
 	SignalFnType ( PPREANUNCIO )
-	ORTSScript(PAPAPARA)
+	ORTSScript(PAPGENERICO)
 	SignalLightTex ( "7PAP" )
 	Include ( "sigcfg_preanuncio_GIF.inc" )
 )
 
 SignalType ( "GIFIZPAP70SOLOAPARA"
 	SignalFnType ( PPREANUNCIO )
-	ORTSScript(PAPAPARA)
+	ORTSScript(PAPGENERICO)
 	SignalLightTex ( "7PAP" )
 	Include ( "sigcfg_preanuncio_GIF.inc" )
 )
