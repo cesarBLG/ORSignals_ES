@@ -1,5 +1,5 @@
 
-LightsTab ( 8
+LightsTab ( 13
 	LightsTabEntry (
 		"Red Light"
 		colour ( 240 195 30 39 )
@@ -31,5 +31,25 @@ LightsTab ( 8
 	LightsTabEntry (
 		"Blue Light"
 		colour ( 255 0 120 255 )
+	)
+	LightsTabEntry (
+		"Green LED Light"
+		colour ( 255 53 255 0 )
+	)
+	LightsTabEntry (
+		"Amber LED Light"
+		colour ( 255 255 217 0 )
+	)
+	LightsTabEntry (
+		"Red LED Light"
+		colour ( 255 255 35 0 )
+	)
+	LightsTabEntry (
+		"White LED Light"
+		colour ( 255 255 255 237 )
+	)
+	LightsTabEntry (
+		"Blue LED Light"
+		colour ( 255 0 110 255 )
 	)
 )
