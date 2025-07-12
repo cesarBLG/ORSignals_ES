@@ -1,5 +1,5 @@
 
-SignalDrawStates ( 11
+SignalDrawStates ( 12
 	SignalDrawState ( 0
 		"FF7A"
 		DrawLights ( 1
@@ -67,6 +67,12 @@ SignalDrawStates ( 11
 		"FF7B"
 		DrawLights ( 1
 			DrawLight ( 0 )
+		)
+	)
+	SignalDrawState ( 11
+		"FF7I"
+		DrawLights ( 1
+			DrawLight ( 3 )
 		)
 	)
 )
