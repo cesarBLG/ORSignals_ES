@@ -6,27 +6,27 @@ SignalType ( "LED5VRBZAGIFRIZ"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 6
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0 4.1 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0 4.36 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "Amber Light"
+        SignalLight ( 4 "Amber LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 5 "White Light"
+        SignalLight ( 5 "White LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -132,23 +132,23 @@ SignalType ( "LED4VRBZGIFRIZ"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 5
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0 4.1 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "White Light"
+        SignalLight ( 4 "White LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -231,11 +231,11 @@ SignalType ( "LED2VAGIFRIZ"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 2
-        SignalLight ( 0 "Green Light"
+        SignalLight ( 0 "Green LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Amber Light"
+        SignalLight ( 1 "Amber LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
@@ -290,27 +290,27 @@ SignalType ( "LED5VRBZAGIFRDE"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 6
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0 4.10 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0 4.36 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "Amber Light"
+        SignalLight ( 4 "Amber LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 5 "White Light"
+        SignalLight ( 5 "White LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -416,23 +416,23 @@ SignalType ( "LED4VRBZGIFRDE"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 5
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0 4.1 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "White Light"
+        SignalLight ( 4 "White LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -515,11 +515,11 @@ SignalType ( "LED2VAGIFRDE"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 2
-        SignalLight ( 0 "Green Light"
+        SignalLight ( 0 "Green LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Amber Light"
+        SignalLight ( 1 "Amber LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
@@ -574,27 +574,27 @@ SignalType ( "LED5VRBZAGIFDE"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 6
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0.815 4.10 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0.815 4.36 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0.815 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0.815 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "Amber Light"
+        SignalLight ( 4 "Amber LED Light"
             Position ( 0.815 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 5 "White Light"
+        SignalLight ( 5 "White LED Light"
             Position ( 0.815 3.85 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -700,23 +700,23 @@ SignalType ( "LED4VRBZGIFDE"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 5
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0.815 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0.815 4.1 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0.815 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0.815 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "White Light"
+        SignalLight ( 4 "White LED Light"
             Position ( 0.815 3.59 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -799,11 +799,11 @@ SignalType ( "LED2VAGIFDE"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 2
-        SignalLight ( 0 "Green Light"
+        SignalLight ( 0 "Green LED Light"
             Position ( 0.815 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Amber Light"
+        SignalLight ( 1 "Amber LED Light"
             Position ( 0.815 3.34 0.07 )
             Radius ( 0.07 )
         )
@@ -858,27 +858,27 @@ SignalType ( "LED5VRBZAGIFIZ"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 6
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( -0.81 4.10 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( -0.81 4.36 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( -0.81 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( -0.81 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "Amber Light"
+        SignalLight ( 4 "Amber LED Light"
             Position ( -0.81 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 5 "White Light"
+        SignalLight ( 5 "White LED Light"
             Position ( -0.81 3.85 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -984,23 +984,23 @@ SignalType ( "LED4VRBZGIFIZ"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 5
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( -0.81 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( -0.81 4.1 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( -0.81 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( -0.81 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "White Light"
+        SignalLight ( 4 "White LED Light"
             Position ( -0.81 3.59 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -1083,11 +1083,11 @@ SignalType ( "LED2VAGIFIZ"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 2
-        SignalLight ( 0 "Green Light"
+        SignalLight ( 0 "Green LED Light"
             Position ( -0.81 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Amber Light"
+        SignalLight ( 1 "Amber LED Light"
             Position ( -0.81 3.34 0.07 )
             Radius ( 0.07 )
         )
@@ -1142,11 +1142,11 @@ SignalType ( "LED2VAGIFIZ_APREC"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 2
-        SignalLight ( 0 "Green Light"
+        SignalLight ( 0 "Green LED Light"
             Position ( -0.81 4.1 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Amber Light"
+        SignalLight ( 1 "Amber LED Light"
             Position ( -0.81 3.34 0.07 )
             Radius ( 0.07 )
         )
@@ -1201,27 +1201,27 @@ SignalType ( "LED5VRBZAGIF"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 6
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0 4.10 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0 4.36 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "Amber Light"
+        SignalLight ( 4 "Amber LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 5 "White Light"
+        SignalLight ( 5 "White LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -1327,23 +1327,23 @@ SignalType ( "LED4VRBZGIF"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 5
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0 3.85 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Green Light"
+        SignalLight ( 1 "Green LED Light"
             Position ( 0 4.1 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 3 "Blue Light"
+        SignalLight ( 3 "Blue LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 4 "White Light"
+        SignalLight ( 4 "White LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
@@ -1426,11 +1426,11 @@ SignalType ( "LED2VAGIF"
     SigFlashDuration ( 0.5 0.5 )
     ORTSOnOffTimeS ( 0 )
     SignalLights ( 2
-        SignalLight ( 0 "Green Light"
+        SignalLight ( 0 "Green LED Light"
             Position ( 0 3.59 0.07 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "Amber Light"
+        SignalLight ( 1 "Amber LED Light"
             Position ( 0 3.34 0.07 )
             Radius ( 0.07 )
         )
@@ -1483,15 +1483,15 @@ SignalType ( "LED2RBGIF"
     SignalFnType ( NORMAL )
     SignalLightTex ( "ltexLED" )
     SignalLights ( 3
-        SignalLight ( 0 "Red Light"
+        SignalLight ( 0 "Red LED Light"
             Position ( 0 0.7 0.1 )
             Radius ( 0.07 )
         )
-        SignalLight ( 1 "White Light"
+        SignalLight ( 1 "White LED Light"
             Position ( 0 0.44 0.1 )
             Radius ( 0.07 )
         )
-        SignalLight ( 2 "White Light"
+        SignalLight ( 2 "White LED Light"
             Position ( 0 0.44 0.1 )
             Radius ( 0.07 )
             ORTSSignalLightTex ( "ltexLEDraya" )
