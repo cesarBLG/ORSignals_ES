@@ -197,6 +197,12 @@ namespace ORTS.Scripting.Script
             estadoDelCanton = GetEstadoDelCanton();
             estaPreparada = IsPreparada();
 
+            if ((!esAvanzada || (!esBLA && !esBSL)) && (Sistemas & SistemaSeñalizacion.LZB) == 0)
+            {
+                int id = NextSignalId("LZB");
+                if (id >= 0 && NextSignalId("NORMAL") == IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SIG_SENAL)) Sistemas |= SistemaSeñalizacion.LZB;
+            }
+
             // Informacion adicional de ruta con oculto de preanuncio
             informacionDeRuta = getInformacionDeRuta();
 
@@ -561,11 +567,7 @@ namespace ORTS.Scripting.Script
             }
             else if (esLZB)
             {
-                if (siguienteSenalEsAvanzadaBLA)
-                {
-                    aspectoEstaSenal = Aspecto.ViaLibre;
-                }
-                else if (esAvanzada)
+                if (esAvanzada)
                 {
                     if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.Apagada ||
                 aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado ||
@@ -583,7 +585,11 @@ namespace ORTS.Scripting.Script
                 {
                     if (aspectoSiguienteSenal == Aspecto.Parada || aspectoSiguienteSenal == Aspecto.Apagada ||
                 aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || 
-                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || idSiguienteSenal < 0 || agujaEstaSenalDesviada)
+                aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || idSiguienteSenal < 0)
+                    {
+                        aspectoEstaSenal = Aspecto.RebaseAutorizado;
+                    }
+                    else if (agujaEstaSenalDesviada)
                     {
                         if (esSalida) aspectoEstaSenal = Aspecto.RebaseAutorizadoDestellos;
                         else aspectoEstaSenal = Aspecto.RebaseAutorizado;
@@ -952,9 +958,6 @@ namespace ORTS.Scripting.Script
             sist = Sistemas;
             forzarParadaSelectiva |= (sist.HasFlag(SistemaSeñalizacion.ETCS_N1) || sist.HasFlag(SistemaSeñalizacion.ETCS_N2)) && !sist.HasFlag(SistemaSeñalizacion.ASFA);
             
-            id = NextSignalId("LZB");
-            if (id >= 0 && NextSignalId("NORMAL") == IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SIG_SENAL)) Sistemas |= SistemaSeñalizacion.LZB;
-            
             ActualizarAspectos();
         }
         void ActualizarAspectos()
@@ -1033,53 +1036,54 @@ namespace ORTS.Scripting.Script
             esBSL = HasHead(13);
             esLZB = HasHead(14);
             esBLA = HasHead(15);
-
-            if (nombreDeSenal.StartsWith("lav")) esBSL = true;
-            if (nombreDeSenal.Equals("lav2av")) esBSL = esAvanzada = reposoAnuncioParada = true;
             
-            if (nombreDeSenal.Equals("sp3ptunizq"))	esPermisiva = esIntermedia = true;
-            if (nombreDeSenal.Equals("sp3ptunder"))	esPermisiva = esIntermedia = true;
-            if (nombreDeSenal.Equals("sp2vrp"))		esPermisiva = esIntermedia = true;
-            if (nombreDeSenal.Equals("sp3p"))		esPermisiva = esIntermedia = true;
-            if (nombreDeSenal.Equals("sp3pr"))		esPermisiva = esIntermedia = true;
-            if (nombreDeSenal.Equals("sp3p200"))		esPermisiva = esIntermedia = tipoDeSenalizacionDoscientos = true;
-            if (nombreDeSenal.Equals("sp4ibab")) esIntermedia = true;
+            if (!esIntermedia && !esPreavanzada && !esAvanzada && !esEntrada && !esSalida && !esProteccion && !esLiberacion)
+            {
+                if (nombreDeSenal.Equals("sp3ptunizq"))	esPermisiva = esIntermedia = true;
+                if (nombreDeSenal.Equals("sp3ptunder"))	esPermisiva = esIntermedia = true;
+                if (nombreDeSenal.Equals("sp2vrp"))		esPermisiva = esIntermedia = true;
+                if (nombreDeSenal.Equals("sp3p"))		esPermisiva = esIntermedia = true;
+                if (nombreDeSenal.Equals("sp3pr"))		esPermisiva = esIntermedia = true;
+                if (nombreDeSenal.Equals("sp3p200"))		esPermisiva = esIntermedia = true;
+                if (nombreDeSenal.Equals("sp4ibab")) esIntermedia = true;
 
-            if (nombreDeSenal.Equals("ep_3_ap_pap_p_ba"))			esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("ep_3_ap_bif_p_ba"))			esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("sp3aptunder"))					esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("sp3aptunizq"))					esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("ep_3_ap_bif_p_ba_tun_izq"))	esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("sp3aptundernar"))				esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("sp3ap"))						esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("sp3apr"))						esPermisiva = esAvanzada = true;
-            if (nombreDeSenal.Equals("sp3ap200"))					esPermisiva = esAvanzada = tipoDeSenalizacionDoscientos = true;
+                if (nombreDeSenal.Equals("ep_3_ap_pap_p_ba"))			esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("ep_3_ap_bif_p_ba"))			esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("sp3aptunder"))					esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("sp3aptunizq"))					esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("ep_3_ap_bif_p_ba_tun_izq"))	esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("sp3aptundernar"))				esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("sp3ap"))						esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("sp3apr"))						esPermisiva = esAvanzada = true;
+                if (nombreDeSenal.Equals("sp3ap200"))					esPermisiva = esAvanzada = true;
 
-            if (nombreDeSenal.Equals("sp5ebab"))			esEntrada = true;
-            if (nombreDeSenal.Equals("sp4ebab"))			esEntrada = true;
-            if (nombreDeSenal.Equals("sp4ebabap"))		esEntrada = true;
-            if (nombreDeSenal.Equals("sp4ebabapap"))		esEntrada = true;
-            if (nombreDeSenal.Equals("sp4ebabapvl"))		esEntrada = true;
-            if (nombreDeSenal.Equals("sp4ebad"))			esEntrada = true;
-            if (nombreDeSenal.Equals("sp4ebad200"))		esEntrada = tipoDeSenalizacionDoscientos = true;
-            if (nombreDeSenal.Equals("sp4ebabap200"))	esEntrada = tipoDeSenalizacionDoscientos= true;
+                if (nombreDeSenal.Equals("sp5ebab"))			esEntrada = true;
+                if (nombreDeSenal.Equals("sp4ebab"))			esEntrada = true;
+                if (nombreDeSenal.Equals("sp4ebabap"))		esEntrada = true;
+                if (nombreDeSenal.Equals("sp4ebabapap"))		esEntrada = true;
+                if (nombreDeSenal.Equals("sp4ebabapvl"))		esEntrada = true;
+                if (nombreDeSenal.Equals("sp4ebad"))			esEntrada = true;
+                if (nombreDeSenal.Equals("sp4ebad200"))		esEntrada = true;
+                if (nombreDeSenal.Equals("sp4ebabap200"))	esEntrada= true;
 
-            if (nombreDeSenal.Equals("sp4sbad"))			esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbad"))		esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbad_izq"))	esSalida = true;
-            if (nombreDeSenal.Equals("sp4sbabsp"))		esSalida = true;
-            if (nombreDeSenal.Equals("sp4sbab"))			esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbab"))		esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbab_izq"))	esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbab_pq"))		esSalida = true;
-            if (nombreDeSenal.Equals("sp4msbab_pq_izq"))	esSalida = true;
-            if (nombreDeSenal.Equals("sp4sbabl"))		esSalida = true;
-            if (nombreDeSenal.Equals("sp4sbad200"))			esSalida = tipoDeSenalizacionDoscientos = true;
-            if (nombreDeSenal.Equals("sp4sbad200mb"))		esSalida = tipoDeSenalizacionDoscientos = true;
-            if (nombreDeSenal.Equals("sp4sbad200mb_izq"))	esSalida = tipoDeSenalizacionDoscientos = true;
-            if (nombreDeSenal.Equals("sp4sbab200"))			esSalida = tipoDeSenalizacionDoscientos = true;
-            if (nombreDeSenal.Equals("sp4sbab200mb"))		esSalida = tipoDeSenalizacionDoscientos = true;
-            if (nombreDeSenal.Equals("sp4sbab200mb_izq"))	esSalida = tipoDeSenalizacionDoscientos = true;
+                if (nombreDeSenal.Equals("sp4sbad"))			esSalida = true;
+                if (nombreDeSenal.Equals("sp4msbad"))		esSalida = true;
+                if (nombreDeSenal.Equals("sp4msbad_izq"))	esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbabsp"))		esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbab"))			esSalida = true;
+                if (nombreDeSenal.Equals("sp4msbab"))		esSalida = true;
+                if (nombreDeSenal.Equals("sp4msbab_izq"))	esSalida = true;
+                if (nombreDeSenal.Equals("sp4msbab_pq"))		esSalida = true;
+                if (nombreDeSenal.Equals("sp4msbab_pq_izq"))	esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbabl"))		esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbad200"))			esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbad200mb"))		esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbad200mb_izq"))	esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbab200"))			esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbab200mb"))		esSalida = true;
+                if (nombreDeSenal.Equals("sp4sbab200mb_izq"))	esSalida = true;
+            }
+            if (nombreDeSenal.Contains("200")) tipoDeSenalizacionDoscientos = true;
 
             if (nombreDeSenal.Equals("sp3apd"))			esAvanzada		= esBLA = true;
             if (nombreDeSenal.Equals("sp1v"))			esPreavanzada	= esBLA = reposoAnuncioParada = true;
@@ -1095,12 +1099,6 @@ namespace ORTS.Scripting.Script
             if (nombreDeSenal.Equals("sp3msbem_izq"))	esSalida		= esBLA = true;
             
             if (nombreDeSenal.StartsWith("sp2m") || nombreDeSenal.Equals("sp2mb")) esManiobra = true;
-            
-            /*if (nombreDeSenal.Equals("sp2vr"))
-            if (nombreDeSenal.Equals("sp3tundersinp"))
-            if (nombreDeSenal.Equals("sp3tunizqsinp"))
-            if (nombreDeSenal.Equals("sp3"))
-            if (nombreDeSenal.Equals("sp3200")) tipoDeSenalizacionDoscientos = true;*/
             
             AspectoParada = esPermisiva ? Aspecto.ParadaPermisiva : Aspecto.Parada;
             
