@@ -501,6 +501,88 @@ SignalShape (
     )
 )
 SignalShape (
+    "eurobaliza_ls_main.s"
+    "ETCS baliza pie de señal Limited Supervision. Baliza 1/2"
+    SignalSubObjs ( 2
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_MAIN" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_ls_default.s"
+    "ETCS baliza de señal Limited Supervision. Baliza 2/2"
+    SignalSubObjs ( 2
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_DEFAULT" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_ls_infill.s"
+    "ETCS baliza previa Limited Supervision. Baliza 1/2"
+    SignalSubObjs ( 2
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_INFILL" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_ls_entry.s"
+    "ETCS baliza de entrada a zona LS en pruebas"
+    SignalSubObjs ( 3
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_ENTRY" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+        SignalSubObj ( 2
+            "DECOR1"
+            "Primera baliza de grupo"
+            SigSubType ( DECOR )
+            SignalFlags ( OPTIONAL )
+        )
+    )
+)
+SignalShape (
     "etcs_level_marker.s"
     "ETCS marcador de nivel"
     SignalSubObjs ( 7

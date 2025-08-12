@@ -267,6 +267,7 @@ namespace ORTS.Scripting.Script
                     break;
                 default:
                     maxToClear = IdSignalLocalVariable(SenalAsociada, 901);
+                    if (maxToClear == 0) maxToClear = 4;
                     break;
             }
             if (maxToClear == 0)

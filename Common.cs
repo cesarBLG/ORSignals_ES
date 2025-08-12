@@ -158,9 +158,9 @@ namespace ORTS.Scripting.Script
         {
             if (id < 0) return Aspecto.Parada;
             var aspectoSiguienteSenalTexto = IdTextSignalAspect(id, tipo);
-            if (textoAAspecto.ContainsKey(aspectoSiguienteSenalTexto))
+            if (textoAAspecto.TryGetValue(aspectoSiguienteSenalTexto, out Aspecto aspecto))
             {
-                return textoAAspecto[aspectoSiguienteSenalTexto];
+                return aspecto;
             }
             else
             {

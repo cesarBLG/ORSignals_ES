@@ -371,6 +371,131 @@ SignalType ( "ETCS_MAIN_FIXED_2_2"
     )
     SignalNumClearAhead ( 5 )
 )
+SignalType ( "ETCS_LS_MAIN"
+    SignalFnType ( ETCS )
+    SignalLightTex ( "ltex" )
+    SigFlashDuration ( 0.5 0.5 )
+    SignalLights ( 3
+        SignalLight ( 0 "Red Light"
+            Position ( 0 -4.601 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 1 "Amber Light"
+            Position ( 0 -4.212 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 2 "Green Light"
+            Position ( 0 -4.978 0.20 )
+            Radius ( 0.13 )
+        )
+    )
+    SignalDrawStates ( 1
+        SignalDrawState ( 0
+            "Green"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+    )
+    SignalAspects ( 1
+        SignalAspect ( CLEAR_2						"Green" )
+    )
+    SignalNumClearAhead ( 5 )
+)
+SignalType ( "ETCS_LS_INFILL"
+    SignalFnType ( ETCS )
+    ORTSScript( ETCS_LS_MAIN )
+    SignalLightTex ( "ltex" )
+    SigFlashDuration ( 0.5 0.5 )
+    SignalLights ( 3
+        SignalLight ( 0 "Red Light"
+            Position ( 0 -4.601 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 1 "Amber Light"
+            Position ( 0 -4.212 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 2 "Green Light"
+            Position ( 0 -4.978 0.20 )
+            Radius ( 0.13 )
+        )
+    )
+    SignalDrawStates ( 1
+        SignalDrawState ( 0
+            "Green"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+    )
+    SignalAspects ( 1
+        SignalAspect ( CLEAR_2						"Green" )
+    )
+    SignalNumClearAhead ( 5 )
+)
+SignalType ( "ETCS_LS_DEFAULT"
+    SignalFnType ( ETCS )
+    SignalLightTex ( "ltex" )
+    SigFlashDuration ( 0.5 0.5 )
+    SignalLights ( 3
+        SignalLight ( 0 "Red Light"
+            Position ( 0 -4.601 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 1 "Amber Light"
+            Position ( 0 -4.212 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 2 "Green Light"
+            Position ( 0 -4.978 0.20 )
+            Radius ( 0.13 )
+        )
+    )
+    SignalDrawStates ( 1
+        SignalDrawState ( 0
+            "Green"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+    )
+    SignalAspects ( 1
+        SignalAspect ( CLEAR_2						"Green" )
+    )
+    SignalNumClearAhead ( 5 )
+)
+SignalType ( "ETCS_LS_ENTRY"
+    SignalFnType ( ETCS )
+    SignalLightTex ( "ltex" )
+    SigFlashDuration ( 0.5 0.5 )
+    SignalLights ( 3
+        SignalLight ( 0 "Red Light"
+            Position ( 0 -4.601 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 1 "Amber Light"
+            Position ( 0 -4.212 0.20 )
+            Radius ( 0.13 )
+        )
+        SignalLight ( 2 "Green Light"
+            Position ( 0 -4.978 0.20 )
+            Radius ( 0.13 )
+        )
+    )
+    SignalDrawStates ( 1
+        SignalDrawState ( 0
+            "Green"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+    )
+    SignalAspects ( 1
+        SignalAspect ( CLEAR_2						"Green" )
+    )
+    SignalNumClearAhead ( 5 )
+)
 SignalType ( "ETCS_RETROCESO"
     SignalFnType ( ETCS )
     SignalLightTex ( "ltex" )

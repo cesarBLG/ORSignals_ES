@@ -27,6 +27,7 @@ namespace ORTS.Scripting.Script
         protected int BaliseProvidesLinking;
         protected bool Faulty = false;
         private int updateCount = 0;
+        protected List<int> VBCs = new List<int> { 1 };
         public override void Initialize()
         {
             SharedVariables[KeyN_PIG] = -1;
@@ -67,8 +68,11 @@ namespace ORTS.Scripting.Script
         {
             var sb = new StringBuilder(300);
             sb.Append("1").Append(format_binary(M_VERSION, 7)).Append("0").Append(format_binary(N_PIG, 3)).Append(format_binary(N_TOTAL, 3)).Append(format_binary(M_DUP, 2)).Append(format_binary(num, 8)).Append(format_binary(NID_C, 10)).Append(format_binary(NID_BG, 14)).Append(format_binary(Linked ? 1 : 0, 1));
-            if (M_VERSION >= 32) sb.Append(format_binary(0, 8)).Append(format_binary(1, 6)); // VBC
-            else if (M_VERSION >= 17) sb.Append(create_packet(200, format_binary(1, 6), 2));
+            foreach (int vbc in VBCs)
+            {
+                if (M_VERSION >= 32) sb.Append(format_binary(0, 8)).Append(format_binary(vbc, 6)); // VBC
+                else if (M_VERSION >= 17) sb.Append(create_packet(200, format_binary(vbc, 6), 2));
+            }
             foreach (string s in mensajes) sb.Append(s);
             sb.Append("11111111");
             Telegrama = sb.ToString();
