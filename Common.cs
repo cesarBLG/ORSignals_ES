@@ -87,6 +87,7 @@ namespace ORTS.Scripting.Script
         public readonly int KEY_VARIABLE_COMPARTIDA_SIG_INFO_RUTA = 804;
         public readonly int KEY_VARIABLE_COMPARTIDA_SNCA_DIFF = 900;
         public readonly int KEY_VARIABLE_COMPARTIDA_SNCA = 901;
+        public readonly int KEY_VARIABLE_COMPARTIDA_PROXIMIDAD = 902;
 
         // Compatibilidad MSTS
         protected Dictionary<Aspecto, Aspect> compatibilidadAspectosMSTS = new Dictionary<Aspecto, Aspect>();
@@ -192,6 +193,23 @@ namespace ORTS.Scripting.Script
                 }
             }
             return Aspecto.Parada;
+        }
+        public virtual void SetSNCA()
+        {
+            int snca = SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA];
+            // Extender SNCA si estamos en la proximidad de otra señal, pero no propagar a señales anteriores
+            int proximidad = 1 - SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF];
+            for (int i = 0; i < snca; i++)
+            {
+                int id = NextSignalId("NORMAL", i);
+                if (id < 0) break;
+                if (IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_PROXIMIDAD) >= proximidad)
+                {
+                    snca = Math.Max(IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SNCA) + i + 1, snca);
+                }
+                proximidad += 1 - IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SNCA_DIFF);
+            }
+            SignalNumClearAhead = snca;
         }
     }
 }

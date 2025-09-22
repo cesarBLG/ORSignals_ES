@@ -110,6 +110,7 @@ namespace ORTS.Scripting.Script
         bool estaPreparada = false;
         bool previoEstaPreparada = false;
         int preparedCycles = 0;
+        bool SucesionAutomatica = false;
 
         // Flags
         protected bool rebaseAutorizadoDestellos = false;
@@ -147,6 +148,8 @@ namespace ORTS.Scripting.Script
         protected bool siguienteSenalEsAvanzadaBLA = false; // Para casos concretos donde el aspecto de la avanzada influye en la señal de salida
 
         protected bool rutaADesviadaObligatoria = false;
+
+        protected int LongitudProximidad = -1;
 
         // Elementos fisicos
         protected bool focoVerde = false;
@@ -953,10 +956,13 @@ namespace ORTS.Scripting.Script
             siguienteSenalEsDeLiberacion = t != TipoSeñal.Ninguno && t.HasFlag(TipoSeñal.Liberacion);
             siguienteSenalEsAvanzadaBLA &= !siguienteSenalEsDeLiberacion;
 
-            var sist = (SistemaSeñalizacion)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION);
-            forzarParadaSelectiva = (sist.HasFlag(SistemaSeñalizacion.ETCS_N1) || sist.HasFlag(SistemaSeñalizacion.ETCS_N2)) && !sist.HasFlag(SistemaSeñalizacion.ASFA);
-            sist = Sistemas;
-            forzarParadaSelectiva |= (sist.HasFlag(SistemaSeñalizacion.ETCS_N1) || sist.HasFlag(SistemaSeñalizacion.ETCS_N2)) && !sist.HasFlag(SistemaSeñalizacion.ASFA);
+            if (focoAzul)
+            {
+                var sist = (SistemaSeñalizacion)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION);
+                forzarParadaSelectiva = (sist.HasFlag(SistemaSeñalizacion.ETCS_N1) || sist.HasFlag(SistemaSeñalizacion.ETCS_N2)) && !sist.HasFlag(SistemaSeñalizacion.ASFA);
+                sist = Sistemas;
+                forzarParadaSelectiva |= (sist.HasFlag(SistemaSeñalizacion.ETCS_N1) || sist.HasFlag(SistemaSeñalizacion.ETCS_N2)) && !sist.HasFlag(SistemaSeñalizacion.ASFA);
+            }
             
             ActualizarAspectos();
         }
@@ -979,7 +985,7 @@ namespace ORTS.Scripting.Script
         }
         int SNCA_orig = -1;
         int SNCAcount = 0;
-        public void SetSNCA()
+        public override void SetSNCA()
         {
             if (SNCAcount++ < 10) return;
             SNCAcount = 0;
@@ -992,27 +998,36 @@ namespace ORTS.Scripting.Script
             if (siguienteSenalEsDeLiberacion || esInterior) SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 1; // Requerir liberacion abierta
             else if (siguienteSenalEsAvanzadaBLA) SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = -1; // Avanzada resta 1 a la secuencia
             else SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 0;
-            
-            int snca = SNCA_orig + SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF];
-            for (int i=0; i<snca-1; i++)
+
+            if (LongitudProximidad >= 0) SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = LongitudProximidad;
+            else if (esEntrada || esSalida || esInterior) SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = Math.Max(tipoDeSenalizacionDoscientos ? 2 : 1, SNCA_orig - 2);
+            else SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = 0;
+
+            int snca = esEntrada || esInterior ? 2 : 1;
+            // Corregir SNCA por señales especiales (virtuales, retroceso, siguiente es liberacion o avanzada BLA)
+            for (int i = 0; i < snca - 1; i++)
             {
                 int id = NextSignalId("NORMAL", i);
                 if (id < 0) break;
                 int sums = IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SNCA_DIFF);
-                if (i+2<snca || sums > 0) snca += sums; 
+                if (i+2 < snca || sums > 0) snca += sums;
             }
-            for (int i=snca-1; i<snca; i++)
+            // Extender SNCA si la señal de fin no es inicio de ruta
+            for (int i = snca - 1; i < snca; i++)
             {
                 int id = NextSignalId("NORMAL", i);
                 if (id < 0) break;
                 var tipo = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
-                if (tipo != TipoSeñal.Ninguno && (tipo.HasFlag(TipoSeñal.Intermedia) || tipo.HasFlag(TipoSeñal.Liberacion) || tipo.HasFlag(TipoSeñal.Retroceso) || tipo.HasFlag(TipoSeñal.Virtual)))
+                if ((tipo != TipoSeñal.Ninguno 
+                        && (tipo.HasFlag(TipoSeñal.Intermedia) || tipo.HasFlag(TipoSeñal.Liberacion) || tipo.HasFlag(TipoSeñal.Retroceso) || tipo.HasFlag(TipoSeñal.Virtual)))
+                    //|| SucesionAutomatica
+                )
                 {
                     snca++;
                 }
             }
-            SignalNumClearAhead = snca;
-            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = SignalNumClearAhead;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = snca;
+            base.SetSNCA();
         }
 
 
@@ -1100,8 +1115,6 @@ namespace ORTS.Scripting.Script
             
             if (nombreDeSenal.StartsWith("sp2m") || nombreDeSenal.Equals("sp2mb")) esManiobra = true;
             
-            AspectoParada = esPermisiva ? Aspecto.ParadaPermisiva : Aspecto.Parada;
-            
             if (nombreDeSenal.StartsWith("led"))
             {
                 int nfocos = int.Parse(nombreDeSenal.Substring(3,1));
@@ -1147,7 +1160,7 @@ namespace ORTS.Scripting.Script
         }
         protected void UpdateTipoSenal()
         {
-            
+            AspectoParada = esPermisiva ? Aspecto.ParadaPermisiva : Aspecto.Parada;
             TipoSeñal tipo = (TipoSeñal)0;
             if (esSalida) tipo |= TipoSeñal.Salida;
             if (esEntrada) tipo |= TipoSeñal.Entrada;

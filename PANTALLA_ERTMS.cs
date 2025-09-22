@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace ORTS.Scripting.Script
 {
-	public class PANTALLA_ERTMS : CommonSignalScript
+    public class PANTALLA_ERTMS : CommonSignalScript
     {
         Aspecto AspectoEstaSeñal;
         Aspecto previoAspectoEstaSeñal;
         Timer actualizarAspectoTimer;
         public override void Initialize()
-		{
+        {
             actualizarAspectoTimer = new Timer(this);
             actualizarAspectoTimer.Setup(1);
-            
+
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SISTEMAS_SEÑALIZACION] = (int)SistemaSeñalizacion.ETCS_N2;
-		}
-		public override void Update()
+        }
+        public override void Update()
         {
             base.Initialize();
             previoAspectoEstaSeñal = AspectoEstaSeñal;
@@ -32,7 +32,7 @@ namespace ORTS.Scripting.Script
             {
                 AspectoEstaSeñal = Aspecto.ViaLibre;
             }
-            
+
             if (!PreUpdate())
             {
                 if (AspectoEstaSeñal != previoAspectoEstaSeñal)
@@ -65,9 +65,14 @@ namespace ORTS.Scripting.Script
             bool callOn = (IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_REBASE) == 1 && CurrentBlockState == BlockState.Clear) || (CurrentBlockState == BlockState.Occupied && TrainHasCallOn(false, true));
             SharedVariables[KEY_VARIABLE_COMPARTIDA_REBASE] = callOn ? 1 : 0;
 
+            SetSNCA();
+        }
+        public override void SetSNCA()
+        {
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = 0;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 1;
-            SignalNumClearAhead = IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_SNCA) + 1;
-            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = SignalNumClearAhead;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_SNCA) + 1;
+            base.SetSNCA();
         }
     }
 }
