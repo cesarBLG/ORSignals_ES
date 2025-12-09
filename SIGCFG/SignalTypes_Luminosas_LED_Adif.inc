@@ -142,15 +142,15 @@ SignalType ( "SELU4MONOMBRAIZQ"
         SignalDrawState ( 1
             "Whitedir"
             DrawLights ( 2
-                DrawLight ( 1 )
                 DrawLight ( 2 )
+                DrawLight ( 3 )
             )
         )
         SignalDrawState ( 2
             "Whitedes"
             DrawLights ( 2
                 DrawLight ( 1 )
-                DrawLight ( 3 )
+                DrawLight ( 2 )
             )
         )
         SignalDrawState ( 3
