@@ -99,7 +99,7 @@ SignalShape (
 SignalShape (
     "etcs_aproxsecc.s"
     "Mensaje Aproximacion Seccionamiento ETCS"
-    SignalSubObjs ( 8
+    SignalSubObjs ( 9
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -113,7 +113,7 @@ SignalShape (
 SignalShape (
     "etcs_ltv_desvios.s"
     "ETCS restriccion de velocidad por desvio para señal en rojo"
-    SignalSubObjs ( 8
+    SignalSubObjs ( 9
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -552,7 +552,7 @@ SignalShape (
 SignalShape (
     "etcs_leveltr.s"
     "ETCS paquete de transicion"
-    SignalSubObjs ( 8
+    SignalSubObjs ( 9
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
