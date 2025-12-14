@@ -96,6 +96,67 @@ SignalShape (
         Include ( "sigcfg_head_etcs_discrete.inc" )
     )
 )
+
+
+SignalShape (
+    "etcs_mensaje_entrada_ertms.s"
+    "Mensaje Entrada ERTMS ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_ENTRADA_ERTMS" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
+
+SignalShape (
+    "etcs_mensaje_salida_ertms.s"
+    "Mensaje Salida ERTMS ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_SALIDA_ERTMS" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
+
+SignalShape (
+    "etcs_aproxsecc_lamina.s"
+    "Mensaje Aproximacion Seccionamiento de lámina ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_SECCIONAMIENTO_LAMINA" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
+
+SignalShape (
+    "etcs_aproxsecc_aislador.s"
+    "Mensaje Aproximacion Aislador de sección ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_SECCIONAMIENTO_AISLADOR" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
 SignalShape (
     "etcs_aproxsecc.s"
     "Mensaje Aproximacion Seccionamiento ETCS"
@@ -497,6 +558,88 @@ SignalShape (
             SigSubType ( SIGNAL_HEAD )
             SignalFlags ( BACK_FACING )
             SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_ls_main.s"
+    "ETCS baliza pie de señal Limited Supervision. Baliza 1/2"
+    SignalSubObjs ( 2
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_MAIN" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_ls_default.s"
+    "ETCS baliza de señal Limited Supervision. Baliza 2/2"
+    SignalSubObjs ( 2
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_DEFAULT" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_ls_infill.s"
+    "ETCS baliza previa Limited Supervision. Baliza 1/2"
+    SignalSubObjs ( 2
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_INFILL" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+    )
+)
+SignalShape (
+    "eurobaliza_ls_entry.s"
+    "ETCS baliza de entrada a zona LS en pruebas"
+    SignalSubObjs ( 3
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_LS_ENTRY" )
+        )
+        SignalSubObj ( 1
+            "HEAD2"
+            "Backfacing"
+            SigSubType ( SIGNAL_HEAD )
+            SignalFlags ( BACK_FACING )
+            SigSubSType ( "ETCS_BACKFACING" )
+        )
+        SignalSubObj ( 2
+            "DECOR1"
+            "Primera baliza de grupo"
+            SigSubType ( DECOR )
+            SignalFlags ( OPTIONAL )
         )
     )
 )
