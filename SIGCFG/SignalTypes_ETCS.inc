@@ -106,12 +106,12 @@ SignalType ( "ETCS_MSG_SECCIONAMIENTO"
     Include ( "sigcfg_ocultas.inc" )
 )
 SignalType ( "ETCS_MSG_SECCIONAMIENTO_LAMINA"
-
+	ORTSScript(ETCS_MSG_SECCIONAMIENTO)
     SignalFnType ( ETCS_PACKET )
     Include ( "sigcfg_ocultas.inc" )
 )
 SignalType ( "ETCS_MSG_SECCIONAMIENTO_AISLADOR"
-
+	ORTSScript(ETCS_MSG_SECCIONAMIENTO)
     SignalFnType ( ETCS_PACKET )
     Include ( "sigcfg_ocultas.inc" )
 )
