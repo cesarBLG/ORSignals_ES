@@ -2,7 +2,7 @@
 SignalLightTex ( "iadtex" )
 SignalLights ( 1
 	SignalLight ( 0 "White Light"
-		Position ( 0 2.200 0.185 )
+		Position ( 0 -40.200 0.185 )
 		Radius ( 0.39 )
 	)
 )

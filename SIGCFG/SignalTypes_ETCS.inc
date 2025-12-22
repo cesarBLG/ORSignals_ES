@@ -7,15 +7,15 @@ SignalType ( "ETCS_GENERIC"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -38,15 +38,15 @@ SignalType ( "ETCS_DEFAULT_1_1"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -193,15 +193,15 @@ SignalType ( "ETCS_INFILL_MA_1_2"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -252,15 +252,15 @@ SignalType ( "ETCS_INFILL_FIXED_2_2"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -284,7 +284,7 @@ SignalType ( "ETCS_MAIN_N2"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 1
         SignalLight ( 0 "Green Light"
-            Position ( 0 -8.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -307,15 +307,15 @@ SignalType ( "ETCS_MAIN_MA_1_2"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -366,15 +366,15 @@ SignalType ( "ETCS_MAIN_FIXED_2_2"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -397,15 +397,15 @@ SignalType ( "ETCS_LS_MAIN"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -429,15 +429,15 @@ SignalType ( "ETCS_LS_INFILL"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -460,15 +460,15 @@ SignalType ( "ETCS_LS_DEFAULT"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -491,15 +491,15 @@ SignalType ( "ETCS_LS_ENTRY"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -522,15 +522,15 @@ SignalType ( "ETCS_RETROCESO"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -554,15 +554,15 @@ SignalType ( "ETCS_DEFAULT_2_2"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -586,15 +586,15 @@ SignalType ( "ETCS_DEFAULT_2_2"
     SigFlashDuration ( 0.5 0.5 )
     SignalLights ( 3
         SignalLight ( 0 "Red Light"
-            Position ( 0 -4.601 0.20 )
+            Position ( 0 -40.601 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Amber Light"
-            Position ( 0 -4.212 0.20 )
+            Position ( 0 -40.212 0.20 )
             Radius ( 0.13 )
         )
         SignalLight ( 2 "Green Light"
-            Position ( 0 -4.978 0.20 )
+            Position ( 0 -40.978 0.20 )
             Radius ( 0.13 )
         )
     )
@@ -665,11 +665,11 @@ SignalType ( "PANTALLA_ERTMS"
 
     SignalLights ( 2
         SignalLight ( 0 "Red Light"
-            Position ( 0 0.789 0.2 )
+            Position ( 0 -40.789 0.2 )
             Radius ( 0.13 )
         )
         SignalLight ( 1 "Blue Light"
-            Position ( 0 0.387 0.2 )
+            Position ( 0 -40.387 0.2 )
             Radius ( 0.13 )
         )
     )
