@@ -145,13 +145,13 @@ SignalShape (
 
 SignalShape (
     "SELULED5FOCOS2.s" 
-    "Señal luminosa LED 5 focos RBA Entrada Estaciones Terminales"
+    "Señal luminosa LED 5 focos Entrada Estaciones Terminales RBA"
     SignalSubObjs ( 16
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
-            SigSubSType ( "LED3RBA" )
+            SigSubSType ( "LED5RBA" )
             SignalFlags ( JN_LINK )
         )
         Include ( "sigcfg_head_caracteristicas.inc" )
@@ -203,6 +203,20 @@ SignalShape (
     )
 )
 
+SignalShape (
+    "SELULED4FOCOS5.s" 
+    "Señal luminosa LED 4 focos Liberacion VRB"
+    SignalSubObjs ( 16
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "LED4VRB" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_caracteristicas.inc" )
+    )
+)
 SignalShape (
     "SELULED4FOCOS4.s" 
     "Señal luminosa LED 4 focos Avanzada VA"
@@ -306,6 +320,20 @@ SignalShape (
         Include ( "sigcfg_head_caracteristicas.inc" )
     )
 )
+SignalShape (
+    "SELULEDSM5FOCOSI2.s" 
+    "Señal luminosa LED SM IZQUIERDA 5 focos Entrada Estaciones Terminales RBA"
+    SignalSubObjs ( 16
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "LED5RBA" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_caracteristicas.inc" )
+    )
+)
 
 SignalShape (
     "SELULEDSM4FOCOSI.s" 
@@ -324,7 +352,7 @@ SignalShape (
 
 SignalShape (
     "SELULEDSM4FOCOSI2.s" 
-    "Señal luminosa LED SM IZQUIERDA 5 focos VRBA"
+    "Señal luminosa LED SM IZQUIERDA 4 focos VRBA"
     SignalSubObjs ( 16
         SignalSubObj ( 0
             "HEAD1"
@@ -352,6 +380,20 @@ SignalShape (
     )
 )
 
+SignalShape (
+    "SELULEDSM4FOCOSI5.s" 
+    "Señal luminosa LED SM IZQUIERDA 4 focos Liberacion VRB"
+    SignalSubObjs ( 16
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "LED4VRB" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_caracteristicas.inc" )
+    )
+)
 SignalShape (
     "SELULEDSM4FOCOSI4.s" 
     "Señal luminosa LED SM IZQUIERDA 4 focos Avanzada VA"
@@ -443,6 +485,21 @@ SignalShape (
 )
 
 SignalShape (
+    "SELULEDSM5FOCOSD2.s" 
+    "Señal luminosa LED SM DERECHA 5 focos Entrada Estaciones Terminales RBA"
+    SignalSubObjs ( 16
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "LED5RBA" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_caracteristicas.inc" )
+    )
+)
+
+SignalShape (
     "SELULEDSM4FOCOSD.s" 
     "Señal luminosa LED SM DERECHA 4 focos VRBZ"
     SignalSubObjs ( 16
@@ -459,7 +516,7 @@ SignalShape (
 
 SignalShape (
     "SELULEDSM4FOCOSD2.s" 
-    "Señal luminosa LED SM DERECHA 5 focos VRBA"
+    "Señal luminosa LED SM DERECHA 4 focos VRBA"
     SignalSubObjs ( 16
         SignalSubObj ( 0
             "HEAD1"
@@ -487,6 +544,20 @@ SignalShape (
     )
 )
 
+SignalShape (
+    "SELULEDSM4FOCOSD5.s" 
+    "Señal luminosa LED SM DERECHA 4 focos Liberacion VRB"
+    SignalSubObjs ( 16
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "LED4VRB" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_caracteristicas.inc" )
+    )
+)
 SignalShape (
     "SELULEDSM4FOCOSD4.s" 
     "Señal luminosa LED SM DERECHA 4 focos Avanzada VA"
@@ -580,13 +651,13 @@ SignalShape (
 
 SignalShape (
     "SELULED5FOCOS2SP.s" 
-    "Señal luminosa LED 5 focos SIN POSTE RBA Entrada Estaciones Terminales"
+    "Señal luminosa LED 5 focos SIN POSTE Entrada Estaciones Terminales RBA"
     SignalSubObjs ( 16
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
             SigSubType ( SIGNAL_HEAD )
-            SigSubSType ( "LED3RBA" )
+            SigSubSType ( "LED5RBA" )
             SignalFlags ( JN_LINK )
         )
         Include ( "sigcfg_head_caracteristicas.inc" )
@@ -638,6 +709,20 @@ SignalShape (
     )
 )
 
+SignalShape (
+    "SELULED4FOCOS6SP.s" 
+    "Señal luminosa LED 4 focos SIN POSTE Liberacion VRB"
+    SignalSubObjs ( 16
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "LED4VRB" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_caracteristicas.inc" )
+    )
+)
 SignalShape (
     "SELULED4FOCOS4SP.s" 
     "Señal luminosa LED 4 focos SIN POSTE Avanzada VA"
