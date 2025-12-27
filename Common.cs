@@ -89,6 +89,7 @@ namespace ORTS.Scripting.Script
         public readonly int KEY_VARIABLE_COMPARTIDA_SNCA = 901;
         public readonly int KEY_VARIABLE_COMPARTIDA_PROXIMIDAD = 902;
         public readonly int KEY_VARIABLE_COMPARTIDA_PROXIMIDAD_ERTMS = 903;
+        public readonly int KEY_VARIABLE_COMPARTIDA_SUCESION_AUTOMATICA = 904;
 
         // Compatibilidad MSTS
         protected Dictionary<Aspecto, Aspect> compatibilidadAspectosMSTS = new Dictionary<Aspecto, Aspect>();

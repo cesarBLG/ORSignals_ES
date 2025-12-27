@@ -245,6 +245,9 @@ namespace ORTS.Scripting.Script
             SharedVariables[KEY_VARIABLE_COMPARTIDA_INFO_RUTA] = (int)Aspect.Stop;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_REBASE] = 0;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_INFO_RUTA] = (int)informacionDeRuta;
+
+            if (SucesionAutomatica && !RouteSet) SucesionAutomatica = false;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SUCESION_AUTOMATICA] = SucesionAutomatica ? 1 : 0;
             
             CalcularAspecto();
             SetSNCA();
@@ -1035,7 +1038,7 @@ namespace ORTS.Scripting.Script
                 var tipo = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
                 if ((tipo != TipoSeñal.Ninguno 
                         && (tipo.HasFlag(TipoSeñal.Intermedia) || tipo.HasFlag(TipoSeñal.Liberacion) || tipo.HasFlag(TipoSeñal.Retroceso) || tipo.HasFlag(TipoSeñal.Virtual)))
-                    //|| SucesionAutomatica
+                    || IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SUCESION_AUTOMATICA) > 0
                 )
                 {
                     snca++;
