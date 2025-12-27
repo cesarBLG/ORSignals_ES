@@ -96,10 +96,71 @@ SignalShape (
         Include ( "sigcfg_head_etcs_discrete.inc" )
     )
 )
+
+
+SignalShape (
+    "etcs_mensaje_entrada_ertms.s"
+    "Mensaje Entrada ERTMS ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_ENTRADA_ERTMS" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
+
+SignalShape (
+    "etcs_mensaje_salida_ertms.s"
+    "Mensaje Salida ERTMS ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_SALIDA_ERTMS" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
+
+SignalShape (
+    "etcs_aproxsecc_lamina.s"
+    "Mensaje Aproximacion Seccionamiento de lámina ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_SECCIONAMIENTO_LAMINA" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
+
+SignalShape (
+    "etcs_aproxsecc_aislador.s"
+    "Mensaje Aproximacion Aislador de sección ETCS"
+    SignalSubObjs ( 9
+        SignalSubObj ( 0
+            "HEAD1"
+            "Signal Head 1"
+            SigSubType ( SIGNAL_HEAD )
+            SigSubSType ( "ETCS_MSG_SECCIONAMIENTO_AISLADOR" )
+            SignalFlags ( JN_LINK )
+        )
+        Include ( "sigcfg_head_etcs_distance.inc" )
+    )
+)
 SignalShape (
     "etcs_aproxsecc.s"
     "Mensaje Aproximacion Seccionamiento ETCS"
-    SignalSubObjs ( 8
+    SignalSubObjs ( 9
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -113,7 +174,7 @@ SignalShape (
 SignalShape (
     "etcs_ltv_desvios.s"
     "ETCS restriccion de velocidad por desvio para señal en rojo"
-    SignalSubObjs ( 8
+    SignalSubObjs ( 9
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"
@@ -634,7 +695,7 @@ SignalShape (
 SignalShape (
     "etcs_leveltr.s"
     "ETCS paquete de transicion"
-    SignalSubObjs ( 8
+    SignalSubObjs ( 9
         SignalSubObj ( 0
             "HEAD1"
             "Signal Head 1"

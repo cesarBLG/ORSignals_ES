@@ -326,7 +326,7 @@ SignalShape (
 
 SignalShape (
 	"mono4luces.s"
-	"RENFE Lum Mono 4 focos VRAB"
+	"RENFE Lum Mono 4 focos VRAB Con caja"
 	SignalSubObjs ( 16
 		SignalSubObj ( 0
 			"HEAD1"
@@ -341,7 +341,7 @@ SignalShape (
 
 SignalShape (
 	"mono4luces_izq.s"
-	"RENFE Lum Mono 4 focos Izq VRAB"
+	"RENFE Lum Mono 4 focos Izq VRAB Con Caja"
 	SignalSubObjs ( 16
 		SignalSubObj ( 0
 			"HEAD1"

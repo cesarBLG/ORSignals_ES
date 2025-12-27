@@ -35,6 +35,34 @@ namespace ORTS.Scripting.Script
             base.UpdatePacket(backfacing);
         }
     }
+    public class ETCS_APEADERO : PaqueteETCS
+    {
+        string Apeadero;
+        public override void Initialize()
+        {
+            base.Initialize();
+            string nom = SignalTypeName.Substring(14);
+            LoadParameter("Apeaderos", nom, ref Apeadero);
+        }
+        public override void UpdatePacket(bool backfacing)
+        {
+            double end = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                if (HasHead(i + 1)) end += (1 << i) * 50;
+            }
+            if (end == 0) end = 1000;
+            string txt = "Próx. Apeadero " + Apeadero;
+            byte[] ascii = System.Text.Encoding.GetEncoding(28591).GetBytes(txt);
+            string pack = "01" + format_binary(0, 2) + "0" + format_etcs_distance(0) + format_binary(15, 4) + format_binary(5, 3) + format_etcs_distance(end) + format_binary(1023, 10) + format_binary(15, 4) + format_binary(5, 3) + format_binary(0, 2) + format_binary(ascii.Length, 8);
+            for (int i = 0; i < ascii.Length; i++)
+            {
+                pack += format_binary((int)ascii[i], 8);
+            }
+            Packet = create_packet(72, pack, backfacing ? 0 : 1);
+            base.UpdatePacket(backfacing);
+        }
+    }
     public class ETCS_BIFURCACION : PaqueteETCS
     {
         string Mensaje = "";

@@ -142,15 +142,15 @@ SignalType ( "SELU4MONOMBRAIZQ"
         SignalDrawState ( 1
             "Whitedir"
             DrawLights ( 2
-                DrawLight ( 1 )
                 DrawLight ( 2 )
+                DrawLight ( 3 )
             )
         )
         SignalDrawState ( 2
             "Whitedes"
             DrawLights ( 2
                 DrawLight ( 1 )
-                DrawLight ( 3 )
+                DrawLight ( 2 )
             )
         )
         SignalDrawState ( 3
@@ -739,6 +739,75 @@ SignalType ( "LED5VRBZA"
     )
     SignalNumClearAhead ( 5 )
 )
+SignalType ( "LED5RBA"
+    SignalFnType ( NORMAL )
+    ORTSScript ( GENERICO )
+    SignalLightTex ( "ltexLED" )
+    SigFlashDuration ( 0.5 0.5 )
+    ORTSOnOffTimeS ( 0 )
+    SignalLights ( 3
+        SignalLight ( 0 "Red LED Light"
+            Position ( 0 4.24 0.09 )
+            Radius ( 0.07 )
+        )
+        SignalLight ( 1 "White LED Light"
+            Position ( 0 3.98 0.09 )
+            Radius ( 0.07 )
+        )
+        SignalLight ( 2 "Amber LED Light"
+            Position ( 0 3.47 0.09 )
+            Radius ( 0.07 )
+        )
+    )
+    SignalDrawStates ( 6
+        SignalDrawState ( 0
+            "FF7A"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+        SignalDrawState ( 1
+            "FF8A"
+            DrawLights ( 2
+                DrawLight ( 0 )
+                DrawLight ( 1 SignalFlags(FLASHING) )
+            )
+        )
+        SignalDrawState ( 2
+            "FF8B"
+            DrawLights ( 2
+                DrawLight ( 0 )
+                DrawLight ( 1 )
+            )
+        )
+            SignalDrawState ( 3
+            "FF5A"
+            DrawLights ( 1
+                DrawLight ( 2 )
+            )
+        )
+            SignalDrawState ( 4
+            "FF4"
+            DrawLights ( 1
+                DrawLight ( 2 )
+            )
+        )
+        SignalDrawState ( 5
+            "FF7B"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+    )
+    SignalAspects ( 4
+        SignalAspect ( STOP                        "FF7A"                    SpeedMPH ( 0 )  )
+        SignalAspect ( APPROACH_1                                 "FF5A" )
+        SignalAspect ( APPROACH_3                              "FF4" )
+        SignalAspect ( RESTRICTING                               "FF8A" )
+        
+    )
+    SignalNumClearAhead ( 5 )
+)
 SignalType ( "LED4VRBZ"
     SignalFnType ( NORMAL )
     ORTSScript ( GENERICO )
@@ -1016,6 +1085,74 @@ SignalType ( "LED4VRZA"
     SignalNumClearAhead ( 5 )
 )
 
+SignalType ( "LED4VRB"
+    SignalFnType ( NORMAL )
+    ORTSScript ( GENERICO )
+    SignalLightTex ( "ltexLED" )
+    SigFlashDuration ( 0.5 0.5 )
+    ORTSOnOffTimeS ( 0 )
+    SignalLights ( 3
+        SignalLight ( 0 "Red LED Light"
+            Position ( 0 3.98 0.09 )
+            Radius ( 0.07 )
+        )
+        SignalLight ( 1 "Green LED Light"
+            Position ( 0 4.24 0.09 )
+            Radius ( 0.07 )
+        )
+        SignalLight ( 2 "White LED Light"
+            Position ( 0 3.72 0.09 )
+            Radius ( 0.07 )
+        )
+    )
+    SignalDrawStates ( 6
+        SignalDrawState ( 0
+            "FF7A"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+        SignalDrawState ( 1
+            "FF8A"
+            DrawLights ( 2
+                DrawLight ( 0 )
+                DrawLight ( 2 SignalFlags(FLASHING) )
+            )
+        )
+        SignalDrawState ( 2
+            "FF8B"
+            DrawLights ( 2
+                DrawLight ( 0 )
+                DrawLight ( 2 )
+            )
+        )
+        SignalDrawState ( 3
+            "FF1A"
+            DrawLights ( 1
+                DrawLight ( 1 )
+            )
+        )
+        SignalDrawState ( 4
+            "FF2"
+            DrawLights ( 1
+                DrawLight ( 1 SignalFlags(FLASHING) )
+            )
+        )
+        SignalDrawState ( 5
+            "FF7B"
+            DrawLights ( 1
+                DrawLight ( 0 )
+            )
+        )
+    )
+    SignalAspects ( 7
+        SignalAspect ( STOP                        "FF7A"                    SpeedMPH ( 0 )  )
+        SignalAspect ( CLEAR_2                        "FF1A"                            )
+        SignalAspect ( CLEAR_1                                 "FF2" )
+        SignalAspect ( RESTRICTING                               "FF8A" )
+    )
+    SignalNumClearAhead ( 5 )
+)
 SignalType ( "LED3VRA"
     SignalFnType ( NORMAL )
     ORTSScript ( GENERICO )
