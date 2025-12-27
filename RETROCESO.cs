@@ -117,9 +117,14 @@ namespace ORTS.Scripting.Script
             SharedVariables[KEY_VARIABLE_COMPARTIDA_REBASE] = callOn ? 1 : 0;
             previoPrevioEstaPreparada = previoEstaPreparada;
             previoEstaPreparada = estaPreparada;
+            SetSNCA();
+        }
+        public override void SetSNCA()
+        {
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = 0;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 1;
-            SignalNumClearAhead = IdSignalLocalVariable(idSigSeñal, KEY_VARIABLE_COMPARTIDA_SNCA) + 1;
-            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = SignalNumClearAhead;
+            SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA] = IdSignalLocalVariable(NextSignalId("NORMAL"), KEY_VARIABLE_COMPARTIDA_SNCA) + 1;
+            base.SetSNCA();
         }
 		bool consultaFlag;
         bool FlagPresente(string tipo)
