@@ -999,7 +999,7 @@ namespace ORTS.Scripting.Script
             if (focoBlanco) aspectosDisponibles.Add(Aspecto.ParadaLZB);
         }
         int SNCA_orig = -1;
-        int SNCAcount = 0;
+        int SNCAcount = 6;
         public override void SetSNCA()
         {
             if (SNCAcount++ < 10) return;
@@ -1036,10 +1036,7 @@ namespace ORTS.Scripting.Script
                 int id = NextSignalId("NORMAL", i);
                 if (id < 0) break;
                 var tipo = (TipoSeñal)IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_TIPO_SEÑAL);
-                if ((tipo != TipoSeñal.Ninguno 
-                        && (tipo.HasFlag(TipoSeñal.Intermedia) || tipo.HasFlag(TipoSeñal.Liberacion) || tipo.HasFlag(TipoSeñal.Retroceso) || tipo.HasFlag(TipoSeñal.Virtual)))
-                    || IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SUCESION_AUTOMATICA) > 0
-                )
+                if (tipo == TipoSeñal.Ninguno || (!tipo.HasFlag(TipoSeñal.Entrada) && !tipo.HasFlag(TipoSeñal.Salida) && !tipo.HasFlag(TipoSeñal.Interior)))
                 {
                     snca++;
                 }
