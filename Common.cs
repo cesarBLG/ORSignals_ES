@@ -88,6 +88,7 @@ namespace ORTS.Scripting.Script
         public readonly int KEY_VARIABLE_COMPARTIDA_SNCA_DIFF = 900;
         public readonly int KEY_VARIABLE_COMPARTIDA_SNCA = 901;
         public readonly int KEY_VARIABLE_COMPARTIDA_PROXIMIDAD = 902;
+        public readonly int KEY_VARIABLE_COMPARTIDA_PROXIMIDAD_ERTMS = 903;
 
         // Compatibilidad MSTS
         protected Dictionary<Aspecto, Aspect> compatibilidadAspectosMSTS = new Dictionary<Aspecto, Aspect>();
@@ -204,6 +205,10 @@ namespace ORTS.Scripting.Script
                 int id = NextSignalId("NORMAL", i);
                 if (id < 0) break;
                 if (IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_PROXIMIDAD) >= proximidad)
+                {
+                    snca = Math.Max(IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SNCA) + i + 1, snca);
+                }
+                if (IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_PROXIMIDAD_ERTMS) >= i + 1)
                 {
                     snca = Math.Max(IdSignalLocalVariable(id, KEY_VARIABLE_COMPARTIDA_SNCA) + i + 1, snca);
                 }

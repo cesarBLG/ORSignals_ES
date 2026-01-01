@@ -164,8 +164,6 @@ namespace ORTS.Scripting.Script
 
         bool pantallaID = false;
         bool cuernosID = false;
-
-        bool placaP = false;
         
         Aspecto AspectoParada;
         List<Aspecto> aspectosDisponibles = new List<Aspecto>();
@@ -214,7 +212,12 @@ namespace ORTS.Scripting.Script
             {
                 ActualizarInformacionFlags();
             }
-            if (!estaPreparada) itinerarioERTMS = esLZB && (!esAvanzada || !esBSL) && ((Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0);
+            if (!estaPreparada)
+            {
+                itinerarioERTMS = esLZB && (!esAvanzada || !esBSL) && ((Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0);
+                itinerarioERTMS |= (esEntrada || esInterior) && esBSL && ((Sistemas & SistemaSeñalizacion.ETCS_N1) != 0 || (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0);
+            }
+            //if (CabSignallingStatus == "LZB" && esLZB && (!esAvanzada || !esBSL) && (Sistemas & SistemaSeñalizacion.LZB) != 0) itinerarioERTMS = true;
             if (forzarParadaSelectiva) itinerarioERTMS = true;
 
             deslizamientoSiguienteSenalOcupado = IdSignalLocalVariable(idSiguienteSenal, KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO) == 1;
@@ -223,6 +226,14 @@ namespace ORTS.Scripting.Script
             {
                 int id = NextSignalId("NORMAL");
                 if (id >= 0 && IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && estadoDelCanton == EstadoCanton.Ocupado) deslizamientoOcupado = true;
+            }
+            else if (esEntrada && esBSL)
+            {
+                if (aspectoEstaSenal == AspectoParada && paradaTotal) deslizamientoOcupado = true;
+            }
+            else if (((esAvanzada || esPreavanzada) && (esBLA || esBSL)) || !aspectosDisponibles.Contains(AspectoParada))
+            {
+                deslizamientoOcupado = deslizamientoSiguienteSenalOcupado;
             }
             SharedVariables[KEY_VARIABLE_COMPARTIDA_DESLIZAMIENTO] = deslizamientoOcupado ? 1 : 0;
             SharedVariables[KEY_VARIABLE_COMPARTIDA_SIG_SENAL] = NextSignalId("NORMAL");
@@ -249,7 +260,7 @@ namespace ORTS.Scripting.Script
         {
             bool n1 = (Sistemas & SistemaSeñalizacion.ETCS_N1) != 0;
             bool n2 = (Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0;
-            if ((focoAzul && (n1 || n2)) || (esLZB && n2)) itinerarioERTMS = true;
+            if (((focoAzul && (n1 || n2)) || (esLZB && n2)) && !esAvanzada && !esIntermedia) itinerarioERTMS = true;
         }
 
         public override void HandleSignalMessage(int id, string message)
@@ -564,7 +575,7 @@ namespace ORTS.Scripting.Script
                 else if ((Sistemas & SistemaSeñalizacion.ETCS_N1) != 0) aspectoEstaSenal = Aspecto.ParadaSelectivaDestellos;
                 else aspectoEstaSenal = Aspecto.ParadaSelectiva;
             }
-            else if (!avanzadaSinParada && deslizamientoSiguienteSenalOcupado && aspectoSiguienteSenal == Aspecto.Parada)
+            else if (!avanzadaSinParada && deslizamientoSiguienteSenalOcupado)
             {
                 aspectoEstaSenal = esLZB ? Aspecto.ParadaLZB : Aspecto.ParadaSelectivaDestellos;
             }
@@ -605,12 +616,12 @@ namespace ORTS.Scripting.Script
             }
             else if (aspectoSiguienteSenal == Aspecto.Apagada && !siguienteSenalEsAvanzadaBLA)
             {
-                if (esPreavanzada) aspectoEstaSenal = Aspecto.ViaLibreCondicional;
-                else aspectoEstaSenal = anuncioParadaInmediata ? Aspecto.AnuncioParadaInmediata : Aspecto.AnuncioParada;
+                aspectoEstaSenal = anuncioParadaInmediata ? Aspecto.AnuncioParadaInmediata : Aspecto.AnuncioParada;
             }
+            else if (aspectoSiguienteSenal == Aspecto.Apagada && esPreavanzada) aspectoEstaSenal = Aspecto.ViaLibreCondicional;
             else if (((aspectoSiguienteSenal == Aspecto.Parada ||
                 aspectoSiguienteSenal == Aspecto.ParadaPermisiva || aspectoSiguienteSenal == Aspecto.RebaseAutorizado ||
-                aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva || 
+                aspectoSiguienteSenal == Aspecto.RebaseAutorizadoDestellos || aspectoSiguienteSenal == Aspecto.ParadaSelectiva ||
                 aspectoSiguienteSenal == Aspecto.ParadaSelectivaDestellos || aspectoSiguienteSenal == Aspecto.ParadaLZB || aspectoSiguienteSenal == Aspecto.AnuncioParadaInmediata || idSiguienteSenal < 0) && !siguienteSenalEsAvanzadaBLA) || HoldState == HoldState.ManualApproach)
             {
                 aspectoEstaSenal = anuncioParadaInmediata ? Aspecto.AnuncioParadaInmediata : Aspecto.AnuncioParada;
@@ -915,6 +926,7 @@ namespace ORTS.Scripting.Script
             siguienteSenalEsAvanzadaBLA = DistMultiSigMR("DISTANCE", "NORMAL", false) != Aspect.Stop;
             siguienteSenalEsAvanzadaBLA |= FlagPresente("F_VL");
             siguienteSenalEsAvanzadaBLA |= (esSalida || esIntermedia) && (esBLA || esBSL);
+            siguienteSenalEsAvanzadaBLA |= esPreavanzada && esBLA;
             /*siguienteSenalEsAvanzadaBLA = false;
             if (DistMultiSigMR("DISTANCE", "NORMAL", false) != Aspect.Stop) siguienteSenalEsAvanzadaBLA = true;
             else
@@ -929,7 +941,7 @@ namespace ORTS.Scripting.Script
                     if (!IdSignalHasNormalSubtype(id, "PANTALLA_ERTMS") && !IdSignalHasNormalSubtype(id, "RETROCESO")) break;
                 }
             }*/
-            
+
             inhibirPreanuncioParadaAViaLibreSiSigAnuncioPrecaucion = FlagPresente("I_PREA_SIG_APREC_A_VL");
             inhibirPreanuncioParadaAViaLibreSiSigAnuncioParada = FlagPresente("I_PREA_SIG_APARA_A_VL");
 
@@ -1002,6 +1014,9 @@ namespace ORTS.Scripting.Script
             if (LongitudProximidad >= 0) SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = LongitudProximidad;
             else if (esEntrada || esSalida || esInterior) SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = Math.Max(tipoDeSenalizacionDoscientos ? 2 : 1, SNCA_orig - 2);
             else SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD] = 0;
+
+            if ((esBSL || esLZB) && ((Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0)) SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD_ERTMS] = 4;
+            else SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD_ERTMS] = 0;
 
             int snca = esEntrada || esInterior ? 2 : 1;
             // Corregir SNCA por señales especiales (virtuales, retroceso, siguiente es liberacion o avanzada BLA)
