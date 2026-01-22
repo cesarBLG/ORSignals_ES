@@ -1002,14 +1002,11 @@ namespace ORTS.Scripting.Script
         int SNCAcount = 6;
         public override void SetSNCA()
         {
-            if (SNCAcount++ < 10) return;
-            SNCAcount = 0;
             if (SNCA_orig == -1)
             {
                 SNCA_orig = SignalNumClearAhead;
                 if (SNCA_orig < 0) SNCA_orig = 2;
             }
-
             if (siguienteSenalEsDeLiberacion || esInterior) SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 1; // Requerir liberacion abierta
             else if (siguienteSenalEsAvanzadaBLA) SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = -1; // Avanzada resta 1 a la secuencia
             else SharedVariables[KEY_VARIABLE_COMPARTIDA_SNCA_DIFF] = 0;
@@ -1020,6 +1017,9 @@ namespace ORTS.Scripting.Script
 
             if ((esBSL || esLZB) && ((Sistemas & SistemaSeñalizacion.ETCS_N2) != 0 || (Sistemas & SistemaSeñalizacion.LZB) != 0)) SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD_ERTMS] = 4;
             else SharedVariables[KEY_VARIABLE_COMPARTIDA_PROXIMIDAD_ERTMS] = 0;
+    
+            if (SNCAcount++ < 10) return;
+            SNCAcount = 0;
 
             int snca = esEntrada || esInterior ? 2 : 1;
             // Corregir SNCA por señales especiales (virtuales, retroceso, siguiente es liberacion o avanzada BLA)

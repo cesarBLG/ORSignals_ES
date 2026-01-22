@@ -27,7 +27,7 @@ namespace ORTS.Scripting.Script
             int endSig = -1;
             if (sigId >= 0)
             {
-                int max = IdSignalLocalVariable(sigId, 901);
+                int max = IdSignalLocalVariable(sigId, 905);
                 for (int i=0; i<max; i++)
                 {
                     int sig = NextSignalId("NORMAL", i);
@@ -164,7 +164,7 @@ namespace ORTS.Scripting.Script
             int endSig = -1;
             if (sigId >= 0)
             {
-                int max = IdSignalLocalVariable(sigId, 901);
+                int max = IdSignalLocalVariable(sigId, 905);
                 for (int i=0; i<max; i++)
                 {
                     int sig = NextSignalId("NORMAL", i);
