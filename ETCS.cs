@@ -266,8 +266,7 @@ namespace ORTS.Scripting.Script
                     maxToClear = 1;
                     break;
                 default:
-                    maxToClear = IdSignalLocalVariable(SenalAsociada, 901);
-                    if (maxToClear == 0) maxToClear = 4;
+                    maxToClear = 2;
                     break;
             }
             if (maxToClear == 0)
@@ -301,7 +300,7 @@ namespace ORTS.Scripting.Script
                 int vrelease = 15;
                 ma += format_etcs_speedKpH(300)+format_etcs_speed(0)+format_binary(0, 10);
                 int nsignals = 0;
-                int totalsignals = 0;
+                int proximidad = 0;
                 int section = 0;
                 int maxsections = 2;
                 int senalUltimaSeccion=-1;
@@ -339,25 +338,28 @@ namespace ORTS.Scripting.Script
                         continue;
                     }
                     first = true;
-                    totalsignals++;
                     if (IdSignalHasNormalSubtype(sig, "PANTALLA_ERTMS") || IdSignalHasNormalSubtype(sig, "RETROCESO")) continue;
-                    if (maxToClear == 1 && nsignals > 0) break;
                     Aspecto a = GetAspectoSenal(sig);
                     SistemaSeñalizacion sist = (SistemaSeñalizacion)IdSignalLocalVariable(sig, 200);
                     TipoSeñal t = (TipoSeñal)IdSignalLocalVariable(sig, 201);
                     bool stop = sig == -1 || a == Aspecto.Parada || a == Aspecto.ParadaPermisiva || a == Aspecto.ParadaSelectiva || a == Aspecto.ParadaLZB || a == Aspecto.RebaseAutorizado || a == Aspecto.RebaseAutorizadoCortaDistancia;
                     if (a == Aspecto.ParadaSelectivaDestellos && (sist & SistemaSeñalizacion.ETCS_N1) == 0 && (sist & SistemaSeñalizacion.ETCS_N2) == 0 && (sist & SistemaSeñalizacion.LZB) == 0) stop = true;
                     bool esInicioRuta = t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Entrada) || t.HasFlag(TipoSeñal.Salida) || t.HasFlag(TipoSeñal.Interior)) && !t.HasFlag(TipoSeñal.Liberacion);
-                    if (esInicioRuta && totalsignals > maxToClear) stop = true;
+                    if (esInicioRuta)
+                    {
+                        int reqProximidad = IdSignalLocalVariable(sig, 902);
+                        if (proximidad > reqProximidad) stop = true;
+                    }
+                    if (maxToClear == 1 && nsignals > 0) stop = true;
                     if (stop)
                     {
                         if (sig < 0)
                         {
                             vrelease = 10;
                             dangerPoint = 10;
-                            sectionLength = "{(EoADistanceM(0)-10)-("+startRef+")}";
+                            sectionLength = "{(EoADistanceM(0)-10)-(" + startRef + ")}";
                         }
-                        else sectionLength = "{NextSignalDistanceM("+i+")-("+startRef+")}";
+                        else sectionLength = "{NextSignalDistanceM(" + i + ")-(" + startRef + ")}";
                         if (t != TipoSeñal.Ninguno && (t.HasFlag(TipoSeñal.Intermedia) || t.HasFlag(TipoSeñal.Avanzada)))
                         {
                             vrelease = 30;
@@ -379,6 +381,7 @@ namespace ORTS.Scripting.Script
                         section++;
                     }
                     nsignals++;
+                    proximidad += 1 - IdSignalLocalVariable(sig, 900);
                 }
                 ma += format_binary(section, 5) + sect;
                 ma += construirSeccion(SenalAsociada, Infill, sectionLength, section, senalUltimaSeccion, sig, nsignals);
