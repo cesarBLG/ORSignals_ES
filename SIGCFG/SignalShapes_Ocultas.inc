@@ -224,7 +224,7 @@ SignalShape (
 )
 
 SignalShape (
-	"ESRNindagu_R_CORtO.s"
+	"ESRNindagu_R_CORTO.s"
 	"RENFE Oculto rebase corta distancia"
 	SignalSubObjs ( 1
 		SignalSubObj ( 0
